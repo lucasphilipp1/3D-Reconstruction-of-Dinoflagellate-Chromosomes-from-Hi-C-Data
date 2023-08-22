@@ -13,11 +13,12 @@
 %         count = count + 1;
 %         PCSynth(count,1)=chr21_Su_HiC(1,j);
 %         PCSynth(count,2)=chr21_Su_HiC(i,1);
-%         PCSynth(count,3)=chr21_Su_HiC(i,j);
+%         PCSynth(count,3)=round(chr21_Su_HiC(i,j),3,"significant")
 %     end
 % end
 %
 % writematrix(PCSynth,'Su_Cell_2020_chr21_CSynth_input.txt','Delimiter','tab')
+
 
 %Comparison of CSynth Structures to FISH data for CSynth parameter optomization
 %Using 651 FISH probe dataset: https://doi.org/10.1016/j.cell.2020.07.032

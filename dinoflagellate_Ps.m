@@ -37,8 +37,8 @@ for i=1:1:N_microadriaticum_coccoid
     s = s(2:end); 
     Ps = Ps(2:end);
     Ps=Ps/Ps(1); %P(min(s))=1
-
-    writematrix([s Ps],append(append('Ps_symbiodinium_microadriaticum_coccoid_chr',num2str(i)),'.txt'),'Delimiter','tab')
+    
+    writematrix([s round(Ps,3,"significant")],append(append('Ps_symbiodinium_microadriaticum_coccoid_chr',num2str(i)),'.txt'),'Delimiter','tab')
 
     figure
     hold on

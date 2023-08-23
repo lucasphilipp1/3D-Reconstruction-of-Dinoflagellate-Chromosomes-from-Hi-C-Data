@@ -107,6 +107,8 @@ GSM2801019	mC_S_minutum_25C
 ### TO DO LIST:
 
 ## High priority:
+Cholestric_HiC code arrays need to be replaced with cell arrays (allow for variable size)
+function to incorporate loops properly into primary sequence
 
 ## Medium priority:
 

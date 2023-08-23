@@ -106,6 +106,22 @@ GSM2801019	mC_S_minutum_25C
 
 ### TO DO LIST:
 
+Fix total sequence length
+	Vary: % of sequence in extrachromosomal loops
+	 	 % in Inter-disc loops
+		 % in Intra-disc loops
+	Discs connected top to bottom consecutively
+	Discs connected in random order
+	Re-visiting discs
+Add “thermal” noise
+
+Orientation order parameter
+
+Chiral Order Parameter
+<img width="861" alt="image" src="https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/b35ade71-1599-4082-83b0-e19b5b968f32">
+
+
+
 ## High priority:
 Cholestric_HiC code arrays need to be replaced with cell arrays (allow for variable size)
 function to incorporate loops properly into primary sequence

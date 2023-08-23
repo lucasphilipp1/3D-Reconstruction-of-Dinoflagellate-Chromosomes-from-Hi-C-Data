@@ -379,8 +379,8 @@ end
 %%%
 
 %euclidian distance between monomers
-%D = pdist(model); %in microns
-D = pdist(new_model); %in microns
+D = pdist(model); %in microns
+%D = pdist(new_model); %in microns
 
 D = squareform(D);
 
@@ -393,7 +393,7 @@ P(P>1) = 1; %no contact probabilities above 1
 
 %output for GEM
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%writematrix(P,'cholesteric_GEM_HiC.txt','Delimiter','tab')
+writematrix(round(P,3,"significant"),'cholesteric_GEM_HiC.txt','Delimiter','tab')
 
 P_loci = zeros(size(P,1),1);
 count = 0;
@@ -422,7 +422,7 @@ for i=1:1:size(P,1)
 end
 
 %PCSynth = round(PCSynth,3,"significant");
-writematrix(PCSynth,'cholesteric_CSynth.txt','Delimiter','tab')
+%writematrix(PCSynth,'cholesteric_CSynth.txt','Delimiter','tab')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -480,18 +480,6 @@ for i=1:x
 end
 end
 
-%
-% %P(s) calculation.
-% %P(s) plots were calculated in two ways.
-% %First, P(s) was calculated genome-wide using valid chromatin interaction pairs
-% %with the following script from the cooltools package with all default settings (https://github.com/mirnylab/ cooltools).
-% %For P(s) calculations for single chromosomes at the level of chromosomal Hi-C domains,
-% %we used Hi-C data binned and balanced at 50-kb resolution. Hi-C domains borders were calculated by insulation analysis (see above).
-% %The grid of domain borders defines a set of squares throughout the Hi-C interaction map. P(s) was calculated for each square by
-% %plotting the average of each diagonal of 50-kb bins in the square as a function of s.
-% %For all squares not centered at the main diagonal, the values of P(s) for the smallest and largest s were left out because
-% %they are calculated only for 1 bin and thus are noisy.
-%
 % %does a CLC model with a particular parameter set give rise to a unique scaling exponent?
 % %or can one scaling exponent correspond to multiple geometries?
 

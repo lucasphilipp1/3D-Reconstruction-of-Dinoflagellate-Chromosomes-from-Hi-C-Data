@@ -182,6 +182,9 @@ Wolynes and Zhang found low structural heterogeneity at small genomic scales, bu
 we could look for heterogeneity as a function of genomic separation using DIMES in dinoflagellates, expecting long range consensus to persist in the case of liquid crystal chromosomes
 the DIMES paper also has a way of clustering conformations using t-sne. this method doesn’t require the length of the polymer to be the same, so we can compare structures from different organisms computed using CSynth. hopefully we see dinoflagellate chromosomes cluster together, but away from other eukaryotic chromosomes
 
+keep in mind there are two optomization techniques
+coarse grain structures if needed
+
 t-sne DIMES paper Dnm equation
 
 

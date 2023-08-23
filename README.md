@@ -123,6 +123,8 @@ Chiral Order Parameter
 
 
 ## High priority:
+fullfile all Data imports in all MATLAB scripts: https://www.mathworks.com/help/matlab/ref/fullfile.html 
+
 Cholestric_HiC code arrays need to be replaced with cell arrays (allow for variable size)
 function to incorporate loops properly into primary sequence
 

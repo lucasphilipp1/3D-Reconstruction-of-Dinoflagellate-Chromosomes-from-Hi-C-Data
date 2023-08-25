@@ -129,8 +129,8 @@ Cholestric_HiC code arrays need to be replaced with cell arrays (allow for varia
 function to incorporate loops properly into primary sequence
 
 Make a table of electron microscopy data vs dinoflagellate order (Lucas):
-Yes Cholesteric
-No Cholesteric
+Discs perpendicular to long axis of chromosome?
+Yes, No
 
 ## Medium priority:
 

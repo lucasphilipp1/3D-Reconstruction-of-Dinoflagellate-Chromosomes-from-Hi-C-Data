@@ -128,6 +128,10 @@ fullfile all Data imports in all MATLAB scripts: https://www.mathworks.com/help/
 Cholestric_HiC code arrays need to be replaced with cell arrays (allow for variable size)
 function to incorporate loops properly into primary sequence
 
+Make a table of electron microscopy data vs dinoflagellate order (Lucas):
+Yes Cholesteric
+No Cholesteric
+
 ## Medium priority:
 
 ## Low priority:

@@ -132,6 +132,8 @@ Make a table of electron microscopy data vs dinoflagellate order (Lucas):
 Discs perpendicular to long axis of chromosome?
 Yes, No
 
+HiC Data from Fugacium kawagutii? (Lucas)
+
 ## Medium priority:
 
 ## Low priority:

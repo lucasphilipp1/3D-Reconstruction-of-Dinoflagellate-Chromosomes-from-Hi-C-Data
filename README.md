@@ -241,6 +241,9 @@ structural heterogeneity can be quantified using the average spread in the separ
 
 <img width="898" alt="Screenshot 2023-08-28 at 4 07 29 PM" src="https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/fefb42dd-8f4a-4eba-9c61-25d2d8bcb10b">
 
+![41467_2023_36412_Fig6_HTML](https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/536bcc1d-c1f3-49c4-8c89-f00084ae6f2b)
+
+<img width="915" alt="Screenshot 2023-08-28 at 4 11 32 PM" src="https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/33a04980-623a-4733-a2cf-dacd431b7738">
 
 I propose using:
 human interphase HiC data as a - control, expecting high structural heterogeneity
@@ -258,7 +261,11 @@ coarse grain structures if needed
 
 ## Medium priority:
 
-diagonal relative error Su 2020
+### rigorously test the accuracy of inferred 3D structures
+In CSynth_FISH_Compare_Su_Cell_2020.m, make sure first and second off-diagonal HiC data is discarded. These are most likely sequence artificats. Don't use this data to assess accuracy of CSynth structure.
+
+Why is the relative error high near the main diagonal?
+
 ### assess uniqueness of dinoflagellate chromosome structure compared to other eukaryotes
 
 t-sne DIMES paper Dnm equation

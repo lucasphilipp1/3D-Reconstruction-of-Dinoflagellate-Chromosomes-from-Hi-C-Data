@@ -13,7 +13,8 @@ pip install pandas
 pip install matplotlib
 ```
 
-### Install MATLAB
+### Install MATLAB:
+Install statistics and machine learning toolbox
 
 ### Other github repos used in this project:
 
@@ -26,7 +27,7 @@ Description: Estimates cell-cell conformational heterogeniety from HiC data.
 Shi, G., & Thirumalai, D. (2023). A maximum-entropy model to predict 3D structural ensembles of chromatin from pairwise distances with applications to interphase chromosomes and structural variants. Nature Communications, 14(1), 1150.
 
 https://github.com/lucasphilipp1/3D_OrientationJ
-Description: Image gradient based algorithm to. Does not rely on segmentation to calculate ortientation.
+Description: Image gradient based algorithm to calculate 3D orientatinon of DNA fibres from electron microscopy .tiff image z-stack. Unlike dragonfly, does not rely on segmentation to calculate ortientation.
 Duclos, G., Adkins, R., Banerjee, D., Peterson, M. S., Varghese, M., Kolvin, I., ... & Dogic, Z. (2020). Topological structure and dynamics of three-dimensional active nematics. Science, 367(6482), 1120-1124.
 
 ### Descriptions of code:

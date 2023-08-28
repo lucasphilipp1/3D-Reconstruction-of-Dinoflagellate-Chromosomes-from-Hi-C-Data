@@ -13,10 +13,12 @@ pip install pandas
 pip install matplotlib
 ```
 
-### Important Google Drive Documents:
+### Very Important Google Drive Documents:
 
 Miscellanious commands:
 https://docs.google.com/document/d/1YIPwidYIA1nwAA2GbczWpTUEh0doGIe9/edit?usp=sharing&ouid=118151059404127538464&rtpof=true&sd=true
+
+### Other Google Drive Documents:
 
 Reading list:
 https://docs.google.com/document/d/1HOtIcwAnNB_7rkMwDU-D4F7sM6BE9LPNg3ZfE19NNNA/edit?usp=sharing
@@ -42,30 +44,39 @@ https://github.com/lucasphilipp1/3D_OrientationJ
 Description: Image gradient based algorithm to calculate 3D orientatinon of DNA fibres from electron microscopy .tiff image z-stack. Unlike dragonfly, does not rely on segmentation to calculate ortientation.
 Duclos, G., Adkins, R., Banerjee, D., Peterson, M. S., Varghese, M., Kolvin, I., ... & Dogic, Z. (2020). Topological structure and dynamics of three-dimensional active nematics. Science, 367(6482), 1120-1124.
 
+https://github.com/diazale/dimension_reduction_workshop
+Description: Workshop on t-SNE dimensionality reduction. Examples of how to implement t-SNE in python. Introductory level details to the theory are provided. Comparison with other dimensinoality reduction techniques. See in particular: toy_examples.ipynb.
+
+https://github.com/ncbi/sra-tools
+Description: Used for downloading transcriptomes in fastq format from the SRA (sequence read archive).
+
+https://github.com/alexdobin/STAR/tree/master
+Description: Use for aligning RNA-seq datasets to HiC assembly. See miscellanious commands document.
+
 ### Descriptions of code:
 
 automatic_CSynth.js
 Description: Use to compute 3D conformations of multiple chromosomes, in succession, using CSynth. 
-See 
+See miscellanious commands document.
 To use, drag and drop onto CSynth tab in browser: https://csynth.github.io/csynth/csynth.html 
 
 chrom_length_order.py
-Description: Find the largest scaffolds or "chromosomes" from dinoflagellate HiC data. Suprisingly, scaffolds are not ordered perfectly by size. 
+Description: Finds the largest scaffolds or "chromosomes" from dinoflagellate HiC data. Suprisingly, scaffolds are not ordered perfectly by size.
 
 CSynth_FISH_Compare_Su_Cell_2020.m
-Description: Use to assess accuracy of CSynth conformations (652)
+Description: Use to assess accuracy of CSynth conformations and to optomize CSynth parameters, using a human cell line where HiC data and 3D FISH data (652 probes) exists.
 
 CSynth_FISH_Compare_Wang_Science_2016.m
-Description: Older version CSynth_FISH_Compare_Su_Cell_2020.m using a FISH data set with fewer probes (30)
+Description: Older version of CSynth_FISH_Compare_Su_Cell_2020.m using a different FISH data set with fewer probes (30).
 
 dinoflagellate_Ps.m
-Description:
+Description: Possibly useless. Used to compute contact probability "P(s)" curves from dinoflagellate HiC data. Use the python cooltools package instead.
 
 fractal_equilbrium_load.m
-Description:
+Description: Used to compute contact probability "P(s)" curves from fractal and equilibrium globule conformations as a positive control for the calculation.
 
 GC_content.m
-Description:
+Description: Possibly useless, does not 
 
 Cholesteric_HiC.m
 Description:
@@ -85,20 +96,20 @@ Description:
 Orientation_Order_Parameter.py
 Description:
 
-plot_P(s)_workshop.py
+plot_P(s)_tree_of_life.py
 Description:
 
-plot_P(s).py
-Description:
+plot_P(s)_dinoflagellate.py
+Description: Orders chromosomes   chrom_length_order.py 
 
 space_delimited_to_tab_delimited.m
-Description:
+Description: Possibly useless. Fixed an issue where .txt files written from cooler dump command were not properly delimited using tabs, as required by CSynth. An error in the bash command was fixed.
 
 straw.R
-Description:
+Description: Possibly useless. Was used to extract chromosome contacts from .hic format and output to .txt files. Made useless by hic2cool, see miscellanious commmands document. 
 
 GEM_plot.m
-Description:
+Description: Use to visualize 3D output of https://github.com/lucasphilipp1/GEM.
 
 ### Data Sources:
 IMR90 cells HiC data:
@@ -113,7 +124,66 @@ Zhu, Guangxiang, Wenxuan Deng, Hailin Hu, Rui Ma, Sai Zhang, Jinglin Yang, Jian 
 Fractal Globule & Equilibrium Globule Structures:
 Lieberman-Aiden E*, van Berkum NL*, Williams L, Imakaev M et al. Comprehensive mapping of long-range interactions reveals folding principles of the human genome. Science 2009 Oct 9;326(5950):289-93. PMID: 19815776. See: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE18199.
 
+https://www.science.org/doi/full/10.1126/science.aao6135
+GEO Accession #: GSE102740
 
+https://www.science.org/doi/10.1126/science.1181369
+GEO Accession #: GSE18199
+
+HiC data:
+Rao, S. et al. A 3D map of the human genome at kilobase resolution reveals principles of chromatin looping. Cell 159, 1665–1680 (2014).
+
+FISH data:
+Wang, S. et al. Spatial organization of chromatin domains and compartments in single chromosomes. Science 353, 598–602 (2016).
+
+Su, J. H., Zheng, P., Kinrot, S. S., Bintu, B., & Zhuang, X. (2020). Genome-scale imaging of the 3D organization and transcriptional activity of chromatin. Cell, 182(6), 1641-1659.
+
+
+From: Hoencamp, C., Dudchenko, O., Elbatsh, A. M., Brahmachari, S., Raaijmakers, J. A., van Schaik, T., ... & Rowland, B. D. (2021). 3D genomics across the tree of life reveals condensin II as a determinant of architecture type. Science, 372(6545), 984-989.
+GSM5182714	Tammar wallaby blood (Sample1096)
+GSM5182715	Domestic chicken splenic-derived lymphocytes (Sample4077)
+GSM5182716	Burmese python blood (Sample0838)
+GSM5182717	African clawed frog fibroblast (XTC) (Sample4078)
+GSM5182718	Red-bellied piranha muscle (Sample2033)
+GSM5182719	Brownbanded bamboo shark blood (Sample1575)
+GSM5182720	Arctic lamprey muscle (Sample3820)
+GSM5182721	Sea squirt tissue (Sample2441, Sample2444)
+GSM5182722	Sea squirt tissue (Sample2441)
+GSM5182723	European lancelet whole animal(s) (Sample1824)
+GSM5182724	Purple sea urchin muscle (Sample2581)
+GSM5182725	Yellow fever mosquito whole animal(s) (SAMN08028733, SAMN08028734, SAMN08028735)
+GSM5182726	Yellow fever mosquito whole animal(s) (SAMN08028734)
+GSM5182727	Southern house mosquito whole animal(s) (SAMN06546149)
+GSM5182728	Fruit fly whole animal(s) (Sample4079)
+GSM5182729	Tardigrade whole animal(s) (Sample3840)
+GSM5182730	Roundworm whole animal(s) (Sample4082)
+GSM5182731	Chinese liver fluke whole animal(s) (Sample2741)
+GSM5182732	California sea hare mix of CNS cells (Sample1819)
+GSM5182733	Moss animal whole animal(s) (Sample1845)
+GSM5182734	Acropora millepora stony coral branch fragments (Sample1884, Sample1992)
+GSM5182735	Sea gooseberry tissue (Sample1830)
+GSM5182736	Common mushroom fruiting body (Sample3828)
+GSM5182737	Baker's yeast cells (Sample4076)
+GSM5182738	Peanut leaves (Sample2455)
+GSM5182739	Bread wheat leaves (Sample4080, Sample4081)
+GSM5182740	Chinese muntjac blood (Sample1296)
+GSM5182741	Chinese muntjac fibroblasts (Sample2606)
+GSM5182742	Indian muntjac (Sample2604, Sample3923)
+GSM5182743	Indian muntjac fibroblasts (Sample3923)
+GSM5182744	Fruit fly PnM cell line (SAMN10242997)
+
+https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE102740
+From Gibcus, J. H., Samejima, K., Goloborodko, A., Samejima, I., Naumova, N., Nuebler, J., ... & Dekker, J. (2018). A pathway for mitotic chromosome formation. Science, 359(6376), eaao6135.
+human (HeLa) cells, not synchronized:
+GSM2745898_17MAY11_HSC02RPAB-PE50_CCHiC-HeLa-NS-R1_23-05-2011_kittlere.5.10000.cool
+human (HeLa) cells, mitosis:
+GSM2745897_18FEB15_PE50_C66B1AC-A_Sample_HiC1-aka-CCHiC-HeLaS3CCL2p2-M-98.1000.cool
+
+From: Marinov, G. K., Trevino, A. E., Xiang, T., Kundaje, A., Grossman, A. R., & Greenleaf, W. J. (2021). Transcription-dependent domain-scale three-dimensional genome organization in the dinoflagellate Breviolum minutum. Nature Genetics, 53(5), 613-617.
+GSM4658994	Dinoflagellate Breviolum minutum
+
+From: Nand, A., Zhan, Y., Salazar, O. R., Aranda, M., Voolstra, C. R., & Dekker, J. (2021). Genetic and spatial organization of the unusual chromosomes of the dinoflagellate Symbiodinium microadriaticum. Nature Genetics, 53(5), 618-629.
+GSE152150	Dinoflagellate Symbiodinium microadriaticum coccoid Smic 1.1N
 
 GSM2801019	mC_S_minutum_25C
 
@@ -147,6 +217,8 @@ HiC Data from Fugacium kawagutii? (Lucas)
 
 ## Medium priority:
 
+diagonal relative error Su 2020
+
 ## Low priority:
 
 Specifically, you will use computer simulations to:
@@ -158,20 +230,22 @@ dinoflagellate chromatin conformation capture (HiC) data
 - map gene density, GC content, and other genomic annotations to 3D structures,
 investigating structure-function relationships
   Figure 1. A sketch of how DNA is folded in the cholesteric liquid crystal chromosome model.
+
+automatic cell counter software
  
 - assess similarities/differences in chromosome structure across dinoflagellate species
 
 RNA-seq data exists for both B minutum and S microadriaticum, much like https://www.nature.com/articles/s41467-023-35909-2 did with ATAC-seq reads we can map RNA-seq data to the CSynth structure by mapping the RNA-seq read count to the 3D location of the corresponding gene’s on the structure. we can PCA the CSynth monomers and make a plot of aggregate RNA-seq as a function of PC1 and PC2. We might see oscillations in the RNA-seq vs PC1 plot corresponding to inter-disc spacings for e.g.
-no need for EU labelling (edited) 
-:grinning:
-1
+no need for EU labelling
 
-7:59
+
 program to map RNA-seq, or any other sequences for that matter (like retrotransposon sequences from https://www.nature.com/articles/s41467-018-03724-9): onto the HiC assembly:
 https://github.com/alexdobin/STAR
 hypothesis being that retrotransposon and tandem repeats occupy the bulk of the chromosome because the “useful” genes are extruded out as extra-chromosomal loops
 
 histogram of P(s) exponents
+
+simulate missing sequence from cholesteric HiC matrix
 
 retrotransposons
 
@@ -205,6 +279,11 @@ keep in mind there are two optomization techniques
 coarse grain structures if needed
 
 t-sne DIMES paper Dnm equation
+
+
+
+
+
 
 
 

@@ -1,13 +1,8 @@
-ALL STATIC DATA SETS STORED HERE: 
-
 ### Request access to dataset hosted by Zenodo.
 Create a zenodo account: https://zenodo.org/ you can login using your github account.\
 Confirm your email attached to your zenodo account by clicking the link in the email sent to you by zenodo.\
 Go to: https://zenodo.org/record/8277338. \
 Request access to the data.\
-Once approved to access the dataset, choose your favourite organism and download the appropriate .zip file.\
-Open the folder. You should see a .hic file in the folder.\
-If your folder doesn't have a .hic file don't worry, download another organism from zenodo.
 
 ### Install the following python packages:
 ```
@@ -23,27 +18,30 @@ pip install matplotlib
 Other github repos used in this project:
 
 https://github.com/lucasphilipp1/GEM
-Description:
+Description: Predicts 3D conformation from HiC data. Method is based on manifold learning, which contrasts CSynth. The 3D conformation take days to compute using this method.
+Zhu, G., Deng, W., Hu, H., Ma, R., Zhang, S., Yang, J., ... & Zeng, J. (2018). Reconstructing spatial organizations of chromosomes through manifold learning. Nucleic acids research, 46(8), e50-e50.
 
 https://github.com/lucasphilipp1/HIPPS-DIMES
-Description:
+Description: Estimates cell-cell conformational heterogeniety from HiC data.
+Shi, G., & Thirumalai, D. (2023). A maximum-entropy model to predict 3D structural ensembles of chromatin from pairwise distances with applications to interphase chromosomes and structural variants. Nature Communications, 14(1), 1150.
 
 https://github.com/lucasphilipp1/3D_OrientationJ
-Description:
+Description: Image gradient based algorithm to. Does not rely on segmentation to calculate ortientation.
+Duclos, G., Adkins, R., Banerjee, D., Peterson, M. S., Varghese, M., Kolvin, I., ... & Dogic, Z. (2020). Topological structure and dynamics of three-dimensional active nematics. Science, 367(6482), 1120-1124.
 
 ### Descriptions of code:
 
 automatic_CSynth.js
-Description:
+Description: Use to compute 3D conformations of multiple chromosomes, in succession, using CSynth. Drag and drop onto CSynth tab in browser: https://csynth.github.io/csynth/csynth.html 
 
 chrom_length_order.py
-Description:
+Description: Find the largest scaffolds or "chromosomes" from dinoflagellate HiC data. Suprisingly, scaffolds are not ordered perfectly by size. 
 
 CSynth_FISH_Compare_Su_Cell_2020.m
-Description:
+Description: Use to assess accuracy of CSynth conformations (652)
 
 CSynth_FISH_Compare_Wang_Science_2016.m
-Description:
+Description: Older version CSynth_FISH_Compare_Su_Cell_2020.m using a FISH data set with fewer probes (30)
 
 dinoflagellate_Ps.m
 Description:

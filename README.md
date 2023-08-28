@@ -54,81 +54,80 @@ Description: Use for aligning RNA-seq datasets to HiC assembly. See miscellaniou
 
 ### Descriptions of code:
 
-automatic_CSynth.js
+# automatic_CSynth.js
 Description: Use to compute 3D conformations of multiple chromosomes, in succession, using CSynth. 
 See miscellanious commands document.
 To use, drag and drop onto CSynth tab in browser: https://csynth.github.io/csynth/csynth.html 
 
-chrom_length_order.py
+# chrom_length_order.py
 Description: Finds the largest scaffolds or "chromosomes" from dinoflagellate HiC data. Suprisingly, scaffolds are not ordered perfectly by size.
 
-CSynth_FISH_Compare_Su_Cell_2020.m
+# CSynth_FISH_Compare_Su_Cell_2020.m
 Description: Use to assess accuracy of CSynth conformations and to optomize CSynth parameters, using a human cell line where HiC data and 3D FISH data (652 probes) exists.
 
-CSynth_FISH_Compare_Wang_Science_2016.m
+# CSynth_FISH_Compare_Wang_Science_2016.m
 Description: Older version of CSynth_FISH_Compare_Su_Cell_2020.m using a different FISH data set with fewer probes (30).
 
-dinoflagellate_Ps.m
+# dinoflagellate_Ps.m
 Description: Possibly useless. Used to compute contact probability "P(s)" curves from dinoflagellate HiC data. Use the python cooltools package instead.
 
-fractal_equilbrium_load.m
+# fractal_equilbrium_load.m
 Description: Used to compute contact probability "P(s)" curves from fractal and equilibrium globule conformations as a positive control for the calculation.
 
-GC_content.m
+# GC_content.m
 Description: Possibly useless. GC content uncertainty based on Ns or ambiguous bases is not calculated. Ns are prevalent in dinoflagellate HiC assemblies. Consider using: https://rdrr.io/cran/seqinr/man/GC.html instead. A better indicator of gene density would be to align RNA-seq reads to the assembly directly.  
 
-Cholesteric_HiC.m
+# Cholesteric_HiC.m
 Description: Generate cholesteric polymer model with extra chromosomal loops. Vary loop length, number of discs, cholesteric pitch, and other model parameters. Compute cholesteric HiC matrix.
 
-Cholesteric_HiC_test.m
+# Cholesteric_HiC_test.m
 Description: A copy of Cholesteric_HiC.m used to test implementation of intra-disc extra chromosomal loops, and variable loop lengths accomodated using cell arrays.
 
-constrained_RW_1D.m
+# constrained_RW_1D.m
 Description: Function used to generate extrachromosomal loops. Random walks are generated separately for each of the spatial three dimensions.
 
-constrained_self_avoiding_RW_3D.m
+# constrained_self_avoiding_RW_3D.m
 Description: Function used to generate extrachromosomal loops. Combines random walks in each dimension to compute a 3D random walk. 
 
-contact_probability_xyz.m
+# contact_probability_xyz.m
 Description: Function used to compute contact probability "P(s)" curves from a 3D structure. Calculation is different from computing contact probability curve from HiC matrix.
 
-Orientation_Order_Parameter.py
-Description: 
-Used to compute the correlation between two tangent vectors to the 3D chromosome structure separated by a certain primary sequence length, averaged over the entire chromosome.
+# Orientation_Order_Parameter.py
+Description: Used to compute the correlation between two tangent vectors to the 3D chromosome structure separated by a certain primary sequence length, averaged over the entire chromosome.
 
-plot_P(s)_tree_of_life.py
+# plot_P(s)_tree_of_life.py
 Description: Used to compute the contact probability "P(s)" curves for many eukaryotic organisms across the tree of life.
 
-plot_P(s)_dinoflagellate.py
+# plot_P(s)_dinoflagellate.py
 Description: Used to compute the contact probability "P(s)" curves for dinoflagellate HiC data testing affect of chromosome ordering (chrom_length_order.py) and differences in aseembly (Smic1.0 vs Smic1.1N).
 
-space_delimited_to_tab_delimited.m
+# space_delimited_to_tab_delimited.m
 Description: Possibly useless. Fixed an issue where .txt files written from cooler dump command were not properly delimited using tabs, as required by CSynth. An error in the bash command was fixed.
 
-straw.R
+# straw.R
 Description: Possibly useless. Was used to extract chromosome contacts from .hic format and output to .txt files. Made useless by hic2cool, see miscellanious commmands document. 
 
-GEM_plot.m
+# GEM_plot.m
 Description: Use to visualize 3D output of https://github.com/lucasphilipp1/GEM.
 
 ### Data Sources:
-IMR90 cells HiC data:
+# IMR90 cells HiC data:
 Rao, S. et al. A 3D map of the human genome at kilobase resolution reveals principles of chromatin looping. Cell 159, 1665–1680 (2014).
 
-IMR90 cells old FISH dataset:
+# IMR90 cells old FISH dataset:
 Wang, S. et al. Spatial organization of chromatin domains and compartments in single chromosomes. Science 353, 598–602 (2016).
 
-IMR90 cells new FISH dataset:
+# IMR90 cells new FISH dataset:
 Su, J. H., et al. (2020). Genome-scale imaging of the 3D organization and transcriptional activity of chromatin. Cell, 182(6), 1641-1659.
 
-GEM:
+# GEM:
 Zhu, Guangxiang, Wenxuan Deng, Hailin Hu, Rui Ma, Sai Zhang, Jinglin Yang, Jian Peng, Tommy Kaplan, and Jianyang Zeng. "Reconstructing spatial organizations of chromosomes through manifold learning." Nucleic acids research 46, no. 8 (2018): e50-e50.
 
-Fractal Globule & Equilibrium Globule Structures:
+# Fractal Globule & Equilibrium Globule Structures:
 Lieberman-Aiden E., et al. Comprehensive mapping of long-range interactions reveals folding principles of the human genome. Science 2009 Oct 9;326(5950):289-93. PMID: 19815776. See: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE18199.
 GEO Accession #: GSE18199
 
-HiC data for many eukaryotes:
+# HiC data for many eukaryotes:
 From: Hoencamp, C., Dudchenko, O., Elbatsh, A. M., Brahmachari, S., Raaijmakers, J. A., van Schaik, T., ... & Rowland, B. D. (2021). 3D genomics across the tree of life reveals condensin II as a determinant of architecture type. Science, 372(6545), 984-989. \
 
 GSM5182714 Tammar wallaby blood (Sample1096) \
@@ -164,24 +163,23 @@ GSM5182743 Indian muntjac fibroblasts (Sample3923) \
 GSM5182744 Fruit fly PnM cell line (SAMN10242997) \
 
 https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE102740
-From Gibcus, J. H., Samejima, K., Goloborodko, A., Samejima, I., Naumova, N., Nuebler, J., ... & Dekker, J. (2018). A pathway for mitotic chromosome formation. Science, 359(6376), eaao6135.
-human (HeLa) cells, not synchronized:
-GSM2745898_17MAY11_HSC02RPAB-PE50_CCHiC-HeLa-NS-R1_23-05-2011_kittlere.5.10000.cool
-human (HeLa) cells, mitosis:
+From Gibcus, J. H., Samejima, K., Goloborodko, A., Samejima, I., Naumova, N., Nuebler, J., ... & Dekker, J. (2018). A pathway for mitotic chromosome formation. Science, 359(6376), eaao6135. \
+human (HeLa) cells, not synchronized: \
+GSM2745898_17MAY11_HSC02RPAB-PE50_CCHiC-HeLa-NS-R1_23-05-2011_kittlere.5.10000.cool \
+human (HeLa) cells, mitosis: \
 GSM2745897_18FEB15_PE50_C66B1AC-A_Sample_HiC1-aka-CCHiC-HeLaS3CCL2p2-M-98.1000.cool
 
-From: Marinov, G. K., Trevino, A. E., Xiang, T., Kundaje, A., Grossman, A. R., & Greenleaf, W. J. (2021). Transcription-dependent domain-scale three-dimensional genome organization in the dinoflagellate Breviolum minutum. Nature Genetics, 53(5), 613-617.
+From: Marinov, G. K., Trevino, A. E., Xiang, T., Kundaje, A., Grossman, A. R., & Greenleaf, W. J. (2021). Transcription-dependent domain-scale three-dimensional genome organization in the dinoflagellate Breviolum minutum. Nature Genetics, 53(5), 613-617. \
 GSM4658994	Dinoflagellate Breviolum minutum
 
-From: Nand, A., Zhan, Y., Salazar, O. R., Aranda, M., Voolstra, C. R., & Dekker, J. (2021). Genetic and spatial organization of the unusual chromosomes of the dinoflagellate Symbiodinium microadriaticum. Nature Genetics, 53(5), 618-629.
+From: Nand, A., Zhan, Y., Salazar, O. R., Aranda, M., Voolstra, C. R., & Dekker, J. (2021). Genetic and spatial organization of the unusual chromosomes of the dinoflagellate Symbiodinium microadriaticum. Nature Genetics, 53(5), 618-629. \
 GSE152150	Dinoflagellate Symbiodinium microadriaticum coccoid Smic 1.1N
 
-
-
-
+# 
 https://www.science.org/doi/full/10.1126/science.aao6135
 GEO Accession #: GSE102740
 
+# 
 GSM2801019	mC_S_minutum_25C
 
 ### TO DO LIST:

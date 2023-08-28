@@ -15,7 +15,7 @@ pip install matplotlib
 
 ### Install MATLAB
 
-Other github repos used in this project:
+### Other github repos used in this project:
 
 https://github.com/lucasphilipp1/GEM
 Description: Predicts 3D conformation from HiC data. Method is based on manifold learning, which contrasts CSynth. The 3D conformation take days to compute using this method.

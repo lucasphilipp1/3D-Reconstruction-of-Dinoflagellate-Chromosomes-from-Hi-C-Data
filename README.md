@@ -142,36 +142,36 @@ Su, J. H., Zheng, P., Kinrot, S. S., Bintu, B., & Zhuang, X. (2020). Genome-scal
 From: Hoencamp, C., Dudchenko, O., Elbatsh, A. M., Brahmachari, S., Raaijmakers, J. A., van Schaik, T., ... & Rowland, B. D. (2021). 3D genomics across the tree of life reveals condensin II as a determinant of architecture type. Science, 372(6545), 984-989. \
 
 GSM5182714 Tammar wallaby blood (Sample1096) \
-GSM5182715	Domestic chicken splenic-derived lymphocytes (Sample4077) \
-GSM5182716	Burmese python blood (Sample0838) \
-GSM5182717	African clawed frog fibroblast (XTC) (Sample4078) \
-GSM5182718	Red-bellied piranha muscle (Sample2033) \
-GSM5182719	Brownbanded bamboo shark blood (Sample1575) \
-GSM5182720	Arctic lamprey muscle (Sample3820) \
-GSM5182721	Sea squirt tissue (Sample2441, Sample2444) \
-GSM5182722	Sea squirt tissue (Sample2441) \
-GSM5182723	European lancelet whole animal(s) (Sample1824) \
-GSM5182724	Purple sea urchin muscle (Sample2581) \
-GSM5182725	Yellow fever mosquito whole animal(s) (SAMN08028733, SAMN08028734, SAMN08028735) \
-GSM5182726	Yellow fever mosquito whole animal(s) (SAMN08028734) \
-GSM5182727	Southern house mosquito whole animal(s) (SAMN06546149) \
-GSM5182728	Fruit fly whole animal(s) (Sample4079) \
-GSM5182729	Tardigrade whole animal(s) (Sample3840) \
-GSM5182730	Roundworm whole animal(s) (Sample4082) \
-GSM5182731	Chinese liver fluke whole animal(s) (Sample2741) \
-GSM5182732	California sea hare mix of CNS cells (Sample1819) \
-GSM5182733	Moss animal whole animal(s) (Sample1845) \
-GSM5182734	Acropora millepora stony coral branch fragments (Sample1884, Sample1992) \
-GSM5182735	Sea gooseberry tissue (Sample1830) \
-GSM5182736	Common mushroom fruiting body (Sample3828) \
-GSM5182737	Baker's yeast cells (Sample4076) \
-GSM5182738	Peanut leaves (Sample2455) \
-GSM5182739	Bread wheat leaves (Sample4080, Sample4081) \
-GSM5182740	Chinese muntjac blood (Sample1296) \
-GSM5182741	Chinese muntjac fibroblasts (Sample2606) \
-GSM5182742	Indian muntjac (Sample2604, Sample3923) \
-GSM5182743	Indian muntjac fibroblasts (Sample3923) \
-GSM5182744	Fruit fly PnM cell line (SAMN10242997) \
+GSM5182715 Domestic chicken splenic-derived lymphocytes (Sample4077) \
+GSM5182716 Burmese python blood (Sample0838) \
+GSM5182717 African clawed frog fibroblast (XTC) (Sample4078) \
+GSM5182718 Red-bellied piranha muscle (Sample2033) \
+GSM5182719 Brownbanded bamboo shark blood (Sample1575) \
+GSM5182720 Arctic lamprey muscle (Sample3820) \
+GSM5182721 Sea squirt tissue (Sample2441, Sample2444) \
+GSM5182722 Sea squirt tissue (Sample2441) \
+GSM5182723 European lancelet whole animal(s) (Sample1824) \
+GSM5182724 Purple sea urchin muscle (Sample2581) \
+GSM5182725 Yellow fever mosquito whole animal(s) (SAMN08028733, SAMN08028734, SAMN08028735) \
+GSM5182726 Yellow fever mosquito whole animal(s) (SAMN08028734) \
+GSM5182727 Southern house mosquito whole animal(s) (SAMN06546149) \
+GSM5182728 Fruit fly whole animal(s) (Sample4079) \
+GSM5182729 Tardigrade whole animal(s) (Sample3840) \
+GSM5182730 Roundworm whole animal(s) (Sample4082) \
+GSM5182731 Chinese liver fluke whole animal(s) (Sample2741) \
+GSM5182732 California sea hare mix of CNS cells (Sample1819) \
+GSM5182733 Moss animal whole animal(s) (Sample1845) \
+GSM5182734 Acropora millepora stony coral branch fragments (Sample1884, Sample1992) \
+GSM5182735 Sea gooseberry tissue (Sample1830) \
+GSM5182736 Common mushroom fruiting body (Sample3828) \
+GSM5182737 Baker's yeast cells (Sample4076) \
+GSM5182738 Peanut leaves (Sample2455) \
+GSM5182739 Bread wheat leaves (Sample4080, Sample4081) \
+GSM5182740 Chinese muntjac blood (Sample1296) \
+GSM5182741 Chinese muntjac fibroblasts (Sample2606) \
+GSM5182742 Indian muntjac (Sample2604, Sample3923) \
+GSM5182743 Indian muntjac fibroblasts (Sample3923) \
+GSM5182744 Fruit fly PnM cell line (SAMN10242997) \
 
 https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE102740
 From Gibcus, J. H., Samejima, K., Goloborodko, A., Samejima, I., Naumova, N., Nuebler, J., ... & Dekker, J. (2018). A pathway for mitotic chromosome formation. Science, 359(6376), eaao6135.

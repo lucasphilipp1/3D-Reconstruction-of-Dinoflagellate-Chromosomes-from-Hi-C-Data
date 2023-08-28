@@ -1,10 +1,10 @@
-# Request access to dataset hosted by Zenodo.
+# Request Access to Data Hosted by Zenodo.
 Create a zenodo account: https://zenodo.org/ you can login using your github account.\
 Confirm your email attached to your zenodo account by clicking the link in the email sent to you by zenodo.\
 Go to: https://zenodo.org/record/8277338. \
 Request access to the data.\
 
-# Install the following python packages:
+# Install the Following Python Packages:
 ```
 pip install cooler
 pip install cooltools
@@ -29,7 +29,7 @@ https://docs.google.com/document/d/14jCeGCLy07exlhpo0kTJyaFfvMh-a48L/edit?usp=sh
 # Install MATLAB:
 Install statistics and machine learning toolbox
 
-# Other github repos used in this project:
+# Other Github Repos Used in this Project:
 
 ### https://github.com/lucasphilipp1/GEM
 Description: Predicts 3D conformation from HiC data. Method is based on manifold learning, which contrasts CSynth. The 3D conformation take days to compute using this method.
@@ -111,13 +111,13 @@ Description: Possibly useless. Was used to extract chromosome contacts from .hic
 Description: Use to visualize 3D output of https://github.com/lucasphilipp1/GEM.
 
 # Data Sources:
-### IMR90 cells HiC data:
+### IMR90 Cells HiC data:
 Rao, S. et al. A 3D map of the human genome at kilobase resolution reveals principles of chromatin looping. Cell 159, 1665–1680 (2014).
 
-### IMR90 cells old FISH dataset:
+### IMR90 Cells Old FISH dataset:
 Wang, S. et al. Spatial organization of chromatin domains and compartments in single chromosomes. Science 353, 598–602 (2016).
 
-### IMR90 cells new FISH dataset:
+### IMR90 Cells New FISH dataset:
 Su, J. H., et al. (2020). Genome-scale imaging of the 3D organization and transcriptional activity of chromatin. Cell, 182(6), 1641-1659.
 
 ### GEM:
@@ -127,7 +127,7 @@ Zhu, Guangxiang, Wenxuan Deng, Hailin Hu, Rui Ma, Sai Zhang, Jinglin Yang, Jian 
 Lieberman-Aiden E., et al. Comprehensive mapping of long-range interactions reveals folding principles of the human genome. Science 2009 Oct 9;326(5950):289-93. PMID: 19815776. See: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE18199.
 GEO Accession #: GSE18199
 
-### HiC data for many eukaryotes:
+### HiC Data for Many Eukaryotes:
 From: Hoencamp, C., Dudchenko, O., Elbatsh, A. M., Brahmachari, S., Raaijmakers, J. A., van Schaik, T., ... & Rowland, B. D. (2021). 3D genomics across the tree of life reveals condensin II as a determinant of architecture type. Science, 372(6545), 984-989. \
 
 GSM5182714 Tammar wallaby blood (Sample1096) \
@@ -160,7 +160,7 @@ GSM5182740 Chinese muntjac blood (Sample1296) \
 GSM5182741 Chinese muntjac fibroblasts (Sample2606) \
 GSM5182742 Indian muntjac (Sample2604, Sample3923) \
 GSM5182743 Indian muntjac fibroblasts (Sample3923) \
-GSM5182744 Fruit fly PnM cell line (SAMN10242997) \
+GSM5182744 Fruit fly PnM cell line (SAMN10242997)
 
 https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE102740
 From Gibcus, J. H., Samejima, K., Goloborodko, A., Samejima, I., Naumova, N., Nuebler, J., ... & Dekker, J. (2018). A pathway for mitotic chromosome formation. Science, 359(6376), eaao6135. \
@@ -175,12 +175,26 @@ GSM4658994	Dinoflagellate Breviolum minutum
 From: Nand, A., Zhan, Y., Salazar, O. R., Aranda, M., Voolstra, C. R., & Dekker, J. (2021). Genetic and spatial organization of the unusual chromosomes of the dinoflagellate Symbiodinium microadriaticum. Nature Genetics, 53(5), 618-629. \
 GSE152150	Dinoflagellate Symbiodinium microadriaticum coccoid Smic 1.1N
 
-### 
+### Human interphase and Mitotic HiC Datasets for Cell-Cell Heterogeneity Controls
 https://www.science.org/doi/full/10.1126/science.aao6135
 GEO Accession #: GSE102740
 
-### 
-GSM2801019	mC_S_minutum_25C
+Human prometaphase: \
+GSM2745897 GSM2745897_18FEB15_PE50_C66B1AC-A_Sample_HiC1-aka-CCHiC-HeLaS3CCL2p2-M-98.1000.cool
+
+Human not synchronized: \
+GSM2745898 GSM2745898_17MAY11_HSC02RPAB-PE50_CCHiC-HeLa-NS-R1_23-05-2011_kittlere.5.10000.cool
+
+Chicken prometaphse: \
+GSM2745843 GSM2745843_JHGHiC-DT40CDK1as-WT-87PMphase-30m-R1.10000.cool
+
+Chicken not synchronized: \
+GSM2745839 GSM2745839_JHGHiC-DT40CDK1as-WT-NS-R1.10000.cool
+
+### 5hmC and retrotransposon genomic tracks
+https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE104474 \
+GSM2801019	mC_S_minutum_25C \
+GSM2801017      mC_S_kawagutii_25C
 
 ### TO DO LIST:
 

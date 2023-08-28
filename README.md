@@ -236,6 +236,12 @@ Distance Matrix to Ensemble of Structures or DIMES (https://www.nature.com/artic
 
 
 structural heterogeneity can be quantified using the average spread in the separation distribution P({xi}), averaged across all pairs of monomers, or the Q value (a measure of commonality of contacts amongst an ensemble of structures as discussed here https://doi.org/10.1073/pnas.1506257112).
+
+<img width="476" alt="Screenshot 2023-08-14 at 1 18 48 PM" src="https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/7e3b06e5-3f12-404a-b674-ae5eb9a4d22f">
+
+<img width="898" alt="Screenshot 2023-08-28 at 4 07 29 PM" src="https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/fefb42dd-8f4a-4eba-9c61-25d2d8bcb10b">
+
+
 I propose using:
 human interphase HiC data as a - control, expecting high structural heterogeneity
 human mitotic HiC data as a + control, expecting low structural heterogeneity

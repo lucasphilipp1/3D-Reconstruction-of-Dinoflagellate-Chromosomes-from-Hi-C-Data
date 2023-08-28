@@ -206,6 +206,8 @@ Use fullfile for all data imports in MATLAB scripts: https://www.mathworks.com/h
 Cholestric_HiC code arrays need to be replaced with cell arrays (allow for variable loop size).
 Draw loop sizes from an exponential distribution with a mean loop size.
 
+<img width="526" alt="Screenshot 2023-08-09 at 10 48 19 AM" src="https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/b56932d5-6e92-4dc1-ab04-ffd5b5e3521b">
+
 What do the squares represent in the cholesteric HiC map?
 
 Code to incorporate loops properly into primary sequence should be written as a function
@@ -251,8 +253,12 @@ we could look for heterogeneity as a function of genomic separation using DIMES 
 
 <img width="476" alt="Screenshot 2023-08-14 at 1 18 48 PM" src="https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/7e3b06e5-3f12-404a-b674-ae5eb9a4d22f">
 
-keep in mind there are two optomization techniques
+keep in mind there are two optomization techniques \
 coarse grain structures if needed
+
+tips from DIMES authors:
+<img width="936" alt="Screenshot 2023-08-28 at 4 21 51 PM" src="https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/68e4b71f-13ea-4fdf-84dc-a982e76de0ce">
+
 
 ## Medium priority:
 
@@ -267,7 +273,7 @@ the DIMES paper also has a way of clustering conformations using t-sne. this met
 
 we can compare CSynth structures from different eukaryotic organisms (see: HiC Data for Many Eukaryotes). hopefully we see dinoflagellate chromosomes cluster together, but away from other eukaryotic chromosomes
 
-![41467_2023_36412_Fig6_HTML copy](https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/d17d6bba-d1d1-40b0-97d9-73fa917bb7a5)
+<img width="667" alt="Screenshot 2023-08-28 at 4 25 01 PM" src="https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/2df5f877-8e75-4ceb-8e6c-87c8f058100e">
 
 histogram of P(s) exponents:
 

@@ -115,30 +115,20 @@ Description: Use to visualize 3D output of https://github.com/lucasphilipp1/GEM.
 IMR90 cells HiC data:
 Rao, S. et al. A 3D map of the human genome at kilobase resolution reveals principles of chromatin looping. Cell 159, 1665–1680 (2014).
 
-IMR90 cells FISH data:
+IMR90 cells old FISH dataset:
 Wang, S. et al. Spatial organization of chromatin domains and compartments in single chromosomes. Science 353, 598–602 (2016).
+
+IMR90 cells new FISH dataset:
+Su, J. H., et al. (2020). Genome-scale imaging of the 3D organization and transcriptional activity of chromatin. Cell, 182(6), 1641-1659.
 
 GEM:
 Zhu, Guangxiang, Wenxuan Deng, Hailin Hu, Rui Ma, Sai Zhang, Jinglin Yang, Jian Peng, Tommy Kaplan, and Jianyang Zeng. "Reconstructing spatial organizations of chromosomes through manifold learning." Nucleic acids research 46, no. 8 (2018): e50-e50.
 
 Fractal Globule & Equilibrium Globule Structures:
-Lieberman-Aiden E*, van Berkum NL*, Williams L, Imakaev M et al. Comprehensive mapping of long-range interactions reveals folding principles of the human genome. Science 2009 Oct 9;326(5950):289-93. PMID: 19815776. See: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE18199.
-
-https://www.science.org/doi/full/10.1126/science.aao6135
-GEO Accession #: GSE102740
-
-https://www.science.org/doi/10.1126/science.1181369
+Lieberman-Aiden E., et al. Comprehensive mapping of long-range interactions reveals folding principles of the human genome. Science 2009 Oct 9;326(5950):289-93. PMID: 19815776. See: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE18199.
 GEO Accession #: GSE18199
 
-HiC data:
-Rao, S. et al. A 3D map of the human genome at kilobase resolution reveals principles of chromatin looping. Cell 159, 1665–1680 (2014).
-
-FISH data:
-Wang, S. et al. Spatial organization of chromatin domains and compartments in single chromosomes. Science 353, 598–602 (2016).
-
-Su, J. H., Zheng, P., Kinrot, S. S., Bintu, B., & Zhuang, X. (2020). Genome-scale imaging of the 3D organization and transcriptional activity of chromatin. Cell, 182(6), 1641-1659.
-
-
+HiC data for many eukaryotes:
 From: Hoencamp, C., Dudchenko, O., Elbatsh, A. M., Brahmachari, S., Raaijmakers, J. A., van Schaik, T., ... & Rowland, B. D. (2021). 3D genomics across the tree of life reveals condensin II as a determinant of architecture type. Science, 372(6545), 984-989. \
 
 GSM5182714 Tammar wallaby blood (Sample1096) \
@@ -185,6 +175,12 @@ GSM4658994	Dinoflagellate Breviolum minutum
 
 From: Nand, A., Zhan, Y., Salazar, O. R., Aranda, M., Voolstra, C. R., & Dekker, J. (2021). Genetic and spatial organization of the unusual chromosomes of the dinoflagellate Symbiodinium microadriaticum. Nature Genetics, 53(5), 618-629.
 GSE152150	Dinoflagellate Symbiodinium microadriaticum coccoid Smic 1.1N
+
+
+
+
+https://www.science.org/doi/full/10.1126/science.aao6135
+GEO Accession #: GSE102740
 
 GSM2801019	mC_S_minutum_25C
 

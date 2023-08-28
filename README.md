@@ -140,7 +140,7 @@ Su, J. H., Zheng, P., Kinrot, S. S., Bintu, B., & Zhuang, X. (2020). Genome-scal
 
 
 From: Hoencamp, C., Dudchenko, O., Elbatsh, A. M., Brahmachari, S., Raaijmakers, J. A., van Schaik, T., ... & Rowland, B. D. (2021). 3D genomics across the tree of life reveals condensin II as a determinant of architecture type. Science, 372(6545), 984-989.
-GSM5182714	Tammar wallaby blood (Sample1096)
+GSM5182714&emsp; Tammar wallaby blood (Sample1096)//
 GSM5182715	Domestic chicken splenic-derived lymphocytes (Sample4077)
 GSM5182716	Burmese python blood (Sample0838)
 GSM5182717	African clawed frog fibroblast (XTC) (Sample4078)

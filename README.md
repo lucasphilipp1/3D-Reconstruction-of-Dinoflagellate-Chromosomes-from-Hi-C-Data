@@ -269,9 +269,24 @@ the DIMES paper also has a way of clustering conformations using t-sne. this met
 t-sne DIMES paper Dnm equation
 <img width="915" alt="Screenshot 2023-08-28 at 4 11 32 PM" src="https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/33a04980-623a-4733-a2cf-dacd431b7738">
 
-![41467_2023_36412_Fig6_HTML](https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/536bcc1d-c1f3-49c4-8c89-f00084ae6f2b)
+![41467_2023_36412_Fig6_HTML copy](https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/d17d6bba-d1d1-40b0-97d9-73fa917bb7a5)
 
 histogram of P(s) exponents
+
+symbiodinium microadriaticum P(s) curve looks most similar to human mitotic chromosome P(s)
+
+calculate P(s) curves from the following data:
+Human prometaphase: \
+GSM2745897 GSM2745897_18FEB15_PE50_C66B1AC-A_Sample_HiC1-aka-CCHiC-HeLaS3CCL2p2-M-98.1000.cool
+
+Human not synchronized: \
+GSM2745898 GSM2745898_17MAY11_HSC02RPAB-PE50_CCHiC-HeLa-NS-R1_23-05-2011_kittlere.5.10000.cool
+
+Chicken prometaphse: \
+GSM2745843 GSM2745843_JHGHiC-DT40CDK1as-WT-87PMphase-30m-R1.10000.cool
+
+Chicken not synchronized: \
+GSM2745839 GSM2745839_JHGHiC-DT40CDK1as-WT-NS-R1.10000.cool
 
 ## Low priority:
  

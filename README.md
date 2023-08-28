@@ -241,17 +241,13 @@ structural heterogeneity can be quantified using the average spread in the separ
 
 <img width="898" alt="Screenshot 2023-08-28 at 4 07 29 PM" src="https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/fefb42dd-8f4a-4eba-9c61-25d2d8bcb10b">
 
-![41467_2023_36412_Fig6_HTML](https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/536bcc1d-c1f3-49c4-8c89-f00084ae6f2b)
-
-<img width="915" alt="Screenshot 2023-08-28 at 4 11 32 PM" src="https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/33a04980-623a-4733-a2cf-dacd431b7738">
-
 I propose using:
-human interphase HiC data as a - control, expecting high structural heterogeneity
-human mitotic HiC data as a + control, expecting low structural heterogeneity
-dinoflagellate chromosomes will be the experimental group, hopefully showing low structural heterogeneity given that we hypothesize permanently condensed chromosomes
-if we can quantify the structural heterogeneity in dinoflagellates, and if it is low, we can:
+- human interphase HiC data as a - control, expecting high structural heterogeneity
+- human mitotic HiC data as a + control, expecting low structural heterogeneity
+- dinoflagellate chromosomes will be the experimental group, hopefully showing low structural heterogeneity given that we hypothesize permanently condensed chromosomes
+- if we can quantify the structural heterogeneity in dinoflagellates, and if it is low, we can:
 support using CSynth as a “consensus” method, given the demonstrated low cell to cell variation (maybe there is only one structure to predict!)
-provide evidence for permanent condensation in dinoflagellate chromosomes
+- provide evidence for permanent condensation in dinoflagellate chromosomes
 
 Wolynes and Zhang found low structural heterogeneity at small genomic scales, but high structural heterogeneity at large genomic scales in humans
 we could look for heterogeneity as a function of genomic separation using DIMES in dinoflagellates, expecting long range consensus to persist in the case of liquid crystal chromosomes
@@ -268,8 +264,12 @@ Why is the relative error high near the main diagonal?
 
 ### assess uniqueness of dinoflagellate chromosome structure compared to other eukaryotes
 
-t-sne DIMES paper Dnm equation
 the DIMES paper also has a way of clustering conformations using t-sne. this method doesn’t require the length of the polymer to be the same, so we can compare structures from different organisms computed using CSynth. hopefully we see dinoflagellate chromosomes cluster together, but away from other eukaryotic chromosomes
+
+t-sne DIMES paper Dnm equation
+<img width="915" alt="Screenshot 2023-08-28 at 4 11 32 PM" src="https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/33a04980-623a-4733-a2cf-dacd431b7738">
+
+![41467_2023_36412_Fig6_HTML](https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/536bcc1d-c1f3-49c4-8c89-f00084ae6f2b)
 
 histogram of P(s) exponents
 

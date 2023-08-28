@@ -78,7 +78,10 @@ GC_content.m
 Description: Possibly useless. GC content uncertainty based on Ns or ambiguous bases is not calculated. Ns are prevalent in dinoflagellate HiC assemblies. Consider using: https://rdrr.io/cran/seqinr/man/GC.html instead. A better indicator of gene density would be to align RNA-seq reads to the assembly directly.  
 
 Cholesteric_HiC.m
-Description: 
+Description: Generate cholesteric polymer model with extra chromosomal loops. Vary loop length, number of discs, cholesteric pitch, and other model parameters. Compute cholesteric HiC matrix.
+
+Cholesteric_HiC_test.m
+Description: A copy of Cholesteric_HiC.m used to test implementation of intra-disc extra chromosomal loops, and variable loop lengths accomodated using cell arrays.
 
 constrained_RW_1D.m
 Description: Function used to generate extrachromosomal loops. Random walks are generated separately for each of the spatial three dimensions.
@@ -89,18 +92,15 @@ Description: Function used to generate extrachromosomal loops. Combines random w
 contact_probability_xyz.m
 Description: Function used to compute contact probability "P(s)" curves from a 3D structure. Calculation is different from computing contact probability curve from HiC matrix.
 
-Cholesteric_HiC_test.m
-Description:
-
 Orientation_Order_Parameter.py
 Description: 
-Compute 
+Used to compute the correlation between two tangent vectors to the 3D chromosome structure separated by a certain primary sequence length, averaged over the entire chromosome.
 
 plot_P(s)_tree_of_life.py
-Description:
+Description: Used to compute the contact probability "P(s)" curves for many eukaryotic organisms across the tree of life.
 
 plot_P(s)_dinoflagellate.py
-Description: Orders chromosomes   chrom_length_order.py 
+Description: Used to compute the contact probability "P(s)" curves for dinoflagellate HiC data testing affect of chromosome ordering (chrom_length_order.py) and differences in aseembly (Smic1.0 vs Smic1.1N).
 
 space_delimited_to_tab_delimited.m
 Description: Possibly useless. Fixed an issue where .txt files written from cooler dump command were not properly delimited using tabs, as required by CSynth. An error in the bash command was fixed.

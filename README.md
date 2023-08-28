@@ -234,10 +234,7 @@ HiC Data from Fugacium kawagutii? (Lucas)
 ### assess cell-to-cell chromosome conformational heterogeneity in dinoflagellates
 Distance Matrix to Ensemble of Structures or DIMES (https://www.nature.com/articles/s41467-023-36412-4) which uses information theory to calculate the minimally biased/maximum entropy joint distribution of positions of loci, P({xi}), whose average distance is equal to that given by the HiC data.
 
-
 structural heterogeneity can be quantified using the average spread in the separation distribution P({xi}), averaged across all pairs of monomers, or the Q value (a measure of commonality of contacts amongst an ensemble of structures as discussed here https://doi.org/10.1073/pnas.1506257112).
-
-<img width="476" alt="Screenshot 2023-08-14 at 1 18 48 PM" src="https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/7e3b06e5-3f12-404a-b674-ae5eb9a4d22f">
 
 <img width="898" alt="Screenshot 2023-08-28 at 4 07 29 PM" src="https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/fefb42dd-8f4a-4eba-9c61-25d2d8bcb10b">
 
@@ -252,6 +249,8 @@ support using CSynth as a “consensus” method, given the demonstrated low cel
 Wolynes and Zhang found low structural heterogeneity at small genomic scales, but high structural heterogeneity at large genomic scales in humans
 we could look for heterogeneity as a function of genomic separation using DIMES in dinoflagellates, expecting long range consensus to persist in the case of liquid crystal chromosomes
 
+<img width="476" alt="Screenshot 2023-08-14 at 1 18 48 PM" src="https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/7e3b06e5-3f12-404a-b674-ae5eb9a4d22f">
+
 keep in mind there are two optomization techniques
 coarse grain structures if needed
 
@@ -264,16 +263,15 @@ Why is the relative error high near the main diagonal?
 
 ### assess uniqueness of dinoflagellate chromosome structure compared to other eukaryotes
 
-the DIMES paper also has a way of clustering conformations using t-sne. this method doesn’t require the length of the polymer to be the same, so we can compare structures from different organisms computed using CSynth. hopefully we see dinoflagellate chromosomes cluster together, but away from other eukaryotic chromosomes
+the DIMES paper also has a way of clustering conformations using t-sne. this method doesn’t require the length of the polymer to be the same. Use this equation: <img width="915" alt="Screenshot 2023-08-28 at 4 11 32 PM" src="https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/33a04980-623a-4733-a2cf-dacd431b7738">
 
-t-sne DIMES paper Dnm equation
-<img width="915" alt="Screenshot 2023-08-28 at 4 11 32 PM" src="https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/33a04980-623a-4733-a2cf-dacd431b7738">
+we can compare CSynth structures from different eukaryotic organisms (see: HiC Data for Many Eukaryotes). hopefully we see dinoflagellate chromosomes cluster together, but away from other eukaryotic chromosomes
 
 ![41467_2023_36412_Fig6_HTML copy](https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/d17d6bba-d1d1-40b0-97d9-73fa917bb7a5)
 
-histogram of P(s) exponents
+histogram of P(s) exponents:
 
-symbiodinium microadriaticum P(s) curve looks most similar to human mitotic chromosome P(s)
+symbiodinium microadriaticum P(s) curve looks most similar to human mitotic chromosome P(s).
 
 calculate P(s) curves from the following data:
 Human prometaphase: \

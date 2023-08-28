@@ -26,7 +26,6 @@ https://docs.google.com/document/d/1HOtIcwAnNB_7rkMwDU-D4F7sM6BE9LPNg3ZfE19NNNA/
 Paper Outline:
 https://docs.google.com/document/d/14jCeGCLy07exlhpo0kTJyaFfvMh-a48L/edit?usp=sharing&ouid=118151059404127538464&rtpof=true&sd=true
 
-
 ### Install MATLAB:
 Install statistics and machine learning toolbox
 
@@ -76,25 +75,26 @@ fractal_equilbrium_load.m
 Description: Used to compute contact probability "P(s)" curves from fractal and equilibrium globule conformations as a positive control for the calculation.
 
 GC_content.m
-Description: Possibly useless, does not 
+Description: Possibly useless. GC content uncertainty based on Ns or ambiguous bases is not calculated. Ns are prevalent in dinoflagellate HiC assemblies. Consider using: https://rdrr.io/cran/seqinr/man/GC.html instead. A better indicator of gene density would be to align RNA-seq reads to the assembly directly.  
 
 Cholesteric_HiC.m
-Description:
+Description: 
 
 constrained_RW_1D.m
-Description:
+Description: Function used to generate extrachromosomal loops. Random walks are generated separately for each of the spatial three dimensions.
 
 constrained_self_avoiding_RW_3D.m
-Description:
+Description: Function used to generate extrachromosomal loops. Combines random walks in each dimension to compute a 3D random walk. 
 
 contact_probability_xyz.m
-Description:
+Description: Function used to compute contact probability "P(s)" curves from a 3D structure. Calculation is different from computing contact probability curve from HiC matrix.
 
 Cholesteric_HiC_test.m
 Description:
 
 Orientation_Order_Parameter.py
-Description:
+Description: 
+Compute 
 
 plot_P(s)_tree_of_life.py
 Description:

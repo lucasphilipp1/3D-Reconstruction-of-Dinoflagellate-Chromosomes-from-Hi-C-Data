@@ -13,6 +13,18 @@ pip install pandas
 pip install matplotlib
 ```
 
+### Important Google Drive Documents:
+
+Miscellanious commands:
+https://docs.google.com/document/d/1YIPwidYIA1nwAA2GbczWpTUEh0doGIe9/edit?usp=sharing&ouid=118151059404127538464&rtpof=true&sd=true
+
+Reading list:
+https://docs.google.com/document/d/1HOtIcwAnNB_7rkMwDU-D4F7sM6BE9LPNg3ZfE19NNNA/edit?usp=sharing
+
+Paper Outline:
+https://docs.google.com/document/d/14jCeGCLy07exlhpo0kTJyaFfvMh-a48L/edit?usp=sharing&ouid=118151059404127538464&rtpof=true&sd=true
+
+
 ### Install MATLAB:
 Install statistics and machine learning toolbox
 
@@ -33,7 +45,9 @@ Duclos, G., Adkins, R., Banerjee, D., Peterson, M. S., Varghese, M., Kolvin, I.,
 ### Descriptions of code:
 
 automatic_CSynth.js
-Description: Use to compute 3D conformations of multiple chromosomes, in succession, using CSynth. Drag and drop onto CSynth tab in browser: https://csynth.github.io/csynth/csynth.html 
+Description: Use to compute 3D conformations of multiple chromosomes, in succession, using CSynth. 
+See 
+To use, drag and drop onto CSynth tab in browser: https://csynth.github.io/csynth/csynth.html 
 
 chrom_length_order.py
 Description: Find the largest scaffolds or "chromosomes" from dinoflagellate HiC data. Suprisingly, scaffolds are not ordered perfectly by size. 
@@ -118,8 +132,6 @@ Orientation order parameter
 
 Chiral Order Parameter
 <img width="861" alt="image" src="https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/b35ade71-1599-4082-83b0-e19b5b968f32">
-
-
 
 ## High priority:
 fullfile all Data imports in all MATLAB scripts: https://www.mathworks.com/help/matlab/ref/fullfile.html 

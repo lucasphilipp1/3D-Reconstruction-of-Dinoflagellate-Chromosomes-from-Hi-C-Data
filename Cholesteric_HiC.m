@@ -9,8 +9,8 @@ clear
 %%%% # OF MONOMERS TAKES ACCOUNTS FOR EXTRACHROMOSOMAL LOOPLENGTH
 
 model=[]; %position of DNA fibres
-chol_layers = 50;
-num_mon = 100; %target for number of monomers in the thicket layer
+chol_layers = 100;
+num_mon = 150; %target for number of monomers in the thicket layer
 
 %ellipse parameters for overall chromosome profile
 min_axis_chr=0.5; %in microns
@@ -379,8 +379,8 @@ end
 %%%
 
 %euclidian distance between monomers
-D = pdist(model); %in microns
-%D = pdist(new_model); %in microns
+%D = pdist(model); %in microns
+D = pdist(new_model); %in microns
 
 D = squareform(D);
 
@@ -393,7 +393,7 @@ P(P>1) = 1; %no contact probabilities above 1
 
 %output for GEM
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-writematrix(round(P,3,"significant"),'cholesteric_GEM_HiC.txt','Delimiter','tab')
+%writematrix(round(P,3,"significant"),'cholesteric_GEM_HiC.txt','Delimiter','tab')
 
 P_loci = zeros(size(P,1),1);
 count = 0;
@@ -421,8 +421,8 @@ for i=1:1:size(P,1)
     end
 end
 
-%PCSynth = round(PCSynth,3,"significant");
-%writematrix(PCSynth,'cholesteric_CSynth.txt','Delimiter','tab')
+PCSynth = round(PCSynth,3,"significant");
+writematrix(PCSynth,'cholesteric_CSynth_large.txt','Delimiter','tab')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

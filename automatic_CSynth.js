@@ -11,20 +11,25 @@ async function process(file, threshold = 0.1) {
     await openfiles([await file.getFile()]);        // this will behave the same as dropping the single file
     await S.waitVal(() => CSynth.current.ready);    // wait till really started
 
-
-    GX.getgui('ribbon/diameter').setValue(20);
+    GX.getgui('ribbon/diameter').setValue(10);
     GX.getgui(/beddatasource/).setValue('rainbow');
-    G.stepsPerStep=50       // 50 simulation steps per graphics display, less wasted graphics effort, more GPU for simulation
+    G.stepsPerStep = 50       // 50 simulation steps per graphics display, less wasted graphics effort, more GPU for simulation
     G.springrate = 10       // bigger simulation steps for faster convergence
-    await sleep(3000)
     G.springrate = 1        // standard simulation steps for better stability
-
-    
+    G.springpow = 0
+    G.contactforce = 60
+    G.pushapartpow = -3
+    await sleep(120000) // divide by 1000 for wait time in seconds
     
     CSynth.showEigen(true);
     await S.frame()         // sleep till next frame (so eigen will have effect)
+    CSynth.autoscale(0.1)
+    await S.frame()        // sleep till next frame (so autoscale will have effect)
+    G.scaleFactor = GX.getgui('modes/scaleFactor').getValue()*0.8;
+    await S.frame()        // sleep till next frame (so zoom in/out will have effect)
+
     log('csyscript: realwork done, saving', file.name)
-    CSynth.savepdb(file.name + '.pdb')
+    CSynth.savexyz(file.name + '_3D.xyz')
     const sgui = V.gui.visible
     V.gui.visible = false;
     await saveimage(3000,2000, false, false, file.name + '.tga')
@@ -47,14 +52,17 @@ async function test() {
     log('csyscript: all files done');
 }
 
-
-/** looping test file for debug, generally use test() directly */
-async function tests(n = 10) {
-    for (let i = 0; i < n; i++) {
-        await test();
-        Files.write('progress' + i, 'done')
-    }
-}
-
-
 test()
+
+// convergence loop
+    // let last = springs.getpos();
+    // let loop;
+    // for (loop = 0; loop < 100; loop++) {     // loop till near enough
+    //     await sleep(1000)
+    //     const now = springs.getpos();
+    //     const diff = CSynth.rmsev(last, now) ;
+    //     log ('loop', loop, 'diff', diff);
+    //     if (diff < threshold) break;
+    //     last = now;
+    // }
+    // log('converged after loops', loop)

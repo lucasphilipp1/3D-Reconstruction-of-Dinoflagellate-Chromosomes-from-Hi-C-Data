@@ -278,6 +278,7 @@ we can compare CSynth structures from different eukaryotic organisms (see: HiC D
 histogram of P(s) exponents:
 
 symbiodinium microadriaticum P(s) curve looks most similar to human mitotic chromosome P(s).
+steep drop off in contact probability indeed corresponds to cylindrical chromosome shape. b minutum is spherically packed and does not have this drop off.
 
 calculate P(s) curves from the following data:
 Human prometaphase: \

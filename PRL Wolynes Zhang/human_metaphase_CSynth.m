@@ -16,10 +16,11 @@ for i=1:1:size(matrix.cp,1)
         count = count + 1;
         PCSynth(count,1)=i*10000;
         PCSynth(count,2)=j*10000;
-        PCSynth(count,3)=round(matrix.cp(i,j),3,"significant");
+        PCSynth(count,3)=matrix.cp(i,j);
     end
 end
 
+PCSynth(:,3) = round(PCSynth(:,3),3,"significant");
 PCSynth(PCSynth < 0) = 0;
 writematrix(PCSynth,'Naumova_2013_human_metaphase_CSynth.txt','Delimiter','tab')
 

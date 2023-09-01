@@ -19,7 +19,7 @@ async function process(file, threshold = 0.1) {
     G.springpow = 0
     G.contactforce = 60
     G.pushapartpow = -3
-    await sleep(120000) // divide by 1000 for wait time in seconds
+    await sleep(300000) // divide by 1000 for wait time in seconds
     
     CSynth.showEigen(true);
     await S.frame()         // sleep till next frame (so eigen will have effect)

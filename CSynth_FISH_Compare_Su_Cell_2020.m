@@ -1,24 +1,23 @@
-%Author: Lucas Philipp
+% %Author: Lucas Philipp
 % clc
 % clear
-%
+% 
 % chr21_Su_HiC = readtable('Hi-C_contacts_chromosome21.csv');
 % chr21_Su_HiC=table2array(chr21_Su_HiC);
 % %output for CSynth
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% PCSynth = zeros(nat_sum(size(chr21_Su_HiC,1)),3);
+% PCSynth = zeros(nat_sum(size(chr21_Su_HiC,1)-1),3);
 % count = 0;
 % for i=2:1:size(chr21_Su_HiC,1)
-%     for j=2:1:size(chr21_Su_HiC,1)
+%     for j=i:1:size(chr21_Su_HiC,1)
 %         count = count + 1;
 %         PCSynth(count,1)=chr21_Su_HiC(1,j);
 %         PCSynth(count,2)=chr21_Su_HiC(i,1);
-%         PCSynth(count,3)=round(chr21_Su_HiC(i,j),3,"significant")
+%         PCSynth(count,3)=chr21_Su_HiC(i,j);
 %     end
 % end
-%
+% 
 % writematrix(PCSynth,'Su_Cell_2020_chr21_CSynth_input.txt','Delimiter','tab')
-
 
 %Comparison of CSynth Structures to FISH data for CSynth parameter optomization
 %Using 651 FISH probe dataset: https://doi.org/10.1016/j.cell.2020.07.032
@@ -339,38 +338,38 @@ ylim([min(temp_y(:)) max(temp_y(:))])
 zlim([min(temp_z(:)) max(temp_z(:))])
 view(-30,15)
 
-param_pearson=zeros(30,4);
+param_pearson=zeros(size(CSynth_structures,2),4);
 param_pearson(:,1) = pearson;
 param_pearson(:,2) = [0 0 0 0 0 -1 -1 -1 -1 -1 -2 -2 -2 -2 -2 0 0 0 0 0 -1 -1 -1 -1 -1 -2 -2 -2 -2 -2 0 0 0 0 0 -1 -1 -1 -1 -1 -2 -2 -2 -2 -2 0 0 0 0 0 -1 -1 -1 -1 -1 -2 -2 -2 -2 -2]; %SP, spring power
 param_pearson(:,3) = [20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100]; %CF, contact force
 param_pearson(:,4) = [-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4]; %PP, pushapart power
-param_avg_RE=zeros(30,4);
+param_avg_RE=zeros(size(CSynth_structures,2),4);
 param_avg_RE(:,1) = avg_RE;
 param_avg_RE(:,2) = [0 0 0 0 0 -1 -1 -1 -1 -1 -2 -2 -2 -2 -2 0 0 0 0 0 -1 -1 -1 -1 -1 -2 -2 -2 -2 -2 0 0 0 0 0 -1 -1 -1 -1 -1 -2 -2 -2 -2 -2 0 0 0 0 0 -1 -1 -1 -1 -1 -2 -2 -2 -2 -2]; %SP, spring power
 param_avg_RE(:,3) = [20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100]; %CF, contact force
 param_avg_RE(:,4) = [-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4]; %PP, pushapart power
 
-% figure
-% scatter3(param_pearson(:,2),param_pearson(:,3),param_pearson(:,4),500,param_pearson(:,1),'filled')
-% ax = gca;
-% view(-30,15)
-% xlabel('SP, spring power', 'fontsize', 18)
-% ylabel('CF, contact force', 'fontsize', 18)
-% zlabel('PP, pushapart power', 'fontsize', 18)
-% cb = colorbar;
-% cb.Label.String = 'pearson correlation between FISH & CSynth distance matrices';
-% cb.FontSize = 14;
-% 
-% figure
-% scatter3(param_avg_RE(:,2),param_avg_RE(:,3),param_avg_RE(:,4),500,param_avg_RE(:,1),'filled')
-% ax = gca;
-% view(-30,15)
-% xlabel('SP, spring power','fontsize', 18)
-% ylabel('CF, contact force', 'fontsize', 18)
-% zlabel('PP, pushapart power', 'fontsize', 18)
-% cb = colorbar;
-% cb.Label.String = 'average relative error between FISH & CSynth distances';
-% cb.FontSize = 14;
+figure
+scatter3(param_pearson(:,2),param_pearson(:,3),param_pearson(:,4),500,param_pearson(:,1),'filled')
+ax = gca;
+view(-30,15)
+xlabel('SP, spring power', 'fontsize', 18)
+ylabel('CF, contact force', 'fontsize', 18)
+zlabel('PP, pushapart power', 'fontsize', 18)
+cb = colorbar;
+cb.Label.String = 'pearson correlation between FISH & CSynth distance matrices';
+cb.FontSize = 14;
+
+figure
+scatter3(param_avg_RE(:,2),param_avg_RE(:,3),param_avg_RE(:,4),500,param_avg_RE(:,1),'filled')
+ax = gca;
+view(-30,15)
+xlabel('SP, spring power','fontsize', 18)
+ylabel('CF, contact force', 'fontsize', 18)
+zlabel('PP, pushapart power', 'fontsize', 18)
+cb = colorbar;
+cb.Label.String = 'average relative error between FISH & CSynth distances';
+cb.FontSize = 14;
 
 function sum = nat_sum(x)
 sum=0;

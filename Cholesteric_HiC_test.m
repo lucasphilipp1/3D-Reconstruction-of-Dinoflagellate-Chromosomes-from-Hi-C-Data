@@ -536,7 +536,7 @@ D = pdist(new_new_model); %in microns
 D = squareform(D);
 
 %HiC contact probablities from distance
-P = spacing./D;
+P = 1./D.^4;
 P(isinf(P)) = 1; %self contact probabilities are 1
 
 %are these coming from disc/loop connections?
@@ -569,6 +569,8 @@ for i=1:1:size(P,1)
         PCSynth(count,3)=P(i,j);
     end
 end
+
+PCSynth(:,3) = round(PCSynth(:,3),3,"significant");
 
 %writematrix(PCSynth,'cholesteric_CSynth.txt','Delimiter','tab')
 

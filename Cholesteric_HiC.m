@@ -9,8 +9,8 @@ clear
 %%%% # OF MONOMERS TAKES ACCOUNTS FOR EXTRACHROMOSOMAL LOOPLENGTH
 
 model=[]; %position of DNA fibres
-chol_layers = 100;
-num_mon = 150; %target for number of monomers in the thicket layer
+chol_layers = 50;
+num_mon = 100; %target for number of monomers in the thicket layer
 
 %ellipse parameters for overall chromosome profile
 min_axis_chr=0.5; %in microns
@@ -385,7 +385,8 @@ D = pdist(new_model); %in microns
 D = squareform(D);
 
 %HiC contact probablities from distance
-P = spacing./D;
+%P = spacing./D;
+P = 1./D.^4;
 P(isinf(P)) = 1; %self contact probabilities are 1
 
 %are these coming from disc/loop connections?
@@ -417,12 +418,12 @@ for i=1:1:size(P,1)
         PCSynth(count,2)=j;
         %PCSynth(count,1)=i*5000;
         %PCSynth(count,2)=j*5000;
-        PCSynth(count,3)=round(P(i,j),3,"significant");
+        PCSynth(count,3)=P(i,j);
     end
 end
 
-PCSynth = round(PCSynth,3,"significant");
-writematrix(PCSynth,'cholesteric_CSynth_large.txt','Delimiter','tab')
+PCSynth(:,3) = round(PCSynth(:,3),3,"significant");
+writematrix(PCSynth,'cholesteric_CSynth_D4.txt','Delimiter','tab')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

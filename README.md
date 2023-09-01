@@ -203,32 +203,7 @@ GSM2801017      mC_S_kawagutii_25C
 Use fullfile for all data imports in MATLAB scripts: https://www.mathworks.com/help/matlab/ref/fullfile.html 
 
 ### specifically test aspects of the cholesteric liquid crystal model for consistency with dinoflagellate chromatin conformation capture (HiC) data
-BUG in Cholestric_HiC:
-
-when the number of cholesteric layers gets large, and when the number of monomers per disc gets large: e.g. chol_layers = 100;
-num_mon = 150;
-
-There is something wrong (or at least unexpected) with the file.
-There are many cases of repeated readings for the same pair of base pairs.
-First oddity seems to start around line 1000; short extract below.
-As the numbers get bigger the density of repeated pairs seems to increase;
-a huge number of contacts of 13300 to itself.
-Probably a simple slip in your code to convert to this more compact id format? 
-
-section of ??? data (I used EditPad Lite as one of the few editors that seem able to cope).
-1 996 0.112
-1 997 0.113
-1 998 0.114
-1 999 0.113
-1 1000 0.11
-1 1000 0.107
-1 1000 0.102
-1 1000 0.0977
-1 1000 0.0927
-1 1010 0.0878
-1 1010 0.083
-![image](https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/eb2bcc27-4bbe-49e3-9032-68074e5e0d2d)
-
+USE COOLTOOLS TO CALCULATE cholesteric P(s) curves, instead of contact_probability_xyz.m
 
 Cholestric_HiC code arrays need to be replaced with cell arrays (allow for variable loop size).
 Draw loop sizes from an exponential distribution with a mean loop size.

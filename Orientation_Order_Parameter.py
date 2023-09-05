@@ -111,54 +111,56 @@ def tolerant_mean(arrs):
 Oijx_list=[]
 Oijy_list=[]
 
-for i in range(1, 101):
-#for i in range(1, 2):
-    df = np.loadtxt('/Users/lucasphilipp/Desktop/Research/GitHub/Dinoflagellate_Cholesteric_Large_Files_3D_structures/CSynth 3D bminutum/structures/bminutum_pseudochromosome_'+str(i)+'_3D.xyz')
-    structure = df[:,1:] #remove first column
-    Oijx, Oijy = compute_Orientation_OP(xyz=structure, chrom_start=0, chrom_end=df.shape[0], vec_length=6)
+# #for i in range(1, 101):
+# for i in range(1, 2):
+#     df = np.loadtxt('/Users/lucasphilipp/Downloads/bminutum_pseudochromosome_'+str(i)+'_CF_60_SP_0_PP-4_3D.xyz')
+#     #df = np.loadtxt('/Users/lucasphilipp/Desktop/Research/GitHub/Dinoflagellate_Cholesteric_Large_Files_3D_structures/CSynth 3D bminutum/structures/bminutum_pseudochromosome_'+str(i)+'_3D.xyz')
+#     structure = df[:,1:] #remove first column
+#     Oijx, Oijy = compute_Orientation_OP(xyz=structure, chrom_start=0, chrom_end=df.shape[0], vec_length=4)
     
-    Oijx_list.append(Oijx)
-    Oijy_list.append(Oijy)
-    print(i)
+#     Oijx_list.append(Oijx)
+#     Oijy_list.append(Oijy)
+#     print(i)
 
-curr_max = np.zeros(1)
-#get longest Oijx
-for o in Oijx_list:
-    if o.shape[0]>curr_max.shape[0]:
-        curr_max=o
+# curr_max = np.zeros(1)
+# #get longest Oijx
+# for o in Oijx_list:
+#     if o.shape[0]>curr_max.shape[0]:
+#         curr_max=o
 
-#average Oijy at each frequency
-Oijy_avg, error = tolerant_mean(Oijy_list)
+# #average Oijy at each frequency
+# Oijy_avg, error = tolerant_mean(Oijy_list)
 
-Oijx_avg=np.arange(0,curr_max.shape[0])
-Oijx_avg=Oijx_avg*5000
+# Oijx_avg=np.arange(0,curr_max.shape[0])
+# Oijx_avg=Oijx_avg*5000
 
-Oijy_avg=np.delete(Oijy_avg,range(-round((max(Oijx_avg)-5*10**6)/5000),0)) #ignore high-frequency data at large separation
-Oijx_avg=np.delete(Oijx_avg,range(-round((max(Oijx_avg)-5*10**6)/5000),0)) #ignore high-frequency data at large separation
+# Oijy_avg=np.delete(Oijy_avg,range(-round((max(Oijx_avg)-5*10**6)/5000),0)) #ignore high-frequency data at large separation
+# Oijx_avg=np.delete(Oijx_avg,range(-round((max(Oijx_avg)-5*10**6)/5000),0)) #ignore high-frequency data at large separation
 
-plt.plot(Oijx_avg,Oijy_avg)
-plt.xscale('log',base=10)
-plt.xlabel('bp')
-plt.ylabel("Orientation Order Parameter")
-plt.title('breviolum_minutum')
-plt.show()
+# plt.plot(Oijx_avg,Oijy_avg)
+# plt.xscale('log',base=10)
+# plt.xlabel('bp')
+# plt.ylabel("Orientation Order Parameter")
+# plt.title('breviolum_minutum')
+# plt.show()
 
-xf, yf = compute_FFT_from_Oij(Oijy=Oijy_avg)
-plt.plot(xf/5000,yf)
-plt.xscale('log',base=10) 
-plt.xlabel('1/bp')
-plt.ylabel('FT of Orientation Order Parameter')
-plt.title('breviolum_minutum')
-plt.show()
+# xf, yf = compute_FFT_from_Oij(Oijy=Oijy_avg)
+# plt.plot(xf/5000,yf)
+# plt.xscale('log',base=10) 
+# plt.xlabel('1/bp')
+# plt.ylabel('FT of Orientation Order Parameter')
+# plt.title('breviolum_minutum')
+# plt.show()
 
 Oijx_list.clear()
 Oijy_list.clear()
 
-for i in range(1, 95):
-#for i in range(1, 2):
-    df = np.loadtxt('/Users/lucasphilipp/Desktop/Research/GitHub/Dinoflagellate_Cholesteric_Large_Files_3D_structures/CSynth 3D smicroadriaticum/structures/symbiodinium_microadriaticum_coccoid_chr'+str(i)+'_3D.xyz')
+#for i in range(1, 95):
+for i in range(1, 2):
+    df = np.loadtxt('/Users/lucasphilipp/Downloads/symbiodinium_microadriaticum_coccoid_chr'+str(i+2)+'_CF_60_SP_0_PP-4_3D.xyz')
+    #df = np.loadtxt('/Users/lucasphilipp/Desktop/Research/GitHub/Dinoflagellate_Cholesteric_Large_Files_3D_structures/CSynth 3D smicroadriaticum/structures/symbiodinium_microadriaticum_coccoid_chr'+str(i)+'_3D.xyz')
     structure = df[:,1:] #remove first column
-    Oijx, Oijy = compute_Orientation_OP(xyz=structure, chrom_start=0, chrom_end=df.shape[0], vec_length=6)
+    Oijx, Oijy = compute_Orientation_OP(xyz=structure, chrom_start=0, chrom_end=df.shape[0], vec_length=4)
     
     Oijx_list.append(Oijx)
     Oijy_list.append(Oijy)
@@ -199,6 +201,8 @@ plt.xlabel('1/bp')
 plt.ylabel('FT of Orientation Order Parameter')
 plt.title('symbiodinium_microadriaticum_coccoid')
 plt.show()
+
+#/Users/lucasphilipp/Downloads/cholesteric_CSynth_D4.txt
 
 
    

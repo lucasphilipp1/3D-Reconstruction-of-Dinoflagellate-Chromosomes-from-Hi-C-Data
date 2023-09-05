@@ -9,8 +9,8 @@ clear
 %%%% # OF MONOMERS TAKES ACCOUNTS FOR EXTRACHROMOSOMAL LOOPLENGTH
 
 model=[]; %position of DNA fibres
-chol_layers = 50;
-num_mon = 100; %target for number of monomers in the thicket layer
+chol_layers = 100;
+num_mon = 150; %target for number of monomers in the thicket layer
 
 %ellipse parameters for overall chromosome profile
 min_axis_chr=0.5; %in microns

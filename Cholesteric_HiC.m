@@ -9,7 +9,7 @@ clear
 %%%% # OF MONOMERS TAKES ACCOUNTS FOR EXTRACHROMOSOMAL LOOPLENGTH
 
 model=[]; %position of DNA fibres
-chol_layers = 100;
+chol_layers = 50;
 num_mon = 150; %target for number of monomers in the thicket layer
 
 %ellipse parameters for overall chromosome profile
@@ -24,7 +24,10 @@ maj_axis_chr=chol_layers*spacing; %in microns
 
 %ellipse minor/major axes ratio for a single layer, for circle set ratio=1
 %major axis of layer ellipse = minor axis of chromosome ellipse
-ell_ratio = 0.90;
+%ell_ratio = 0.90;
+%BUG WHEN ELL_RATIO = 1
+
+ell_ratio = .99;
 
 %longitudinal component magnitude
 b = 0.130 * 0.025; %in microns
@@ -121,7 +124,7 @@ r = (min_axis_chr/maj_axis_chr)*sqrt(maj_axis_chr^2-z.^2);
 %     view(i,0)
 %     pause(0.01);
 % end
-% 
+%
 % view(0,10)
 
 %DNA FIBRES HAVE LONGITUDINAL COMPONENT
@@ -157,7 +160,7 @@ lin_vec_b_rot=lin_vec_b*Rphi;
 % set(gcf, 'Position', get(0, 'Screensize'));
 % q0=quiver3(model_rot(:,1)-lin_vec_0_rot(:,1)./2,model_rot(:,2)-lin_vec_0_rot(:,2)./2,model_rot(:,3)-lin_vec_0_rot(:,3)./2,lin_vec_0_rot(:,1),lin_vec_0_rot(:,2),lin_vec_0_rot(:,3),'off'); %orientation vector rotates about midpoint instead of base
 % q0.ShowArrowHead = 'off';
-% 
+%
 % xlim([-1 1])
 % ylim([-1 1])
 % zlim([-0.15 0.15])
@@ -169,12 +172,12 @@ lin_vec_b_rot=lin_vec_b*Rphi;
 
 %INTER DISK LOOPS
 idx=find(diff(model(:,3))>0); %new disc starts when z coordinate changes
-looplength = 10; %requested loop length along each axis
+mean_looplength = 20; %requested loop length along each axis
 %looplength = looplength*3;
 
 %make sure the accepted loop length is close to the requested loop length
 numloops = size(idx,1);
-loops = zeros(looplength, 3, numloops);
+loops = cell(1, numloops); %cell array
 disc_starts = zeros(numloops+1, 3);
 disc_ends = zeros(numloops+1, 3);
 save_disc_starts = zeros(numloops+1, 3); %remains off-latice, matches model coordinates
@@ -201,38 +204,59 @@ for i=1:1:numloops+1
     disc_ends(i,:)=spacing*round(disc_ends(i,:)./spacing);
 end
 
+
+%KEEP GENERATING LOOPS UNTIL A CERTAIN SEQUENCE LENGTH IS REACHED.
+%OTHERWISE DISCS ARE CONNECTED BY A DIRECT VERTICAL STEP BY DEFAULT (CHECK)
+%MOVE SAMPLING EXPONENTIAL DIST TO TOP OF THE CODE 
+
+%generate loops with looplength as mean
+exponential_loops = exprnd(mean_looplength, 1, numloops);
+
+%if the generated loop length is rounded to 0, assign it a length of 1
+for i=1:1:numloops
+    if round(exponential_loops(i)) == 0
+        exponential_loops(i) = 1;
+    end
+end
+
 count = 1;
 for i=1:1:numloops
+    i
+    round(exponential_loops(i))
     %adjacent disks connected
     if mod(count,2)==1
-        loops(:,:,i)=constrained_self_avoiding_RW_3D(disc_starts(count,:),disc_starts(count+1,:),looplength,spacing);
+        %convert 2D array to cell
+        loops{i}=num2cell(constrained_self_avoiding_RW_3D(disc_starts(count,:),disc_starts(count+1,:),round(exponential_loops(i)),spacing));
     else
-        loops(:,:,i)=constrained_self_avoiding_RW_3D(disc_ends(count,:),disc_ends(count+1,:),looplength,spacing);
+        %convert 2D array to cell
+        loops{i}=num2cell(constrained_self_avoiding_RW_3D(disc_ends(count,:),disc_ends(count+1,:),round(exponential_loops(i)),spacing));
     end
-    for j=1:1:looplength
-        if sqrt((loops(j,1,i)).^2 + (loops(j,2,i)).^2) <= min_axis_chr
-            [theta,rho] = cart2pol(loops(j,1,i),loops(j,2,i));
-            rho=rho+abs(2*(min_axis_chr-sqrt((loops(j,1,i)).^2 + (loops(j,2,i)).^2)));
-            [loops(j,1,i),loops(j,2,i)] = pol2cart(theta,rho);
+    value = round(exponential_loops(i));
+    for j=1:1:round(exponential_loops(i))
+        %test = loops{i}{j,1};
+        if sqrt((loops{i}{j,1}).^2 + (loops{i}{j,2}).^2) <= min_axis_chr
+            [theta,rho] = cart2pol(loops{i}{j,1},loops{i}{j,2});
+            rho=rho+abs(2*(min_axis_chr-sqrt((loops{i}{j,1}).^2 + (loops{i}{j,2}).^2)));
+            [loops{i}{j,1},loops{i}{j,2}] = pol2cart(theta,rho);
         end
     end
     %resolved problem where two intertior parts of the loop are being reflected to opposite ends of the cylinder, the loop then crosses through the cylinder
     %reject walks with any steps of length spacing*3 or greater
     j=1;
-    while j<=size(loops(:,:,i),1)-1
-        while sqrt((loops(j,1,i)-loops(j+1,1,i)).^2 + (loops(j,2,i)-loops(j+1,2,i)).^2 + (loops(j,3,i)-loops(j+1,3,i)).^2) > spacing*2
+    while j<=size(loops{i},1)-1
+        while sqrt((loops{i}{j,1})-loops{i}{j+1,1}).^2 + (loops{i}{j,2}-loops{i}{j+1,2}).^2 + (loops{i}{j,3}-loops{i}{j+1,3}).^2 > spacing*2
             if mod(count,2)==1
-                loops(:,:,i)=constrained_self_avoiding_RW_3D(disc_starts(count,:),disc_starts(count+1,:),looplength,spacing);
+                loops{i}=num2cell(constrained_self_avoiding_RW_3D(disc_starts(count,:),disc_starts(count+1,:),round(exponential_loops(i)),spacing));
                 j=1;
             else
-                loops(:,:,i)=constrained_self_avoiding_RW_3D(disc_ends(count,:),disc_ends(count+1,:),looplength,spacing);
+                loops{i}=num2cell(constrained_self_avoiding_RW_3D(disc_ends(count,:),disc_ends(count+1,:),round(exponential_loops(i)),spacing));
                 j=1;
             end
-            for k=1:1:looplength
-                if sqrt((loops(k,1,i)).^2 + (loops(k,2,i)).^2) <= min_axis_chr
-                    [theta,rho] = cart2pol(loops(k,1,i),loops(k,2,i));
-                    rho=rho+abs(2*(min_axis_chr-sqrt((loops(k,1,i)).^2 + (loops(k,2,i)).^2)));
-                    [loops(k,1,i),loops(k,2,i)] = pol2cart(theta,rho);
+            for k=1:1:round(exponential_loops(i))
+                if sqrt((loops{i}{k,1}).^2 + (loops{i}{k,2}).^2) <= min_axis_chr
+                    [theta,rho] = cart2pol(loops{i}{k,1},loops{i}{k,2});
+                    rho=rho+abs(2*(min_axis_chr-sqrt((loops{i}{k,1}).^2 + (loops{i}{k,2}).^2)));
+                    [loops{i}{k,1},loops{i}{k,2}] = pol2cart(theta,rho);
                 end
             end
         end
@@ -253,7 +277,7 @@ Zcyl = Zcyl - max(model(:,3));
 %     clf(f)
 %     hold on
 %     surf(Xcyl,Ycyl,Zcyl,'FaceAlpha',0.2);
-% 
+%
 %     if mod(count,2)==1
 %         plot3(disc_starts(count,1),disc_starts(count,2),disc_starts(count,3),'o','Color','g')
 %         plot3(disc_starts(count+1,1),disc_starts(count+1,2),disc_starts(count+1,3),'o','Color','r')
@@ -263,11 +287,11 @@ Zcyl = Zcyl - max(model(:,3));
 %         plot3(disc_ends(count+1,1),disc_ends(count+1,2),disc_ends(count+1,3),'o','Color','r')
 %         count = count + 1;
 %     end
-% 
+%
 %     plot3(loops(:,1,i),loops(:,2,i),loops(:,3,i),'-','Color','k')
 %     plot3(loops(1,1,i),loops(1,2,i),loops(1,3,i),'o','MarkerFaceColor','g')
 %     plot3(loops(end,1,i),loops(end,2,i),loops(end,3,i),'o','MarkerFaceColor','r')
-% 
+%
 %     xlim([min(model(:,1))*2 max(model(:,1))*2])
 %     ylim([min(model(:,2))*2 max(model(:,2))*2])
 %     zlim([min(model(:,3))*2 max(model(:,3))*2])
@@ -289,11 +313,11 @@ Zcyl = Zcyl - max(model(:,3));
 %         plot3(disc_ends(count+1,1),disc_ends(count+1,2),disc_ends(count+1,3),'o','Color','r')
 %         count = count + 1;
 %     end
-% 
+%
 %     plot3(loops(:,1,i),loops(:,2,i),loops(:,3,i),'-','Color','k')
 %     plot3(loops(1,1,i),loops(1,2,i),loops(1,3,i),'o','MarkerFaceColor','g')
 %     plot3(loops(end,1,i),loops(end,2,i),loops(end,3,i),'o','MarkerFaceColor','r')
-% 
+%
 %     xlim([min(model(:,1))*2 max(model(:,1))*2])
 %     ylim([min(model(:,2))*2 max(model(:,2))*2])
 %     zlim([min(model(:,3))*2 max(model(:,3))*2])
@@ -301,37 +325,13 @@ Zcyl = Zcyl - max(model(:,3));
 % end
 % plot3(model(:,1),model(:,2),model(:,3))
 
-% insert loops into primary sequence in model
-idx=zeros(numloops,1);
-idx=find(diff(model(:,3))>0); %new disc starts when z coordinate changes
-
-model(1:idx(1),:) = flipud(model(1:idx(1),:));
-for i=1:1:size(idx,1)
-    if mod(i,2)==0 
-        if i == size(idx,1)
-            model(idx(i)+1:end,:) = flipud(model(idx(i)+1:end,:));
-        else
-            model(idx(i)+1:idx(i+1),:) = flipud(model(idx(i)+1:idx(i+1),:));
-        end
-    end
-end
-% Preallocate output
-new_model = zeros(size(model,1)+looplength*numloops,3);
-% Find indices for old data
-addRows = ismember(1:size(model,1), idx)*looplength;
-
-oldDataInd = (1:size(model,1)) + cumsum([0, addRows(1:end-1)]);
-
-% Add in old data
-new_model(oldDataInd,:) = model(:,:);
-store_new=[];
+total_length = 0;
 for i=1:1:numloops
-    % Find indices for new data
-    newDataInd = idx(i)+1+looplength*(i-1):1:idx(i)+looplength*i;
-    store_new = [store_new; newDataInd(1)];
-    % Add in new data
-    new_model(newDataInd,:) = loops(:,:,i);
+    total_length = total_length + size(loops{i},1);
 end
+
+% insert loops into primary sequence in model
+new_model = insert_loops(numloops, total_length, model, loops);
 
 %INTRA DISK LOOPS
 
@@ -390,7 +390,9 @@ P = 1./D.^4;
 P(isinf(P)) = 1; %self contact probabilities are 1
 
 %are these coming from disc/loop connections?
-P(P>1) = 1; %no contact probabilities above 1
+%this is very important! as long extrachromosomal loops might have
+%overlapping monomers
+P(P>1) = 1; %no contact probabilities above 1 
 
 %output for GEM
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -460,7 +462,7 @@ tot_monomers_in_body = sum(mon_per_layer);
 distance_threshold = spacing*5;
 %[s Ps] = contact_probability_xyz(model,distance_threshold);
 % [s Ps] = contact_probability_xyz(new_model,distance_threshold);
-% 
+%
 % figure
 % hold on
 % ax=gca;
@@ -480,6 +482,47 @@ for i=1:x
     sum=sum+i;
 end
 end
+
+%CAN NO LONGER USE LOOPLENGTH SINCE IT DIFFERS
+function new_model = insert_loops(numloops, total_length, model, loops)
+idx=zeros(numloops,1);
+idx=find(diff(model(:,3))>0); %new disc starts when z coordinate changes
+
+model(1:idx(1),:) = flipud(model(1:idx(1),:));
+for i=1:1:size(idx,1)
+    if mod(i,2)==0
+        if i == size(idx,1)
+            model(idx(i)+1:end,:) = flipud(model(idx(i)+1:end,:));
+        else
+            model(idx(i)+1:idx(i+1),:) = flipud(model(idx(i)+1:idx(i+1),:));
+        end
+    end
+end
+% Preallocate output
+new_model = zeros(size(model,1)+total_length,3);
+% Find indices for old data
+addRows = double(ismember(1:size(model,1), idx));
+
+temp=find(addRows>0);
+
+for i=1:1:numloops
+    addRows(temp(i)) = size(loops{i},1);
+end
+
+oldDataInd = (1:size(model,1)) + cumsum([0, addRows(1:end-1)]);
+
+% Add in old data
+new_model(oldDataInd,:) = model(:,:);
+
+loops_concatenated=[];
+for i=1:1:numloops
+    loops_concatenated = [loops_concatenated; cell2mat(loops{i})];
+end
+% Find indices for new data
+% Add in new data
+new_model(find(all(new_model == 0,2)),:) = loops_concatenated;
+end
+
 
 % %does a CLC model with a particular parameter set give rise to a unique scaling exponent?
 % %or can one scaling exponent correspond to multiple geometries?

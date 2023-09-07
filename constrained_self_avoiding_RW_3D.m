@@ -1,4 +1,4 @@
-function walk = constrained_self_avoiding_RW_3D(start,finish,steps,step_size)
+function walk = constrained_self_avoiding_RW_3D_test(start,finish,steps,step_size)
 isunique=0;
 while isunique==0
     x = constrained_RW_1D(start(:,1),finish(:,1),steps,step_size);
@@ -19,8 +19,15 @@ while isunique==0
         z(end)=[];
     end
     walk = [x y z];
-    if size(unique(walk, "rows"),1) == steps
-        isunique=1;
+
+    if steps > 50
+        if size(unique(walk, "rows"),1) >= steps*0.95
+            isunique=1;
+        end
+    else
+        if size(unique(walk, "rows"),1) == steps
+            isunique=1;
+        end
     end
 end
 end

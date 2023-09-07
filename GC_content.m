@@ -2,64 +2,65 @@
 clc
 clear
 
-[header_Smic11N,sequence_Smic11N] = fastaread('GSE152150_Smic1.1N.fa');
-Density_Smic11N = cell(size(header_Smic11N,2),1);
-NTStruct_Smic11N = cell(size(header_Smic11N,2),1);
-unmappable_Smic11N = cell(size(header_Smic11N,2),1);
-percent_N_Smic11N = zeros(size(header_Smic11N,2),1);
-
+% [header_Smic11N,sequence_Smic11N] = fastaread('GSE152150_Smic1.1N.fa');
+% Density_Smic11N = cell(size(header_Smic11N,2),1);
+% NTStruct_Smic11N = cell(size(header_Smic11N,2),1);
+% unmappable_Smic11N = cell(size(header_Smic11N,2),1);
+% percent_N_Smic11N = zeros(size(header_Smic11N,2),1);
+% 
+% % for i = 1:size(header_Smic11N,2)
+% %     Density_Smic11N{i} = ntdensity(sequence_Smic11N{i},'Window',5000);
+% % end
+% 
 % for i = 1:size(header_Smic11N,2)
-%     Density_Smic11N{i} = ntdensity(sequence_Smic11N{i},'Window',5000);
+%     NTStruct_Smic11N{i} = basecount(sequence_Smic11N{i},'Ambiguous', 'individual');
+%     percent_N_Smic11N(i) = NTStruct_Smic11N{i}.N./length(sequence_Smic11N{i})*100;
 % end
-
-for i = 1:size(header_Smic11N,2)
-    NTStruct_Smic11N{i} = basecount(sequence_Smic11N{i},'Ambiguous', 'individual');
-    percent_N_Smic11N(i) = NTStruct_Smic11N{i}.N./length(sequence_Smic11N{i})*100;
-end
-
-count = logspace(log10(50),log10(100*1000),15);
-for j = 1:1:size(header_Smic11N,2)
-    %seqwordcount does not count overlapping patterns multiple times
-    %however, Ns are considered an any of: A, T, C, G
-    %searching for 'NNN' using seqwordcount counts AAA, NNN, etc...
-    %A, T, C, G are changed to an unrecognized letter so consecutive Ns are counted explicitly
-    %recognized letters: A, C, G, T, R, Y, K, M, S, W, B, D, H, V, N
-    temp_seq=sequence_Smic11N{j};
-    temp_seq = strrep(temp_seq,'A','Z');
-    temp_seq = strrep(temp_seq,'T','Z');
-    temp_seq = strrep(temp_seq,'C','Z');
-    temp_seq = strrep(temp_seq,'G','Z');
-
-    nhist=[];
-    for i = 1:1:size(count,2)
-        word = repmat('N',1,round(count(i)));
-        nhist=[nhist; seqwordcount(temp_seq, word)];
-    end
-
-    for i = 1:1:size(count,2)
-        nhist(i)=nhist(i).*round(count(i))./length(sequence_Smic11N{j}).*100;
-    end
-
-    unmappable_Smic11N{j} = nhist;
-    j
-end
-
-%percentage of chromosome unmappable given average read-length
-figure
-hold on
-for i = 1:1:size(header_Smic11N,2)
-    plot(count,unmappable_Smic11N{i}', 'Color', [0 0.4470 0.7410])
-end
-%ChIP-seq read length: ~100 bp
-%DiMeLo-seq read length: ~100 000 bp
-xline(100,'-',{'ChIP-seq','readlength'});
-xline(100*1000,'-',{'DiMeLo-seq','readlength'});
-ylabel('% chromosome unmappable', 'FontSize', 18)
-xlabel('average readlength [bp]', 'FontSize', 18)
-xlim([0 20*10^4])
-ylim([0 10])
-set(gca, 'XScale', 'log')
-title('Smic1.1N Symbiodinium microadriaticum', 'FontSize', 18)
+% 
+% count = logspace(log10(50),log10(100*1000),15);
+% for j = 1:1:size(header_Smic11N,2)
+%     %seqwordcount does not count overlapping patterns multiple times
+%     %however, Ns are considered an any of: A, T, C, G
+%     %searching for 'NNN' using seqwordcount counts AAA, NNN, etc...
+%     %A, T, C, G are changed to an unrecognized letter so consecutive Ns are counted explicitly
+%     %recognized letters: A, C, G, T, R, Y, K, M, S, W, B, D, H, V, N
+%     temp_seq=sequence_Smic11N{j};
+%     temp_seq = strrep(temp_seq,'A','Z');
+%     temp_seq = strrep(temp_seq,'T','Z');
+%     temp_seq = strrep(temp_seq,'C','Z');
+%     temp_seq = strrep(temp_seq,'G','Z');
+% 
+%     nhist=[];
+%     for i = 1:1:size(count,2)
+%         word = repmat('N',1,round(count(i)));
+%         nhist=[nhist; seqwordcount(temp_seq, word)];
+%     end
+% 
+%     for i = 1:1:size(count,2)
+%         nhist(i)=nhist(i).*round(count(i))./length(sequence_Smic11N{j}).*100;
+%     end
+% 
+%     unmappable_Smic11N{j} = nhist;
+%     j
+% end
+% 
+% %percentage of chromosome unmappable given average read-length
+% figure
+% hold on
+% for i = 1:1:size(header_Smic11N,2)
+%     plot(count,unmappable_Smic11N{i}', 'Color', [0 0.4470 0.7410])
+% end
+% %ChIP-seq read length: ~100 bp
+% %DiMeLo-seq read length: ~100 000 bp
+% xline(100,'-',{'Short read sequencing','e.g. ChIP-seq & ATAC-seq'}, 'FontSize', 12);
+% xline(20*1000,'-',{'Long read sequencing','e.g. DiMeLo-seq & Fiber-seq'}, 'FontSize', 12);
+% ylabel('% chromosome unmappable', 'FontSize', 18)
+% xlabel('average readlength [bp]', 'FontSize', 18)
+% xlim([0 20*10^4])
+% ylim([0 10])
+% set(gca, 'XScale', 'log')
+% %title('Smic1.1N Symbiodinium microadriaticum', 'FontSize', 18)
+% title('Symbiodinium microadriaticum', 'FontSize', 18)
 
 [header_Smic10,sequence_Smic10] = fastaread('GSE152150_Smic1.0.fa');
 Density_Smic10 = cell(size(header_Smic10,2),1);
@@ -117,12 +118,14 @@ for i = 1:100
 end
 %ChIP-seq read length: ~100 bp
 %DiMeLo-seq read length: ~100 000 bp
-xline(100,'-',{'ChIP-seq','readlength'});
-xline(100*1000,'-',{'DiMeLo-seq','readlength'});
+xline(100,'-',{'Short read sequencing','e.g. ChIP-seq & ATAC-seq'}, 'FontSize', 12);
+xline(20*1000,'-',{'Long read sequencing','e.g. DiMeLo-seq & Fiber-seq'}, 'FontSize', 12);
 ylabel('% chromosome unmappable', 'FontSize', 18)
 xlabel('average readlength [bp]', 'FontSize', 18)
 xlim([0 20*10^4])
 ylim([0 10])
 set(gca, 'XScale', 'log')
-title('SSB01 Breviolum minutum', 'FontSize', 18)
+title('Breviolum minutum', 'FontSize', 18)
+
+
 

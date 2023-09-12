@@ -197,6 +197,14 @@ https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE104474 \
 GSM2801019	mC_S_minutum_25C \
 GSM2801017      mC_S_kawagutii_25C
 
+### HiC Data Symbiodinium kawagutii (formerly Fugacium kawagutii):
+HiC Raw Reads
+SRR25948349
+SRR25948348
+
+Genome Assembly:
+http://sampgr.org.cn/index.php/download (V3)
+
 # TO DO LIST:
 
 ## High priority:

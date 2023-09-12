@@ -14,8 +14,8 @@ clear
 %%% distance cutoff
 
 model=[]; %position of DNA fibres
-chol_layers = 20;
-num_mon = 50; %target for number of monomers in the thicket layer
+chol_layers = 10;
+num_mon = 40; %target for number of monomers in the thicket layer
 
 %ellipse parameters for overall chromosome profile
 min_axis_chr=0.5; %in microns
@@ -435,7 +435,7 @@ end
 num_intra_disc_loops = 10;
 
 %intra_disc_loop_potential_starts are indicies for new_model
-cluster=clusterdata(intra_disc_loop_potential_starts_ind,1);
+cluster=clusterdata(intra_disc_loop_potential_starts_ind,'Criterion','distance','Cutoff',1);
 for i = 1:1:max(cluster)
     if size(find(cluster==i),1) > 2
         intra_disc_loop_potential_starts_ind(find(cluster==i)) = [];
@@ -444,7 +444,7 @@ end
 
 intra_disc_loop_potential_starts_ind=intra_disc_loop_potential_starts_ind(find(diff(intra_disc_loop_potential_starts_ind)==1));
 p = randperm(size(intra_disc_loop_potential_starts_ind,1),num_intra_disc_loops);
-intra_disc_loop_starts_ind = intra_disc_loop_potential_starts_ind(p);
+intra_disc_loop_starts_ind = sort(intra_disc_loop_potential_starts_ind(p));
 intra_disc_loop_ends_ind = intra_disc_loop_starts_ind + 1;
 
 intra_disc_loop_starts = zeros(num_intra_disc_loops+1, 3); %on lattice points
@@ -551,7 +551,7 @@ MyColor = linspace(1,numPoints,numPoints)';
 % create a connectivity matrix
 Faces = [1:(numPoints-1); 2:numPoints]';
 
-skip=1;
+skip=5;
 
 f=figure
 hold on
@@ -575,7 +575,7 @@ for i=skip+1:skip:numPoints
     c = colorbar;
     c.Label.String = 'primary sequence';
     patch('Faces', Faces(i-skip:i-1,:) ,'Vertices', new_new_model(1:i,:) ,'FaceColor', 'none', 'FaceVertexCData', MyColor(1:i,:) ,'EdgeColor','interp' ,'LineWidth',5, 'FaceAlpha',.5,'EdgeAlpha',.5);
-    pause(0.5);
+    pause(0.1);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -586,14 +586,14 @@ end
 
 %euclidian distance between monomers
 %D = pdist(model); %in microns
-D = pdist(new_model); %in microns
-%D = pdist(new_new_model); %in microns
+%D = pdist(new_model); %in microns
+D = pdist(new_new_model); %in microns
 
 D = squareform(D);
 
 %HiC contact probablities from distance
-%P = spacing./D;
-P = 1./D.^4;
+P = spacing./D.^4;
+%P = 1./D.^4;
 P(isinf(P)) = 1; %self contact probabilities are 1
 
 %are these coming from disc/loop connections?

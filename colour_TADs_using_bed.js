@@ -1,5 +1,5 @@
 window.bedline2col = p => {
-    let v = p[8]; //expect TPM in 9th column in bed file
+    let v = p[8]; //expect TAD indicator in 9th column in bed file
     let threshold = 1;
     v = clamp(v, -threshold, threshold);
     v = v/threshold;  //map to [-1,1]

@@ -1,125 +1,113 @@
 clc
 clear
-get_model = importdata('symbiodinium_microadriaticum_chr2.xyz');
-get_RNAseq = importdata('s_microadriaticum_chr2_pilon_strandsum_TPM.bed');
+chromosome = importdata('symbiodinium_microadriaticum_chr2.xyz');
+RNAseq = importdata('s_microadriaticum_chr2_pilon_strandsum_TPM.bed');
 
-resolution = get_model(2,1)-get_model(1,1);
+HiC_resolution = chromosome(2,1)-chromosome(1,1);
 
-RNA = [get_RNAseq.data(:,1) get_RNAseq.data(:,2) get_RNAseq.data(:,8)];
+genes_start_end_TPM = [RNAseq.data(:,1) RNAseq.data(:,2) RNAseq.data(:,8)];
 
-[coeff,score] = pca(get_model(:,2:4));
+[coeff,score] = pca(chromosome(:,2:4));
 
-%%% !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-%%% use this get_RNAseq.data(:,8)!!! does TPM change as a functino of
-%%% radius? or z-axis
-%%% !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-model_PCA = [get_model(:,1) score];
+chromosome_PCA = [chromosome(:,1) score];
 
 %get xyz coordinates for every base pair by linearly interpolating between the model
-
-model_PCA_interp = zeros(get_model(end,1),4);
-model_PCA_interp(:,1) = linspace(1,get_model(end,1),get_model(end,1))';
-for i = 1:1:size(model_PCA,1)-1
-        model_PCA_interp(resolution*(i-1)+1:resolution*i,2:4) = [linspace(model_PCA(i,2),model_PCA(i+1,2),resolution)' linspace(model_PCA(i,3),model_PCA(i+1,3),resolution)' linspace(model_PCA(i,4),model_PCA(i+1,4),resolution)'];
+chromosome_PCA_interpolated = zeros(chromosome(end,1),4);
+chromosome_PCA_interpolated(:,1) = linspace(1,chromosome(end,1),chromosome(end,1))';
+for i = 1:1:size(chromosome_PCA,1)-1
+        chromosome_PCA_interpolated(HiC_resolution*(i-1)+1:HiC_resolution*i,2:4) = [linspace(chromosome_PCA(i,2),chromosome_PCA(i+1,2),HiC_resolution)' linspace(chromosome_PCA(i,3),chromosome_PCA(i+1,3),HiC_resolution)' linspace(chromosome_PCA(i,4),chromosome_PCA(i+1,4),HiC_resolution)'];
 end
 
-gene_loc = [];
-gene_centre_coord = [];
+genes_xyz = [];
+genes_center_xyz = [];
 
 %store coordinates for each base pair in each gene
-for i = 1:1:size(RNA,1)
-    gene_loc = [gene_loc; model_PCA_interp(RNA(i,1):RNA(i,2),2) model_PCA_interp(RNA(i,1):RNA(i,2),3) model_PCA_interp(RNA(i,1):RNA(i,2),4)];
-    gene_centre_coord = [gene_centre_coord; mean(model_PCA_interp(RNA(i,1):RNA(i,2),2)) mean(model_PCA_interp(RNA(i,1):RNA(i,2),3)) mean(model_PCA_interp(RNA(i,1):RNA(i,2),4))];
-    size(RNA,1)-i
+for i = 1:1:size(genes_start_end_TPM,1)
+    genes_xyz = [genes_xyz; chromosome_PCA_interpolated(genes_start_end_TPM(i,1):genes_start_end_TPM(i,2),2) chromosome_PCA_interpolated(genes_start_end_TPM(i,1):genes_start_end_TPM(i,2),3) chromosome_PCA_interpolated(genes_start_end_TPM(i,1):genes_start_end_TPM(i,2),4)];
+    genes_center_xyz = [genes_center_xyz; mean(chromosome_PCA_interpolated(genes_start_end_TPM(i,1):genes_start_end_TPM(i,2),2)) mean(chromosome_PCA_interpolated(genes_start_end_TPM(i,1):genes_start_end_TPM(i,2),3)) mean(chromosome_PCA_interpolated(genes_start_end_TPM(i,1):genes_start_end_TPM(i,2),4))];
+    size(genes_start_end_TPM,1)-i
 end
 
-[theta_TPM,rho_TPM] = cart2pol(gene_centre_coord(:,2),gene_centre_coord(:,3));
+%column 1 is PC1, the chromosome long axis
+[theta_TPM,rho_TPM z_TPM] = cart2pol(genes_center_xyz(:,2),genes_center_xyz(:,3),genes_center_xyz(:,1));
 
 figure
-scatter(rho_TPM, abs(get_RNAseq.data(:,8)))
+scatter(z_TPM,rho_TPM,[],RNAseq.data(:,8), 'filled')
+xlim([-100 100])
+ylim([0 100])
+xlabel('cylidrical axis','FontSize', 24)
+ylabel('radial axis','FontSize', 24)
+cb = colorbar; 
+caxis([min(RNAseq.data(:,8)),max(RNAseq.data(:,8))]);
+cb.Label.String = 'TPM';
+cb.FontSize = 16;
 
-figure
-scatter(gene_centre_coord(:,1), abs(get_RNAseq.data(:,8)))
+%gene density is enriched 2.5Mbs away from the telomere, measured in 100-kb windows
 
-figure
-hold on
-histogram(model_PCA_interp(:,2), 25,'Normalization','pdf')
-histogram(gene_loc(:,1), 25,'Normalization','pdf')
-hold off
+%genes per unit volume plot
+chrom_xyz = chromosome_PCA_interpolated(:,2:4);
 
-[theta,rho] = cart2pol(gene_loc(:,2),gene_loc(:,3));
-[theta_model_PCA_interp,rho_model_PCA_interp] = cart2pol(model_PCA_interp(:,3),model_PCA_interp(:,4));
+%normalized gene density
+%% Compute density
+% Put points into 3D bins; xyzBinNum is an nx3 matrix containing
+% the bin ID for n values in xyz for the [x,y,z] axes.
+nBins = 10;  % number of bins
+chrom_xbins = linspace(min(chrom_xyz(:,1)),max(chrom_xyz(:,1))*1,nBins+1);
+chrom_ybins = linspace(min(chrom_xyz(:,2)),max(chrom_xyz(:,2))*1,nBins+1);
+chrom_zbins = linspace(min(chrom_xyz(:,3)),max(chrom_xyz(:,3))*1,nBins+1);
+chrom_xyzBinNum = [...
+    discretize(chrom_xyz(:,1),chrom_xbins), ...
+    discretize(chrom_xyz(:,2),chrom_ybins), ...
+    discretize(chrom_xyz(:,3),chrom_zbins), ...
+    ];
 
-figure
-hold on
-histogram(rho_model_PCA_interp,25,'Normalization','pdf')
-histogram(rho,25,'Normalization','pdf')
-legend()
-hold off
+genes_xyzBinNum = [...
+    discretize(genes_xyz(:,1),chrom_xbins), ...
+    discretize(genes_xyz(:,2),chrom_ybins), ...
+    discretize(genes_xyz(:,3),chrom_zbins), ...
+    ];
+% bin3D is a mx3 matrix of m unique 3D bins that appear 
+% in xyzBinNum, sorted.  binNum is a nx1 vector of bin
+% numbers identifying the bin for each xyz point. For example,
+% b=xyz(j,:) belongs to bins3D(b,:).
+[chrom_bins3D, ~, chrom_binNum] = unique(chrom_xyzBinNum, 'rows');
 
-figure
-scatter(theta,rho)
+%map gene_density onto the same bins as chrom_density
+gene_density = [];
+for i = 1:1:size(chrom_bins3D,1)
+        gene_density = [gene_density; sum(ismember(genes_xyzBinNum, chrom_bins3D(i,:),'rows'));];
+        size(chrom_bins3D,1)-i
+end
 
-figure
-hold on
-plot3(model_PCA_interp(:,2),model_PCA_interp(:,3),model_PCA_interp(:,4),'Color', 'g')
-plot3(gene_loc(:,1),gene_loc(:,2),gene_loc(:,3),'Color', 'r')
-plot3(model_PCA(:,2),model_PCA(:,3),model_PCA(:,4),'Color', 'k')
-hold off
+% density is a mx1 vector of integers showing the number of 
+% xyz points in each of the bins3D. To see the number of points
+% in bins3D(k,:), density(k).  
+chrom_density = histcounts(chrom_binNum,[1:size(chrom_bins3D,1),inf])'; 
 
-numPoints = size(get_model,1);
-MyColor = linspace(1,numPoints,numPoints)';
-% create a connectivity matrix
-Faces = [1:(numPoints-1); 2:numPoints]';
+% Compute bin centers
+chrom_xbinCnt = chrom_xbins(2:end)-diff(chrom_xbins)/2;
+chrom_ybinCnt = chrom_ybins(2:end)-diff(chrom_ybins)/2;
+chrom_zbinCnt = chrom_zbins(2:end)-diff(chrom_zbins)/2;
 
-f=figure
-hold on
-%plot3(get_model(:,2),get_model(:,3),get_model(:,4),'Color', [.6 .6 .6])
-%plot3(score(:,1),score(:,2),score(:,3),'Color', [.6 .6 .6])
+chrom_bins3D(find(gene_density==0),:) = [];
+chrom_density(find(gene_density==0)) = [];
+gene_density(find(gene_density==0)) = [];
 
-
-colormap jet
+%% Plot raw data
+fig = figure();
+%% Plot scatter3
+scatter3(...
+    chrom_xbinCnt(chrom_bins3D(:,1)), ...
+    chrom_ybinCnt(chrom_bins3D(:,2)), ...
+    chrom_zbinCnt(chrom_bins3D(:,3)), ...
+    gene_density./chrom_density*100, ...
+    gene_density./chrom_density, 'filled', ...
+    'MarkerFaceAlpha',.6)
 axis equal
-xlim([min(get_model(:,2))*2 max(get_model(:,2))*2])
-ylim([min(get_model(:,3))*2 max(get_model(:,3))*2])
-zlim([min(get_model(:,4))*2 max(get_model(:,4))*2])
-caxis([min(MyColor) max(MyColor)])
-c = colorbar;
-c.Label.String = 'primary sequence';
-patch('Faces', Faces,'Vertices', get_model(:,2:4) ,'FaceColor', 'none', 'FaceVertexCData', MyColor ,'EdgeColor','interp' ,'LineWidth',5, 'FaceAlpha',.5,'EdgeAlpha',.5);
-view(30,30)
-
-function c = redblue(m)
-%REDBLUE    Shades of red and blue color map
-%   REDBLUE(M), is an M-by-3 matrix that defines a colormap.
-%   The colors begin with bright blue, range through shades of
-%   blue to white, and then through shades of red to bright red.
-%   REDBLUE, by itself, is the same length as the current figure's
-%   colormap. If no figure exists, MATLAB creates one.
-%
-%   For example, to reset the colormap of the current figure:
-%
-%             colormap(redblue)
-%
-if nargin < 1, m = size(get(gcf,'colormap'),1); end
-if (mod(m,2) == 0)
-    % From [0 0 1] to [1 1 1], then [1 1 1] to [1 0 0];
-    m1 = m*0.5;
-    r = (0:m1-1)'/max(m1-1,1);
-    g = r;
-    r = [r; ones(m1,1)];
-    g = [g; flipud(g)];
-    b = flipud(r);
-else
-    % From [0 0 1] to [1 1 1] to [1 0 0];
-    m1 = floor(m*0.5);
-    r = (0:m1-1)'/max(m1,1);
-    g = r;
-    r = [r; ones(m1+1,1)];
-    g = [g; 1; flipud(g)];
-    b = flipud(r);
-end
-c = [r g b];
-end
-
+box on
+xlabel('x')
+ylabel('y')
+zlabel('z')
+cb = colorbar
+cb.Label.String = 'Gene Density/Chromsome Density';
+cb.FontSize = 16;

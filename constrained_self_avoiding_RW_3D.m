@@ -9,6 +9,8 @@ while isunique==0
     size_y=size(y,1);
     size_z=size(z,1);
 
+    %some paths require and even number of steps along a certain axis
+    %some paths require an odd number of steps along a certain axis
     if find(find([size_x; size_y; size_z] == max([size_x; size_y; size_z]))==1) & size_x > steps
         x(end)=[];
     end
@@ -20,16 +22,21 @@ while isunique==0
     end
     walk = [x y z];
 
+    %nearly self avoiding 3D, some overlap allowed
     if steps > 100
-        if size(unique(walk, "rows"),1) >= steps*0.90
+        if size(unique(walk, "rows"),1) >= steps*0.75
             isunique=1;
         end
     elseif steps > 50
-        if size(unique(walk, "rows"),1) >= steps*0.95
+        if size(unique(walk, "rows"),1) >= steps*0.80
+            isunique=1;
+        end
+    elseif steps > 10
+        if size(unique(walk, "rows"),1) >= steps*0.85
             isunique=1;
         end
     else
-        if size(unique(walk, "rows"),1) == steps
+        if size(unique(walk, "rows"),1) >= steps-1
             isunique=1;
         end
     end

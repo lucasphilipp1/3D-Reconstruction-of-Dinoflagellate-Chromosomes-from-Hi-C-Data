@@ -13,6 +13,7 @@ async function process(file, threshold = 0.1) {
 
     GX.getgui('ribbon/diameter').setValue(10);
     GX.getgui(/beddatasource/).setValue('rainbow');
+    setBackgroundColor(1)
     G.stepsPerStep = 50       // 50 simulation steps per graphics display, less wasted graphics effort, more GPU for simulation
     G.springrate = 10       // bigger simulation steps for faster convergence
     G.springrate = 1        // standard simulation steps for better stability

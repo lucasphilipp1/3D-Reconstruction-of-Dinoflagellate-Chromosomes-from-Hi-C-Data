@@ -52,8 +52,8 @@ clear
 % end
 % %ChIP-seq read length: ~100 bp
 % %DiMeLo-seq read length: ~100 000 bp
-% xline(100,'-',{'Short read sequencing','e.g. ChIP-seq & ATAC-seq'}, 'FontSize', 12);
-% xline(20*1000,'-',{'Long read sequencing','e.g. DiMeLo-seq & Fiber-seq'}, 'FontSize', 12);
+% xline(100,'-r',{'Short read sequencing','e.g. ChIP-seq & ATAC-seq'}, 'FontSize', 12);
+% xline(20*1000,'-g',{'Long read sequencing','e.g. DiMeLo-seq & Fiber-seq'}, 'FontSize', 12);
 % ylabel('% chromosome unmappable', 'FontSize', 18)
 % xlabel('average readlength [bp]', 'FontSize', 18)
 % xlim([0 20*10^4])
@@ -62,11 +62,11 @@ clear
 % %title('Smic1.1N Symbiodinium microadriaticum', 'FontSize', 18)
 % title('Symbiodinium microadriaticum', 'FontSize', 18)
 
-[header_Smic10,sequence_Smic10] = fastaread('GSE152150_Smic1.0.fa');
-Density_Smic10 = cell(size(header_Smic10,2),1);
-for i = 1:size(header_Smic10,2)
-    Density_Smic10{i} = ntdensity(sequence_Smic10{i},'Window',5000);
-end
+% [header_Smic10,sequence_Smic10] = fastaread('GSE152150_Smic1.0.fa');
+% Density_Smic10 = cell(size(header_Smic10,2),1);
+% for i = 1:size(header_Smic10,2)
+%     Density_Smic10{i} = ntdensity(sequence_Smic10{i},'Window',5000);
+% end
 
 [header_SSB01,sequence_SSB01] = fastaread('SSB01_HiC_assembly.fa');
 Density_SSB01 = cell(size(header_SSB01,2),1);
@@ -106,7 +106,7 @@ for j = 1:1:100
         nhist(i)=nhist(i).*round(count(i))./length(sequence_SSB01{j}).*100;
     end
 
-    unmappable_Smic11N{j} = nhist;
+    unmappable_SSB01{j} = nhist;
     j
 end
 
@@ -114,18 +114,18 @@ end
 figure
 hold on
 for i = 1:100
-    plot(count,unmappable_Smic11N{i}', 'Color', [0 0.4470 0.7410])
+    plot(count,unmappable_SSB01{i}', 'Color', [0 0.4470 0.7410])
 end
 %ChIP-seq read length: ~100 bp
 %DiMeLo-seq read length: ~100 000 bp
-xline(100,'-',{'Short read sequencing','e.g. ChIP-seq & ATAC-seq'}, 'FontSize', 12);
-xline(20*1000,'-',{'Long read sequencing','e.g. DiMeLo-seq & Fiber-seq'}, 'FontSize', 12);
+xline(100,'-r',{'Short read sequencing','e.g. ChIP-seq & ATAC-seq'}, 'FontSize', 12);
+xline(20*1000,'-g',{'Long read sequencing','e.g. DiMeLo-seq & Fiber-seq'}, 'FontSize', 12);
 ylabel('% chromosome unmappable', 'FontSize', 18)
 xlabel('average readlength [bp]', 'FontSize', 18)
 xlim([0 20*10^4])
 ylim([0 10])
 set(gca, 'XScale', 'log')
-title('Breviolum minutum', 'FontSize', 18)
+%title('Breviolum minutum', 'FontSize', 18)
 
 
 

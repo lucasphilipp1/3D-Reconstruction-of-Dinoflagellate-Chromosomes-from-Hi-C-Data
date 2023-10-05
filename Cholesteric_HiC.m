@@ -13,37 +13,47 @@ clear
 %%% compute P(s) curve directly from HiC map, using cooltools without
 %%% distance cutoff
 
-model=[]; %position of DNA fibres
-chol_layers = 10;
-num_mon = 40; %target for number of monomers in the thicket layer
+%%% variables in commented figures need to renamed
+
+chromosome=[]; %position of DNA fibres
+%7.655Mbp/(10 layers)∗1monomer/5kbp≈(150 monomers)/layer
+num_mon = 50; %number of monomers in the thickest cholesteric disk
+
+frac_tot_sequence_in_loops = 0.3; %Fraction
+frac_loop_sequence_inter_disc = 0.5; %Fraction
+total_chromosome_length = 1500;
+%total_chromosome_length = 15000;
+
+%cholesteric pitch P: length in microns along long axis of the chromosome
+%corresponding to a full turn of the nematic director
+pitch = 1.30*2; %in microns
 
 %ellipse parameters for overall chromosome profile
-min_axis_chr=0.5; %in microns
+min_axis_chr=0.5; %radius of cholesteric disc, in microns
+
+%ellipse minor/major axes ratio for a cholesteric disc, for circle set ell_ratio=1
+%major axis of cholesteric disc ellipse = minor axis of chromosome ellipse
+ell_ratio = 1;
 
 spacing = min_axis_chr*sqrt(pi/num_mon); %mesh spacing in microns
 %2D grid of points
 x = -1:spacing:1; %mesh in microns
 y = -1:spacing:1; %mesh in microns
 
-maj_axis_chr=chol_layers*spacing; %in microns
-
-%ellipse minor/major axes ratio for a single layer, for circle set ratio=1
-%major axis of layer ellipse = minor axis of chromosome ellipse
-%ell_ratio = 0.90;
-ell_ratio = 1;
-
+%VECTOR FIELD ONLY:
 %longitudinal component magnitude
 b = 0.130 * 0.025; %in microns
 
-%ensure ~num_mon monomers in the thickest layer (where r=b)
-%7.655Mbp/(10 layers)∗1monomer/5kbp≈(150 monomers)/layer
-mon_per_layer=zeros(chol_layers,1);
-
-%cholesteric pitch P: length in microns along long axis of the chromosome
-%corresponding to a full turn of the nematic director
-pitch = 1.30/1.5; %in microns
-
 dtheta_layer=360*spacing/pitch; %DNA fibres in a layer are rotated dtheta_layer degrees counterclockwise relative to the previous layer
+
+% Find the target total length of core and loops
+wanted_total_core_length = total_chromosome_length-(frac_tot_sequence_in_loops*total_chromosome_length);
+wanted_total_inter_disc_loop_length = (total_chromosome_length-wanted_total_core_length)*frac_loop_sequence_inter_disc;
+wanted_total_intra_disc_loop_length = total_chromosome_length-wanted_total_core_length-wanted_total_inter_disc_loop_length;
+
+chol_layers = wanted_total_core_length/num_mon;
+mon_per_disc=zeros(chol_layers,1);
+maj_axis_chr=chol_layers*spacing; %in microns
 
 %for vector field describing orientation of DNA fibres
 lin_vec_x =[];
@@ -55,9 +65,11 @@ i=1;
 for z = 0-(spacing*(chol_layers-1))/2:spacing:spacing*(chol_layers-1)-(spacing*(chol_layers-1))/2 %thickest/middle part of chromosome is z=0
 
     [X,Y] = meshgrid(x,y);
+
+    % MAKE r A CONSTANT = maj_axis_chr (get longest distance parabola from origin)
     r = (min_axis_chr/maj_axis_chr)*sqrt(maj_axis_chr^2-z^2); %major axis of disk at this z position
 
-    %layer mask
+    %mask for a single cholesteric disc
     indicator = sqrt((X./r).^2 + (Y./(r.*ell_ratio)).^2) - 1 < 0;
     xEllipse = X(indicator);
     yEllipse = Y(indicator);
@@ -77,29 +89,29 @@ for z = 0-(spacing*(chol_layers-1))/2:spacing:spacing*(chol_layers-1)-(spacing*(
     end
 
     %create array of potential start positions for intra-disc extra chromosomal loops
-    intra_disc_loop_potential_starts_ind = [intra_disc_loop_potential_starts_ind; size(model,1) + flip_these];
+    intra_disc_loop_potential_starts_ind = [intra_disc_loop_potential_starts_ind; size(chromosome,1) + flip_these];
 
-    model = [model; [rotcoord(:,1), rotcoord(:,2), z.*ones(size(xEllipse))]]; %append positions of DNA fibres for new layer
+    chromosome = [chromosome; [rotcoord(:,1), rotcoord(:,2), z.*ones(size(xEllipse))]]; %append positions of DNA fibres for new cholesteric disc
 
-    lin_vec_x = [lin_vec_x; spacing*cosd((i-1)*dtheta_layer).*ones(size(xEllipse))]; %append orientation of DNA fibres for new layer
-    lin_vec_y = [lin_vec_y; spacing*sind((i-1)*dtheta_layer).*ones(size(xEllipse))]; %append orientation of DNA fibres for new layer
+    lin_vec_x = [lin_vec_x; spacing*cosd((i-1)*dtheta_layer).*ones(size(xEllipse))]; %append orientation of DNA fibres for new cholesteric disc
+    lin_vec_y = [lin_vec_y; spacing*sind((i-1)*dtheta_layer).*ones(size(xEllipse))]; %append orientation of DNA fibres for new cholesteric disc
 
-    mon_per_layer(i)=size(xEllipse,1);
+    mon_per_disc(i)=size(xEllipse,1);
     i=i+1;
 end
 
 %orientation of DNA fibres, no longituindal component: fvec=(cos(az), sin(az), 0)
-lin_vec_0=ones(size(model));
+lin_vec_0=ones(size(chromosome));
 %orientation of DNA fibres, longitudnal component=b fvec=(cos(az), sin(az), b) %normalize to unit length???
-lin_vec_b=ones(size(model));
+lin_vec_b=ones(size(chromosome));
 
 lin_vec_0(:,1) = lin_vec_x;
 lin_vec_0(:,2) = lin_vec_y;
-lin_vec_0(:,3) = zeros(size(model(:,3)));
+lin_vec_0(:,3) = zeros(size(chromosome(:,3)));
 
 lin_vec_b(:,1) = lin_vec_x;
 lin_vec_b(:,2) = lin_vec_y;
-lin_vec_b(:,3) = b.*ones(size(model(:,3))); %not affected by normalization
+lin_vec_b(:,3) = b.*ones(size(chromosome(:,3))); %not affected by normalization
 
 %another way to taper: no taper, elliptical, hockey rink
 %z = 0-(spacing*(chol_layers-1))/2:spacing:spacing*(chol_layers-1)-(spacing*(chol_layers-1))/2;
@@ -161,14 +173,13 @@ lin_vec_b(:,3) = b.*ones(size(model(:,3))); %not affected by normalization
 %rotate entire model and vector field by phi
 phi=45; %degrees
 Rphi = [1 0 0; 0 cosd(phi) -sind(phi); 0 sind(phi) cosd(phi)];
-model_rot=model*Rphi;
+chromosome_rot=chromosome*Rphi;
 lin_vec_0_rot=lin_vec_0*Rphi;
 lin_vec_b_rot=lin_vec_b*Rphi;
 % figure
 % set(gcf, 'Position', get(0, 'Screensize'));
-% q0=quiver3(model_rot(:,1)-lin_vec_0_rot(:,1)./2,model_rot(:,2)-lin_vec_0_rot(:,2)./2,model_rot(:,3)-lin_vec_0_rot(:,3)./2,lin_vec_0_rot(:,1),lin_vec_0_rot(:,2),lin_vec_0_rot(:,3),'off'); %orientation vector rotates about midpoint instead of base
+% q0=quiver3(chromosome_rot(:,1)-lin_vec_0_rot(:,1)./2,chromosome_rot(:,2)-lin_vec_0_rot(:,2)./2,chromosome_rot(:,3)-lin_vec_0_rot(:,3)./2,lin_vec_0_rot(:,1),lin_vec_0_rot(:,2),lin_vec_0_rot(:,3),'off'); %orientation vector rotates about midpoint instead of base
 % q0.ShowArrowHead = 'off';
-%
 % xlim([-1 1])
 % ylim([-1 1])
 % zlim([-0.15 0.15])
@@ -178,19 +189,14 @@ lin_vec_b_rot=lin_vec_b*Rphi;
 % zlabel('z','FontSize', 24)
 % title('Rotated model for oblique cross-section viewing','FontSize', 24)
 
-%INTER DISK LOOPS
-idx=find(diff(model(:,3))>0); %new disc starts when z coordinate changes
-mean_looplength = 20; %requested loop length along each axis
-
-model_unflipped=model;
-
+%INTRA DISK LOOPS
 %choose potential intra-disc loop start positions, i.e. perimeter points on discs
 intra_disc_loop_potential_starts_ind = sort(intra_disc_loop_potential_starts_ind);
 
 append=[];
 %RENAME IDX2
 for i = 1:1:size(intra_disc_loop_potential_starts_ind,1)
-    [match, idx2] = ismember(model_unflipped(intra_disc_loop_potential_starts_ind(i),:), model, 'rows');
+    [match, idx2] = ismember(chromosome(intra_disc_loop_potential_starts_ind(i),:), chromosome, 'rows');
     intra_disc_loop_potential_starts_ind(i)=idx2;
     append = [append; idx2+1];
     append = [append; idx2-1];
@@ -202,77 +208,84 @@ intra_disc_loop_potential_starts_ind = unique(intra_disc_loop_potential_starts_i
 intra_disc_loop_potential_starts_ind = sort(intra_disc_loop_potential_starts_ind);
 
 intra_disc_loop_potential_starts_ind(intra_disc_loop_potential_starts_ind == 0, :) = [];
-intra_disc_loop_potential_starts_ind(intra_disc_loop_potential_starts_ind == size(model,1)+1, :) = [];
+intra_disc_loop_potential_starts_ind(intra_disc_loop_potential_starts_ind == size(chromosome,1)+1, :) = [];
 
 save=[];
 for i = 3:1:size(intra_disc_loop_potential_starts_ind,1)-2
-    if ismember(model(intra_disc_loop_potential_starts_ind(i)-2,:), model(intra_disc_loop_potential_starts_ind,:), 'rows') & ismember(model(intra_disc_loop_potential_starts_ind(i)+2,:), model(intra_disc_loop_potential_starts_ind,:), 'rows')
+    if ismember(chromosome(intra_disc_loop_potential_starts_ind(i)-2,:), chromosome(intra_disc_loop_potential_starts_ind,:), 'rows') & ismember(chromosome(intra_disc_loop_potential_starts_ind(i)+2,:), chromosome(intra_disc_loop_potential_starts_ind,:), 'rows')
         save=[save; i];
     end
 end
 
 intra_disc_loop_potential_starts_ind(save)=[];
 
+%INTER DISK LOOPS
+idx=find(diff(chromosome(:,3))>0); %new disc starts when z coordinate changes
 num_inter_disc_loops = size(idx,1);
-num_intra_disc_loops = 0;
+mean_looplength = wanted_total_inter_disc_loop_length/num_inter_disc_loops;
+% Generate inter disc loops with variable looplength drawn from an exponential distribution
+% Total length of inter disc loops adds up to the wanted length of inter disc loops
+inter_disc_loop_lengths = [];
 
-inter_disc_loops = cell(1, num_inter_disc_loops); %cell array
-disc_starts = zeros(num_inter_disc_loops+1, 3); %on lattice points
-disc_ends = zeros(num_inter_disc_loops+1, 3);  %on lattice points
-save_disc_starts = zeros(num_inter_disc_loops+1, 3); %remains off-latice, matches model coordinates
-save_disc_ends = zeros(num_inter_disc_loops+1, 3); %remains off-latice, matches model coordinates
+for i = 1:1:num_inter_disc_loops
+    new_loop = round(exprnd(mean_looplength));
+    % Reject loops lengths of 0
+    while new_loop == 0
+        new_loop = round(exprnd(mean_looplength));
+    end
+    inter_disc_loop_lengths = [inter_disc_loop_lengths new_loop];
+end
+
+inter_disc_loops = cell(1, num_inter_disc_loops); %cell array containing the loops
+
+disc_spine_1 = zeros(num_inter_disc_loops+1, 3); %on lattice points
+disc_spine_2 = zeros(num_inter_disc_loops+1, 3);  %on lattice points
+save_disc_starts = zeros(num_inter_disc_loops+1, 3); %remains off-latice, matches chromosome coordinates
+save_disc_ends = zeros(num_inter_disc_loops+1, 3); %remains off-latice, matches chromosome coordinates
 
 %find starts and ends to each disc
-for i=1:1:num_inter_disc_loops+1
+for i=1:1:size(idx,1)+1
     if i == 1
-        disc_ends(i,:)=model(idx(1),:);
-        disc_starts(i,:)=model(1,:);
-    elseif i == num_inter_disc_loops+1
-        disc_ends(i,:)=model(end,:);
-        disc_starts(i,:)=model(idx(end)+1,:);
+        disc_spine_1(i,:)=chromosome(1,:);
+        disc_spine_2(i,:)=chromosome(idx(1),:);
+    elseif i == size(idx,1)+1
+        disc_spine_1(i,:)=chromosome(idx(end)+1,:);
+        disc_spine_2(i,:)=chromosome(end,:);
     else
-        disc_ends(i,:)=model(idx(i),:);
-        disc_starts(i,:)=model(idx(i-1)+1,:);
+        disc_spine_1(i,:)=chromosome(idx(i-1)+1,:);
+        disc_spine_2(i,:)=chromosome(idx(i),:);
     end
 end
 
 for i=1:1:num_inter_disc_loops+1
-    save_disc_starts(i,:)=disc_starts(i,:);
-    save_disc_ends(i,:)=disc_ends(i,:);
+    save_disc_starts(i,:)=disc_spine_1(i,:);
+    save_disc_ends(i,:)=disc_spine_2(i,:);
 
-    disc_starts(i,:)=spacing*round(disc_starts(i,:)./spacing);
-    disc_ends(i,:)=spacing*round(disc_ends(i,:)./spacing);
+    disc_spine_1(i,:)=spacing*round(disc_spine_1(i,:)./spacing);
+    disc_spine_2(i,:)=spacing*round(disc_spine_2(i,:)./spacing);
 end
 
-%KEEP GENERATING LOOPS UNTIL A CERTAIN SEQUENCE LENGTH IS REACHED.
-%OTHERWISE DISCS ARE CONNECTED BY A DIRECT VERTICAL STEP BY DEFAULT (CHECK)
-%MOVE SAMPLING EXPONENTIAL DIST TO TOP OF THE CODE
+%PROBLEM
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%pdist([disc_starts(count,:); disc_starts(count+1,:)])/size(inter_disc_loops{i},1)
 
-%generate loops with looplength as mean
-inter_disc_loop_lengths = exprnd(mean_looplength, 1, num_inter_disc_loops);
-
-%if the generated loop length is rounded to 0, remove it from the list
-%inter_disc_loop_lengths(find(round(inter_disc_loop_lengths)==0))=[];
-for i=1:1:num_inter_disc_loops
-    if round(inter_disc_loop_lengths(i)) == 0
-        inter_disc_loop_lengths(i) = 1;
-    end
-end
+%spacing*2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 count = 1;
-for i=1:1:size(inter_disc_loop_lengths,2)
+for i=1:1:num_inter_disc_loops
     i
-    round(inter_disc_loop_lengths(i))
+    inter_disc_loop_lengths(i)
     %adjacent disks connected
     if mod(count,2)==1
         %convert 2D array to cell
-        inter_disc_loops{i}=num2cell(constrained_self_avoiding_RW_3D(disc_starts(count,:),disc_starts(count+1,:),round(inter_disc_loop_lengths(i)),spacing));
+        inter_disc_loops{i}=num2cell(constrained_self_avoiding_RW_3D(disc_spine_1(count,:),disc_spine_1(count+1,:),inter_disc_loop_lengths(i),spacing));
     else
         %convert 2D array to cell
-        inter_disc_loops{i}=num2cell(constrained_self_avoiding_RW_3D(disc_ends(count,:),disc_ends(count+1,:),round(inter_disc_loop_lengths(i)),spacing));
+        inter_disc_loops{i}=num2cell(constrained_self_avoiding_RW_3D(disc_spine_2(count,:),disc_spine_2(count+1,:),inter_disc_loop_lengths(i),spacing));
     end
-    for j=1:1:round(inter_disc_loop_lengths(i))
-        if sqrt((inter_disc_loops{i}{j,1}).^2 + (inter_disc_loops{i}{j,2}).^2) <= min_axis_chr
+    for j=1:1:inter_disc_loop_lengths(i)
+        if sqrt((inter_disc_loops{i}{j,1}).^2 + (inter_disc_loops{i}{j,2}).^2) <= min_axis_chr*0.9
             [theta,rho] = cart2pol(inter_disc_loops{i}{j,1},inter_disc_loops{i}{j,2});
             rho=rho+abs(2*(min_axis_chr-sqrt((inter_disc_loops{i}{j,1}).^2 + (inter_disc_loops{i}{j,2}).^2)));
             [inter_disc_loops{i}{j,1},inter_disc_loops{i}{j,2}] = pol2cart(theta,rho);
@@ -282,16 +295,16 @@ for i=1:1:size(inter_disc_loop_lengths,2)
     %reject walks with any steps of length spacing*2 or greater
     j=1;
     while j<=size(inter_disc_loops{i},1)-1
-        while sqrt((inter_disc_loops{i}{j,1})-inter_disc_loops{i}{j+1,1}).^2 + (inter_disc_loops{i}{j,2}-inter_disc_loops{i}{j+1,2}).^2 + (inter_disc_loops{i}{j,3}-inter_disc_loops{i}{j+1,3}).^2 > spacing*2
+        while sqrt((inter_disc_loops{i}{j,1}-inter_disc_loops{i}{j+1,1}).^2 + (inter_disc_loops{i}{j,2}-inter_disc_loops{i}{j+1,2}).^2 + (inter_disc_loops{i}{j,3}-inter_disc_loops{i}{j+1,3}).^2) > spacing*2
             if mod(count,2)==1
-                inter_disc_loops{i}=num2cell(constrained_self_avoiding_RW_3D(disc_starts(count,:),disc_starts(count+1,:),round(inter_disc_loop_lengths(i)),spacing));
+                inter_disc_loops{i}=num2cell(constrained_self_avoiding_RW_3D(disc_spine_1(count,:),disc_spine_1(count+1,:),inter_disc_loop_lengths(i),spacing));
                 j=1;
             else
-                inter_disc_loops{i}=num2cell(constrained_self_avoiding_RW_3D(disc_ends(count,:),disc_ends(count+1,:),round(inter_disc_loop_lengths(i)),spacing));
+                inter_disc_loops{i}=num2cell(constrained_self_avoiding_RW_3D(disc_spine_2(count,:),disc_spine_2(count+1,:),inter_disc_loop_lengths(i),spacing));
                 j=1;
             end
-            for k=1:1:round(inter_disc_loop_lengths(i))
-                if sqrt((inter_disc_loops{i}{k,1}).^2 + (inter_disc_loops{i}{k,2}).^2) <= min_axis_chr
+            for k=1:1:inter_disc_loop_lengths(i)
+                if sqrt((inter_disc_loops{i}{k,1}).^2 + (inter_disc_loops{i}{k,2}).^2) <= min_axis_chr*0.9
                     [theta,rho] = cart2pol(inter_disc_loops{i}{k,1},inter_disc_loops{i}{k,2});
                     rho=rho+abs(2*(min_axis_chr-sqrt((inter_disc_loops{i}{k,1}).^2 + (inter_disc_loops{i}{k,2}).^2)));
                     [inter_disc_loops{i}{k,1},inter_disc_loops{i}{k,2}] = pol2cart(theta,rho);
@@ -303,9 +316,58 @@ for i=1:1:size(inter_disc_loop_lengths,2)
     count = count + 1;
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%by flipping every second disc the start of the next disc will be directly above the end of the disc below
+chromosome(1:idx(1),:) = flipud(chromosome(1:idx(1),:));
+for i=1:1:size(idx,1)
+    if mod(i,2)==0
+        if i == size(idx,1)
+            chromosome(idx(i)+1:end,:) = flipud(chromosome(idx(i)+1:end,:));
+        else
+            chromosome(idx(i)+1:idx(i+1),:) = flipud(chromosome(idx(i)+1:idx(i+1),:));
+        end
+    end
+end
+
+%delete inter disc loops until wanted_total_inter_disc_loop_length is reached
+%discs are otherwise connected with a direct vertical step
+sum_inter_disc_loops=0;
+for i = 1:1:size(inter_disc_loops,2)
+    sum_inter_disc_loops = sum_inter_disc_loops+size(inter_disc_loops{i},1);
+end
+
+% Generate loop length while the desired total length is not hit
+while sum_inter_disc_loops >= wanted_total_inter_disc_loop_length
+    temp=randperm(size(inter_disc_loops,2),1);
+    inter_disc_loops(:,temp) = [];
+    idx(temp)=[];
+    if size(temp,1) > 0
+        num_inter_disc_loops = num_inter_disc_loops - size(temp,1);
+    end
+    sum_inter_disc_loops = 0;
+    for i = 1:1:size(inter_disc_loops,2)
+        sum_inter_disc_loops = sum_inter_disc_loops+size(inter_disc_loops{i},1);
+    end
+end
+
+sum_inter_disc_loops = 0;
+for i = 1:1:size(inter_disc_loops,2)
+    sum_inter_disc_loops = sum_inter_disc_loops+size(inter_disc_loops{i},1);
+end
+
+% insert inter-disc loops into primary sequence in model
+chromosome_w_inter_disc_loops = insert_loops(num_inter_disc_loops, sum_inter_disc_loops, chromosome, inter_disc_loops, idx);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 [Xcyl,Ycyl,Zcyl] = cylinder(min_axis_chr);
-Zcyl = Zcyl*(max(model(:,3))-min(model(:,3)));
-Zcyl = Zcyl - max(model(:,3));
+Zcyl = Zcyl*(max(chromosome(:,3))-min(chromosome(:,3)));
+Zcyl = Zcyl - max(chromosome(:,3));
 
 % f=figure
 % fig=gcf;
@@ -363,28 +425,6 @@ Zcyl = Zcyl - max(model(:,3));
 % end
 % plot3(model(:,1),model(:,2),model(:,3))
 
-%by flipping every second disc the start of the next disc will be directly above the end of the disc below
-model(1:idx(1),:) = flipud(model(1:idx(1),:));
-for i=1:1:size(idx,1)
-    if mod(i,2)==0
-        if i == size(idx,1)
-            model(idx(i)+1:end,:) = flipud(model(idx(i)+1:end,:));
-        else
-            model(idx(i)+1:idx(i+1),:) = flipud(model(idx(i)+1:idx(i+1),:));
-        end
-    end
-end
-
-total_length_inter_disc = 0;
-for i=1:1:num_inter_disc_loops
-    total_length_inter_disc = total_length_inter_disc + round(inter_disc_loop_lengths(i));
-end
-
-% insert inter-disc loops into primary sequence in model
-%%%RENAME NEW MODEL AND NEW_NEW_MODEL
-
-new_model = insert_loops(num_inter_disc_loops, total_length_inter_disc, model, inter_disc_loops, idx);
-
 % figure
 % plot3(new_model(:,1),new_model(:,2),new_model(:,3))
 % xlim([min(model(:,1))*2 max(model(:,1))*2])
@@ -395,25 +435,25 @@ new_model = insert_loops(num_inter_disc_loops, total_length_inter_disc, model, i
 % zlabel('z','FontSize', 24)
 % view(30,30)
 
-
+%INTRA DISK LOOPS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %RENAME IDX3
-%this maps the list of indicies for intra-disc loop starts from model -> new_model
+%this maps the list of indicies for intra-disc loop starts from chromosome -> chromosome_w_inter_disc_loops
 for i = 1:1:size(intra_disc_loop_potential_starts_ind,1)
-    [match, idx3] = ismember(model(intra_disc_loop_potential_starts_ind(i),:), new_model, 'rows');
+    [match, idx3] = ismember(chromosome(intra_disc_loop_potential_starts_ind(i),:), chromosome_w_inter_disc_loops, 'rows');
     intra_disc_loop_potential_starts_ind(i)=idx3;
 end
 
 %ensure intra-disc loops don't start/end at the same position as an inter-disc loop
 for i = 1:1:size(save_disc_starts,1)
-    common = ismember(save_disc_starts(i,:),new_model(intra_disc_loop_potential_starts_ind,:),'rows');
+    common = ismember(save_disc_starts(i,:),chromosome_w_inter_disc_loops(intra_disc_loop_potential_starts_ind,:),'rows');
     if common == 1
-        RowIdx = find(ismember(new_model(intra_disc_loop_potential_starts_ind,:), save_disc_starts(i,:),'rows'));
+        RowIdx = find(ismember(chromosome_w_inter_disc_loops(intra_disc_loop_potential_starts_ind,:), save_disc_starts(i,:),'rows'));
         intra_disc_loop_potential_starts_ind(RowIdx)=[];
     end
-    common = ismember(save_disc_ends(i,:),new_model(intra_disc_loop_potential_starts_ind,:),'rows');
+    common = ismember(save_disc_ends(i,:),chromosome_w_inter_disc_loops(intra_disc_loop_potential_starts_ind,:),'rows');
     if common == 1
-        RowIdx = find(ismember(new_model(intra_disc_loop_potential_starts_ind,:), save_disc_ends(i,:),'rows'));
+        RowIdx = find(ismember(chromosome_w_inter_disc_loops(intra_disc_loop_potential_starts_ind,:), save_disc_ends(i,:),'rows'));
         intra_disc_loop_potential_starts_ind(RowIdx)=[];
     end
 end
@@ -431,17 +471,40 @@ end
 % view(0,90)
 % hold off
 
-%choose two neighbouring perimeter points on the same disc
-num_intra_disc_loops = 10;
+% Generate loops with looplength as mean from an exponential distribution
+% Total length of loops adds up to the wanted length of intra disc loops
+intra_disc_loop_lengths = [];
 
-%intra_disc_loop_potential_starts are indicies for new_model
-cluster=clusterdata(intra_disc_loop_potential_starts_ind,'Criterion','distance','Cutoff',1);
-for i = 1:1:max(cluster)
-    if size(find(cluster==i),1) > 2
-        intra_disc_loop_potential_starts_ind(find(cluster==i)) = [];
+while sum(intra_disc_loop_lengths) <= wanted_total_intra_disc_loop_length
+    new_loop = round(exprnd(mean_looplength));
+    % Reject loops lengths of 0
+    while new_loop == 0
+        new_loop = round(exprnd(mean_looplength));
     end
+    if sum(intra_disc_loop_lengths)+new_loop > wanted_total_intra_disc_loop_length
+        break; %CHECK THIS!!!
+    end
+    intra_disc_loop_lengths = [intra_disc_loop_lengths new_loop];
 end
 
+if sum(intra_disc_loop_lengths) < wanted_total_intra_disc_loop_length
+    intra_disc_loop_lengths = [intra_disc_loop_lengths wanted_total_intra_disc_loop_length-sum(intra_disc_loop_lengths)];
+end
+
+num_intra_disc_loops = size(intra_disc_loop_lengths,2);
+intra_disc_loops = cell(1, num_intra_disc_loops); %cell array
+
+%intra_disc_loop_potential_starts are indicies for chromosome_w_inter_disc_loops
+cluster=clusterdata(intra_disc_loop_potential_starts_ind,1);
+for i = 1:1:max(cluster)
+    del = [];
+    if size(find(cluster==i),1) > 2
+        del = [del; i];
+    end
+    intra_disc_loop_potential_starts_ind(find(del)) = [];
+end
+
+%number of random intra disc loops starts and ends correspond to num_intra_disc_loops and are chosen randomly from all possible locations
 intra_disc_loop_potential_starts_ind=intra_disc_loop_potential_starts_ind(find(diff(intra_disc_loop_potential_starts_ind)==1));
 p = randperm(size(intra_disc_loop_potential_starts_ind,1),num_intra_disc_loops);
 intra_disc_loop_starts_ind = sort(intra_disc_loop_potential_starts_ind(p));
@@ -451,8 +514,8 @@ intra_disc_loop_starts = zeros(num_intra_disc_loops+1, 3); %on lattice points
 intra_disc_loop_ends = zeros(num_intra_disc_loops+1, 3);  %on lattice points
 
 for i=1:1:num_intra_disc_loops
-    intra_disc_loop_starts(i,:)=spacing*round(new_model(intra_disc_loop_starts_ind(i),:)./spacing);
-    intra_disc_loop_ends(i,:)=spacing*round(new_model(intra_disc_loop_ends_ind(i),:)./spacing);
+    intra_disc_loop_starts(i,:)=spacing*round(chromosome_w_inter_disc_loops(intra_disc_loop_starts_ind(i),:)./spacing);
+    intra_disc_loop_ends(i,:)=spacing*round(chromosome_w_inter_disc_loops(intra_disc_loop_ends_ind(i),:)./spacing);
 end
 
 % figure
@@ -468,30 +531,12 @@ end
 % zlabel('z','FontSize', 24)
 % view(30,30)
 
-%KEEP GENERATING LOOPS UNTIL A CERTAIN SEQUENCE LENGTH IS REACHED.
-%OTHERWISE DISCS ARE CONNECTED BY A DIRECT VERTICAL STEP BY DEFAULT (CHECK)
-%MOVE SAMPLING EXPONENTIAL DIST TO TOP OF THE CODE
-
-%generate loops with looplength as mean
-intra_disc_loop_lengths = exprnd(mean_looplength, 1, num_intra_disc_loops);
-
-%if the generated loop length is rounded to 0, remove it from the list
-%intra_disc_loop_lengths(find(round(intra_disc_loop_lengths)==0))=[];
-%!!!!!!!!!!!!!!!!
-for i=1:1:num_intra_disc_loops
-    if round(intra_disc_loop_lengths(i)) == 0
-        intra_disc_loop_lengths(i) = 1;
-    end
-end
-
 %Generate intra-disc loops
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-intra_disc_loops = cell(1, num_intra_disc_loops); %cell array
-
 for i=1:1:size(intra_disc_loop_lengths,2)
-    intra_disc_loops{i}=num2cell(constrained_self_avoiding_RW_3D(intra_disc_loop_starts(i,:),intra_disc_loop_ends(i,:),round(intra_disc_loop_lengths(i)),spacing));
-    for j=1:1:round(intra_disc_loop_lengths(i))
-        if sqrt((intra_disc_loops{i}{j,1}).^2 + (intra_disc_loops{i}{j,2}).^2) <= min_axis_chr
+    intra_disc_loops{i}=num2cell(constrained_self_avoiding_RW_3D(intra_disc_loop_starts(i,:),intra_disc_loop_ends(i,:),intra_disc_loop_lengths(i),spacing));
+    for j=1:1:intra_disc_loop_lengths(i)
+        if sqrt((intra_disc_loops{i}{j,1}).^2 + (intra_disc_loops{i}{j,2}).^2) <= min_axis_chr*0.9
             [theta,rho] = cart2pol(intra_disc_loops{i}{j,1},intra_disc_loops{i}{j,2});
             rho=rho+abs(2*(min_axis_chr-sqrt((intra_disc_loops{i}{j,1}).^2 + (intra_disc_loops{i}{j,2}).^2)));
             [intra_disc_loops{i}{j,1},intra_disc_loops{i}{j,2}] = pol2cart(theta,rho);
@@ -502,10 +547,10 @@ for i=1:1:size(intra_disc_loop_lengths,2)
     j=1;
     while j<=size(intra_disc_loops{i},1)-1
         while sqrt((intra_disc_loops{i}{j,1}-intra_disc_loops{i}{j+1,1}).^2 + (intra_disc_loops{i}{j,2}-intra_disc_loops{i}{j+1,2}).^2 + (intra_disc_loops{i}{j,3}-intra_disc_loops{i}{j+1,3}).^2) > spacing*2
-            intra_disc_loops{i}=num2cell(constrained_self_avoiding_RW_3D(intra_disc_loop_starts(i,:),intra_disc_loop_ends(i,:),round(intra_disc_loop_lengths(i)),spacing));
+            intra_disc_loops{i}=num2cell(constrained_self_avoiding_RW_3D(intra_disc_loop_starts(i,:),intra_disc_loop_ends(i,:),intra_disc_loop_lengths(i),spacing));
             j=1;
-            for k=1:1:round(intra_disc_loop_lengths(i))
-                if sqrt((intra_disc_loops{i}{k,1}).^2 + (intra_disc_loops{i}{k,2}).^2) <= min_axis_chr
+            for k=1:1:intra_disc_loop_lengths(i)
+                if sqrt((intra_disc_loops{i}{k,1}).^2 + (intra_disc_loops{i}{k,2}).^2) <= min_axis_chr*0.9
                     [theta,rho] = cart2pol(intra_disc_loops{i}{k,1},intra_disc_loops{i}{k,2});
                     rho=rho+abs(2*(min_axis_chr-sqrt((intra_disc_loops{i}{k,1}).^2 + (intra_disc_loops{i}{k,2}).^2)));
                     [intra_disc_loops{i}{k,1},intra_disc_loops{i}{k,2}] = pol2cart(theta,rho);
@@ -517,66 +562,45 @@ for i=1:1:size(intra_disc_loop_lengths,2)
     i
 end
 
-total_length_intra_disc = 0;
-for i=1:1:num_intra_disc_loops
-    total_length_intra_disc = total_length_intra_disc + round(intra_disc_loop_lengths(i));
-end
-
-% insert intra-disc loops into primary sequence in model
-%%%RENAME NEW MODEL AND NEW_NEW_MODEL
-new_new_model = insert_loops(num_intra_disc_loops, total_length_intra_disc, new_model, intra_disc_loops, intra_disc_loop_starts_ind);
-
-figure
-hold on
-plot3(model(:,1),model(:,2),model(:,3))
-for j = 1:1:size(inter_disc_loops,2)
-    plot3(cell2mat(inter_disc_loops{j}(:,1)),cell2mat(inter_disc_loops{j}(:,2)),cell2mat(inter_disc_loops{j}(:,3)),'-','Color','r')
-end
-for k = 1:1:size(intra_disc_loops,2)
-    plot3(cell2mat(intra_disc_loops{k}(:,1)),cell2mat(intra_disc_loops{k}(:,2)),cell2mat(intra_disc_loops{k}(:,3)),'-','Color','g')
-end
-xlim([min(new_model(:,1))*2 max(new_model(:,1))*2])
-ylim([min(new_model(:,2))*2 max(new_model(:,2))*2])
-zlim([min(new_model(:,3))*2 max(new_model(:,3))*2])
-xlabel('x','FontSize', 24)
-ylabel('y','FontSize', 24)
-zlabel('z','FontSize', 24)
-view(30,30)
+% insert intra-disc loops into primary sequence in chromosome
+chromosome_w_inter_and_intra_disc_loops = insert_loops(num_intra_disc_loops, sum(intra_disc_loop_lengths), chromosome_w_inter_disc_loops, intra_disc_loops, intra_disc_loop_starts_ind);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-numPoints = size(new_new_model,1);
+numPoints = size(chromosome_w_inter_and_intra_disc_loops,1);
 
 MyColor = linspace(1,numPoints,numPoints)';
 % create a connectivity matrix
 Faces = [1:(numPoints-1); 2:numPoints]';
 
-skip=5;
+skip=numPoints;
 
 f=figure
 hold on
-plot3(new_new_model(:,1),new_new_model(:,2),new_new_model(:,3),'Color', [.6 .6 .6])
+plot3(chromosome_w_inter_and_intra_disc_loops(:,1),chromosome_w_inter_and_intra_disc_loops(:,2),chromosome_w_inter_and_intra_disc_loops(:,3),'Color', [.6 .6 .6])
 colormap jet
 axis equal
-xlim([min(model(:,1))*2 max(model(:,1))*2])
-ylim([min(model(:,2))*2 max(model(:,2))*2])
-zlim([min(model(:,3))*2 max(model(:,3))*2])
+xlim([min(chromosome(:,1))*2 max(chromosome(:,1))*2])
+ylim([min(chromosome(:,2))*2 max(chromosome(:,2))*2])
+zlim([min(chromosome(:,3))*2 max(chromosome(:,3))*2])
 caxis([min(MyColor) max(MyColor)])
 c = colorbar;
 c.Label.String = 'primary sequence';
-for i=skip+1:skip:numPoints
-    clf(f)
-    plot3(new_new_model(:,1),new_new_model(:,2),new_new_model(:,3),'Color', [.6 .6 .6])
-    xlim([min(model(:,1))*2 max(model(:,1))*2])
-    ylim([min(model(:,2))*2 max(model(:,2))*2])
-    zlim([min(model(:,3))*2 max(model(:,3))*2])
-    view(30,30)
-    caxis([min(MyColor) max(MyColor)])
-    c = colorbar;
-    c.Label.String = 'primary sequence';
-    patch('Faces', Faces(i-skip:i-1,:) ,'Vertices', new_new_model(1:i,:) ,'FaceColor', 'none', 'FaceVertexCData', MyColor(1:i,:) ,'EdgeColor','interp' ,'LineWidth',5, 'FaceAlpha',.5,'EdgeAlpha',.5);
-    pause(0.1);
-end
+patch('Faces', Faces(:,:) ,'Vertices', chromosome_w_inter_and_intra_disc_loops(:,:) ,'FaceColor', 'none', 'FaceVertexCData', MyColor(:,:) ,'EdgeColor','interp' ,'LineWidth',5, 'FaceAlpha',.5,'EdgeAlpha',.5);
+view(30,30)
+% for i=skip+1:skip:numPoints
+%     clf(f)
+%     plot3(new_new_model(:,1),new_new_model(:,2),new_new_model(:,3),'Color', [.6 .6 .6])
+%     xlim([min(model(:,1))*2 max(model(:,1))*2])
+%     ylim([min(model(:,2))*2 max(model(:,2))*2])
+%     zlim([min(model(:,3))*2 max(model(:,3))*2])
+%     view(30,30)
+%     caxis([min(MyColor) max(MyColor)])
+%     c = colorbar;
+%     c.Label.String = 'primary sequence';
+%     patch('Faces', Faces(i-skip:i-1,:) ,'Vertices', new_new_model(1:i,:) ,'FaceColor', 'none', 'FaceVertexCData', MyColor(1:i,:) ,'EdgeColor','interp' ,'LineWidth',5, 'FaceAlpha',.5,'EdgeAlpha',.5);
+%     pause(0.5);
+% end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -587,19 +611,40 @@ end
 %euclidian distance between monomers
 %D = pdist(model); %in microns
 %D = pdist(new_model); %in microns
-D = pdist(new_new_model); %in microns
+D = pdist(chromosome_w_inter_and_intra_disc_loops); %in microns
 
 D = squareform(D);
 
 %HiC contact probablities from distance
-P = spacing./D.^4;
-%P = 1./D.^4;
+%P = spacing./D;
+P = 1./D.^4;
 P(isinf(P)) = 1; %self contact probabilities are 1
 
 %are these coming from disc/loop connections?
 %this is very important! as long extrachromosomal loops might have
 %overlapping monomers
 P(P>1) = 1; %no contact probabilities above 1
+
+figure
+hold on
+plot3(chromosome(:,1),chromosome(:,2),chromosome(:,3))
+for j = 1:1:size(inter_disc_loops,2)
+    plot3(cell2mat(inter_disc_loops{j}(:,1)),cell2mat(inter_disc_loops{j}(:,2)),cell2mat(inter_disc_loops{j}(:,3)),'-','Color','r')
+end
+for k = 1:1:size(intra_disc_loops,2)
+    plot3(cell2mat(intra_disc_loops{k}(:,1)),cell2mat(intra_disc_loops{k}(:,2)),cell2mat(intra_disc_loops{k}(:,3)),'-','Color','g')
+end
+for i = 1:1:size(find(diag(D,1)>0.5),1)
+    far=find(diag(D,1)>0.5);
+    plot3(chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,1),chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,2),chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,3),'-o','Color','k')
+end
+xlim([min(chromosome_w_inter_disc_loops(:,1))*2 max(chromosome_w_inter_disc_loops(:,1))*2])
+ylim([min(chromosome_w_inter_disc_loops(:,2))*2 max(chromosome_w_inter_disc_loops(:,2))*2])
+zlim([min(chromosome_w_inter_disc_loops(:,3))*2 max(chromosome_w_inter_disc_loops(:,3))*2])
+xlabel('x','FontSize', 24)
+ylabel('y','FontSize', 24)
+zlabel('z','FontSize', 24)
+view(30,30)
 
 %output for GEM
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -650,25 +695,24 @@ maj_axis_chr.FontSize = 18;
 %what are the boxes in this plot???
 
 %total number of monomers
-tot_monomers_in_body = sum(mon_per_layer);
+tot_monomers_in_body = sum(mon_per_disc);
 
 %(The possible number of pairs of genomic positions separated by d on a given chromosome is Lc-d, where Lc is the length of the chromosome.)
 distance_threshold = spacing*5;
-%[s Ps] = contact_probability_xyz(model,distance_threshold);
-% [s Ps] = contact_probability_xyz(new_model,distance_threshold);
-%
-% figure
-% hold on
-% ax=gca;
-% xlim([0,400]);
-% plot(s,Ps)
-% legendStrings = "d_{cutoff} = " + string(distance_threshold) + "um";
-% legend(legendStrings, 'Location', 'southwest')
-% xlabel('s in multiples of 5kbp')
-% ylabel('P(s)')
-% set(ax,'xScale', 'log')
-% set(ax,'YScale', 'log')
-% grid on
+[s Ps] = contact_probability_xyz(chromosome_w_inter_and_intra_disc_loops,distance_threshold);
+
+figure
+hold on
+ax=gca;
+xlim([0,400]);
+plot(s,Ps)
+legendStrings = "d_{cutoff} = " + string(distance_threshold) + "um";
+legend(legendStrings, 'Location', 'southwest')
+xlabel('s in multiples of 5kbp')
+ylabel('P(s)')
+set(ax,'xScale', 'log')
+set(ax,'YScale', 'log')
+grid on
 
 function sum = nat_sum(x)
 sum=0;

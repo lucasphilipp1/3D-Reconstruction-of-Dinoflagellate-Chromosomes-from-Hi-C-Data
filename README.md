@@ -8,6 +8,7 @@ Request access to the data.\
 # Viewing HiC Data:
 .cool & .mcool format:
 https://resgen.io/
+account creation is required to download a dataset
 .hic format:
 http://higlass.io/
 

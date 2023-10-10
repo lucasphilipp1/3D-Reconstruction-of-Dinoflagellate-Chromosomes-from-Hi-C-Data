@@ -4,6 +4,13 @@ Confirm your email attached to your zenodo account by clicking the link in the e
 Go to: https://zenodo.org/record/8277338. \
 Request access to the data.\
 
+
+# Viewing HiC Data:
+.cool & .mcool format:
+https://resgen.io/
+.hic format:
+http://higlass.io/
+
 # Install the Following Python Packages:
 ```
 pip install cooler

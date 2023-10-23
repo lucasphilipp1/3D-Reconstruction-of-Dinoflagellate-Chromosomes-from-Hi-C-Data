@@ -10,7 +10,7 @@ Request access to the data.\
 https://resgen.io/
 account creation is required to download a dataset
 .hic format:
-http://higlass.io/
+https://www.aidenlab.org/juicebox/
 
 # Install the Following Python Packages:
 ```

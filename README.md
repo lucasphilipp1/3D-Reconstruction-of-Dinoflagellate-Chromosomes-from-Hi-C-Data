@@ -287,7 +287,9 @@ Why is the relative error high near the main diagonal?
 
 ### assess uniqueness of dinoflagellate chromosome structure compared to other eukaryotes
 
-the DIMES paper also has a way of clustering conformations using t-sne. this method doesn’t require the length of the polymer to be the same. Use this equation: <img width="915" alt="Screenshot 2023-08-28 at 4 11 32 PM" src="https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/33a04980-623a-4733-a2cf-dacd431b7738">
+the DIMES paper also has a way of clustering conformations using t-sne. to overcome chromosomes being different lengths. we only care about comparing chromosome topology. so. sample 2500 points uniformly throughout the conformation. that way the input to Dnm will always be a 2500x2500 matrix regardless of chromosome length.
+
+Use this equation: <img width="915" alt="Screenshot 2023-08-28 at 4 11 32 PM" src="https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/33a04980-623a-4733-a2cf-dacd431b7738">
 
 we can compare CSynth structures from different eukaryotic organisms (see: HiC Data for Many Eukaryotes). hopefully we see dinoflagellate chromosomes cluster together, but away from other eukaryotic chromosomes
 

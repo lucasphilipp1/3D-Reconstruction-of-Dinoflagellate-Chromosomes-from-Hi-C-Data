@@ -1,3 +1,27 @@
+automatic_CSynth.js
+Cholesteric_HiC.m
+chrom_length_order.py
+chromosome_3D_alignment.m
+colour_TADs_using_bed.js
+colour_TPM_using_bed.js
+constrained_RW_1D.m
+constrained_self_avoiding_RW_3D.m
+contact_probability_xyz.m
+convert_hic_to_CSynth_.py
+CSynth_FISH_Compare_Su_Cell_2020.m
+CSynth_FISH_Compare_Wang_Science_2016.r
+CSynth_structure_volume.py m dinoflagellate_Ps.m
+Figures m fractal_equilbrium_load.m
+increase_contact_strength.m miter_Cholesteric_HiC.m
+juicer_tools.2.20.00.jar
+Orientation_Order_Parameter.y
+plot_P(s)_dinoflagellate.py
+plot_P(s)_tree_of_life.py
+Ps_from_CSynth.m
+repeats_and_GC.M m RNAsea_align_to_CSynth_agg_chr.m
+space_delimited_to_tab_delimited.m
+straw.R
+
 # Request Access to Data Hosted by Zenodo.
 Create a zenodo account: https://zenodo.org/ you can login using your github account.\
 Confirm your email attached to your zenodo account by clicking the link in the email sent to you by zenodo.\

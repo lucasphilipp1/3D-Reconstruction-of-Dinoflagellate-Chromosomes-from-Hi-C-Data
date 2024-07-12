@@ -243,34 +243,3 @@ ax.FontSize = 16;
 xlabel('Asphericity','FontSize', 24)
 ylabel('Count','FontSize', 24)
 
-% %correlate # of gene orientation switches with chromosome asphericity
-% 
-% %correlate # of TADs with chromosome asphericity
-% figure
-% hold on
-% scatter(TAD_num_microadriaticum, asphericity_tensor_microadriaticum, 60, 'blue', 'filled')
-% scatter(TAD_num_kawagutii, asphericity_tensor_kawagutii, 60, 'green', 'filled')
-% lgd=legend({sprintf('Symbiodinium microadriaticum'),sprintf('Symbiodinium kawagutii')});
-% legend boxoff
-% hold off
-% ax = gca;
-% ax.FontSize = 16;
-% %ylim([1 2])
-% xlabel('Number of TADs','FontSize', 24)
-% ylabel('Chromosome Asphericity','FontSize', 24)
-% 
-% %add 0 TAD chromosomes to scatter plots
-% 
-% figure
-% hold on
-% scatter(TAD_percent_coverage_microadriaticum, asphericity_tensor_microadriaticum, 25, 'blue', 'filled')
-% scatter(TAD_percent_coverage_kawagutii, asphericity_tensor_kawagutii, 25, 'green', 'filled')
-% lgd=legend({sprintf('Symbiodinium microadriaticum'),sprintf('Symbiodinium kawagutii')});
-% legend boxoff
-% hold off
-% ax = gca;
-% ax.FontSize = 16;
-% %ylim([1 2])
-% xlabel('TAD % Coverage','FontSize', 24)
-% ylabel('Chromosome Asphericity','FontSize', 24)
-

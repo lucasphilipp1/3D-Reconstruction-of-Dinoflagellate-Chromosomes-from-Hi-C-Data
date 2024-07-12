@@ -1,6 +1,6 @@
 window.bedline2col = p => {
     let v = p[8]; //expect TPM in 9th column in bed file
-    let threshold = 5;
+    let threshold = 2;
     v = clamp(v, -threshold, threshold);
     v = v/threshold;  //map to [-1,1]
     let r,g,b;

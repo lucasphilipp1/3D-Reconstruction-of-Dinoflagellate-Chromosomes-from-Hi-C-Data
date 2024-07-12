@@ -1,7 +1,7 @@
 % %Author: Lucas Philipp
 % clc
 % clear
-% 
+%
 % chr21_Su_HiC = readtable('Hi-C_contacts_chromosome21.csv');
 % chr21_Su_HiC=table2array(chr21_Su_HiC);
 % %output for CSynth
@@ -16,7 +16,7 @@
 %         PCSynth(count,3)=chr21_Su_HiC(i,j);
 %     end
 % end
-% 
+%
 % writematrix(PCSynth,'Su_Cell_2020_chr21_CSynth_input.txt','Delimiter','tab')
 
 %Comparison of CSynth Structures to FISH data for CSynth parameter optomization
@@ -266,6 +266,9 @@ for q = 1:1:size(CSynth_structures,2)
     %F_ij FISH distance, H_ij HiC distance, ij genomic loci
     RE = abs(H-F)./F;
 
+    RE(idiag(size(RE),-1)) = NaN(size(RE,1)-1,1);
+    RE(idiag(size(RE),1)) = NaN(size(RE,1)-1,1);
+    
     RE_vec = RE(:);
     F_vec = F(:);
     H_vec = H(:);
@@ -280,23 +283,25 @@ for q = 1:1:size(CSynth_structures,2)
 
     %we want to minimize the average relative error as a function of CSynth parameters
     %disp('Average relative error')
-    avg_RE(q)=mean(RE_vec);
+    avg_RE(q)=mean(RE_vec)
+    q
 
     %diagonal set to zero for plotting purposes
     RE(isinf(RE))=0;
 
-    % figure
-    % fig=gcf;
-    % fig.Position(3:4)=[750,600];
-    % imagesc(RE);
-    % xlabel('FISH probe #', 'fontsize', 24)
-    % ylabel('FISH probe #', 'fontsize', 24)
-    % title({'Relative Error'},{append('- ',CSynth_structures{q},' human IMR90 cells')}, 'FontSize', 24, 'Interpreter', 'none')
-    % cb=colorbar;
-    % cb.Label.String = 'abs(H_{ij}-F_{ij})/F_{ij}';
-    % cb.FontSize = 18;
-    % 
-    % %are larger distortions happening at larger probe separations?
+    figure
+    fig=gcf;
+    fig.Position(3:4)=[750,600];
+    imagesc(RE);
+    xlabel('FISH probe #', 'fontsize', 24)
+    ylabel('FISH probe #', 'fontsize', 24)
+    title({'Relative Error'},{append('- ',CSynth_structures{q},' human IMR90 cells')}, 'FontSize', 24, 'Interpreter', 'none')
+    cb=colorbar;
+    cb.Label.String = 'abs(H_{ij}-F_{ij})/F_{ij}';
+    cb.FontSize = 18;
+    caxis([0 1]);
+
+    %are larger distortions happening at larger probe separations?
     % figure
     % hist3([F_vec, RE_vec],[100 100],'CdataMode','auto')
     % view(2)
@@ -319,24 +324,24 @@ for q = 1:1:size(CSynth_structures,2)
 end
 
 %plot ALL structures simultaneously
-figure
-hold on
-for q = 1:1:size(CSynth_structures,2)
-    plot3(ALL_CSynth_structures(:,2,q),ALL_CSynth_structures(:,3,q),ALL_CSynth_structures(:,4,q),'-')
-end
-xlabel('x', 'fontsize', 18)
-ylabel('y', 'fontsize', 18)
-zlabel('z', 'fontsize', 18)
-title('CSynth 3D Prediction - IMR90 HiC chr 21')
-grid on
-axis equal
-temp_x = ALL_CSynth_structures(:,2,:);
-temp_y = ALL_CSynth_structures(:,3,:);
-temp_z = ALL_CSynth_structures(:,4,:);
-xlim([min(temp_x(:)) max(temp_x(:))])
-ylim([min(temp_y(:)) max(temp_y(:))])
-zlim([min(temp_z(:)) max(temp_z(:))])
-view(-30,15)
+% figure
+% hold on
+% for q = 1:1:size(CSynth_structures,2)
+%     plot3(ALL_CSynth_structures(:,2,q),ALL_CSynth_structures(:,3,q),ALL_CSynth_structures(:,4,q),'-')
+% end
+% xlabel('x', 'fontsize', 18)
+% ylabel('y', 'fontsize', 18)
+% zlabel('z', 'fontsize', 18)
+% title('CSynth 3D Prediction - IMR90 HiC chr 21')
+% grid on
+% axis equal
+% temp_x = ALL_CSynth_structures(:,2,:);
+% temp_y = ALL_CSynth_structures(:,3,:);
+% temp_z = ALL_CSynth_structures(:,4,:);
+% xlim([min(temp_x(:)) max(temp_x(:))])
+% ylim([min(temp_y(:)) max(temp_y(:))])
+% zlim([min(temp_z(:)) max(temp_z(:))])
+% view(-30,15)
 
 param_pearson=zeros(size(CSynth_structures,2),4);
 param_pearson(:,1) = pearson;
@@ -359,6 +364,7 @@ zlabel('PP, pushapart power', 'fontsize', 18)
 cb = colorbar;
 cb.Label.String = 'pearson correlation between FISH & CSynth distance matrices';
 cb.FontSize = 14;
+caxis([0 1]);
 
 figure
 scatter3(param_avg_RE(:,2),param_avg_RE(:,3),param_avg_RE(:,4),500,param_avg_RE(:,1),'filled')
@@ -370,11 +376,28 @@ zlabel('PP, pushapart power', 'fontsize', 18)
 cb = colorbar;
 cb.Label.String = 'average relative error between FISH & CSynth distances';
 cb.FontSize = 14;
+caxis([0 1]);
 
 function sum = nat_sum(x)
 sum=0;
 for i=1:x
     sum=sum+i;
+end
+end
+
+function [I J] = idiag(sz, k)
+if isscalar(sz)
+    sz = [sz sz];
+end
+m=sz(1);
+n=sz(2);
+if nargin<2
+    k=0;
+end
+I = (1-min(k,0):min(m,n-k)).';
+J = I+k;
+if nargout<2
+    I = sub2ind([m n], I, J);
 end
 end
 

@@ -72,33 +72,13 @@ def compute_Orientation_OP(xyz, chrom_start=0, chrom_end=1000, vec_length=4):
 
     return np.asarray(Oijx), np.asarray(Oijy)
 
-def compute_FFT_from_Oij(Oijy, lowcut=1, highcut=500, order=5):
-    from scipy.fftpack import fft
-    R"""
-    Calculates the Fourier transform of the Orientation Order Parameter OP. Details are decribed in "Zhang, Bin, and Peter G. Wolynes. "Topology, structures, and energy landscapes of human chromosomes." Proceedings of the National Academy of Sciences 112.19 (2015): 6062-6067."
-
-    Args:
-        xyz (:math:`(frames, beadSelection, XYZ)` :class:`numpy.ndarray`, required):
-            Array of the 3D position of the selected beads for different frames extracted by using the :code: `xyz()` function.
-        lowcut (int, required):
-            Filter to cut low frequencies (Default value = 1).
-        highcut (int, required):
-            Filter to cut high frequencies (Default value = 500).
-        order (int, required):
-            Order of the Butterworth filter obtained from `scipy.signal.butter <https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html>`__. (Default value = 5).
-
-
-    Returns:
-        xf:class:`numpy.ndarray`:
-            Return frequencies.
-        yf:class:`numpy.ndarray`:
-            Returns the Fourier transform of the Orientation Order Parameter OP in space of 1/Chrom_Length.
-    """
+def compute_FFT_from_Oij(Oijy, resolution):
+    from scipy.fftpack import fft, fftfreq
+ 
     N = np.shape(Oijy)[0]
-    xf = np.linspace(1, N//2, N//2)
-    yf = fft(Oijy)/len(Oijy)
-    return (xf[0:N//2]-1)/N, np.abs(yf[0:N//2])
-
+    xf = fftfreq(N, resolution)[:N//2]
+    yf = fft(Oijy)
+    return xf, 2.0/N * np.abs(yf[0:N//2])
 
 def tolerant_mean(arrs):
     lens = [len(i) for i in arrs]
@@ -111,95 +91,133 @@ def tolerant_mean(arrs):
 Oijx_list=[]
 Oijy_list=[]
 
-for i in range(1, 101):
-#for i in range(1, 2):
-    #df = np.loadtxt('/Users/lucasphilipp/Downloads/bminutum_pseudochromosome_'+str(i)+'_CF_60_SP_0_PP-4_3D.xyz')
-    df = np.loadtxt('/Users/lucasphilipp/Desktop/Research/GitHub/Dinoflagellate_Cholesteric_Large_Files_3D_structures/CSynth 3D bminutum/structures/bminutum_pseudochromosome_'+str(i)+'_3D.xyz')
-    structure = df[:,1:] #remove first column
-    Oijx, Oijy = compute_Orientation_OP(xyz=structure, chrom_start=0, chrom_end=df.shape[0], vec_length=4)
+xf_list=[]
+yf_list=[]
+
+res=5000
+cutoff=5*10**6
+
+# for i in range(1, 101):
+# #for i in range(1, 2):
+#     #df = np.loadtxt('/Users/lucasphilipp/Downloads/bminutum_pseudochromosome_'+str(i)+'_CF_60_SP_0_PP-4_3D.xyz')
+#     df = np.loadtxt('/Users/lucasphilipp/Desktop/Research/GitHub/Dinoflagellate_Cholesteric_Large_Files_3D_structures/CSynth 3D bminutum/structures/bminutum_pseudochromosome_'+str(i)+'_3D.xyz')
+#     structure = df[:,1:] #remove first column
+#     Oijx, Oijy = compute_Orientation_OP(xyz=structure, chrom_start=0, chrom_end=df.shape[0], vec_length=4)
     
-    Oijx_list.append(Oijx)
-    Oijy_list.append(Oijy)
-    print(i)
+#     Oijx_list.append(Oijx)
+#     Oijy_list.append(Oijy)
+#     print(i)
 
-curr_max = np.zeros(1)
-#get longest Oijx
-for o in Oijx_list:
-    if o.shape[0]>curr_max.shape[0]:
-        curr_max=o
+# curr_max = np.zeros(1)
+# #get longest Oijx
+# for o in Oijx_list:
+#     if o.shape[0]>curr_max.shape[0]:
+#         curr_max=o
 
-#average Oijy at each frequency
-Oijy_avg, error = tolerant_mean(Oijy_list)
+# #average Oijy at each frequency
+# Oijy_avg, error = tolerant_mean(Oijy_list)
 
-Oijx_avg=np.arange(0,curr_max.shape[0])
-Oijx_avg=Oijx_avg*5000
+# Oijx_avg=np.arange(0,curr_max.shape[0])
+# Oijx_avg=Oijx_avg*res
 
-Oijy_avg=np.delete(Oijy_avg,range(-round((max(Oijx_avg)-5*10**6)/5000),0)) #ignore high-frequency data at large separation
-Oijx_avg=np.delete(Oijx_avg,range(-round((max(Oijx_avg)-5*10**6)/5000),0)) #ignore high-frequency data at large separation
+# Oijy_avg=np.delete(Oijy_avg,range(-round((max(Oijx_avg)-cutoff)/res),0)) #ignore high-frequency data at large separation
+# Oijx_avg=np.delete(Oijx_avg,range(-round((max(Oijx_avg)-cutoff)/res),0)) #ignore high-frequency data at large separation
 
-plt.plot(Oijx_avg,Oijy_avg)
-plt.xscale('log',base=10)
-plt.xlabel('bp')
-plt.ylabel("Orientation Order Parameter")
-plt.title('breviolum_minutum')
-plt.show()
+# plt.plot(Oijx_avg,Oijy_avg)
+# plt.xscale('log',base=10)
+# plt.xlabel('bp')
+# plt.ylabel("Orientation Order Parameter")
+# plt.title('breviolum_minutum')
+# plt.show()
 
-xf, yf = compute_FFT_from_Oij(Oijy=Oijy_avg)
-plt.plot(xf/5000,yf)
-plt.xscale('log',base=10) 
-plt.xlabel('1/bp')
-plt.ylabel('FT of Orientation Order Parameter')
-plt.title('breviolum_minutum')
-plt.show()
+# xf, yf = compute_FFT_from_Oij(Oijy=Oijy_avg, resolution=res)
+# plt.plot(xf/5000,yf)
+# plt.xscale('log',base=10) 
+# plt.xlabel('1/bp')
+# plt.ylabel('FT of Orientation Order Parameter')
+# plt.title('breviolum_minutum')
+# plt.show()
 
 Oijx_list.clear()
 Oijy_list.clear()
 
+xf_list.clear()
+yf_list.clear()
+
 #for i in range(1, 95):
-for i in range(1, 2):
-    #df = np.loadtxt('/Users/lucasphilipp/Downloads/symbiodinium_microadriaticum_coccoid_chr'+str(i+2)+'_CF_60_SP_0_PP-4_3D.xyz')
-    df = np.loadtxt('/Users/lucasphilipp/Desktop/Research/GitHub/Dinoflagellate_Cholesteric_Large_Files_3D_structures/CSynth 3D smicroadriaticum/structures/symbiodinium_microadriaticum_coccoid_chr'+str(i)+'_3D.xyz')
+#for i in range(1, 2):
+for i in range(1, 76):
+    #df = np.loadtxt('/Users/lucasphilipp/Desktop/Research/GitHub/Dinoflagellate_Large_Files/CSynth 3D smicroadriaticum/structures/combined/symbiodinium_microadriaticum_chr'+str(i)+'_3D.xyz')
+    df = np.loadtxt('/Users/lucasphilipp/Desktop/Research/GitHub/Dinoflagellate_Large_Files/CSynth 3D skawagutii/structures/s_kawagutii_V3_HiC_scaffold_'+str(i)+'.xyz')
+    #df = np.loadtxt('/Users/lucasphilipp/Desktop/Research/GitHub/Dinoflagellate_Large_Files/GSE18199_Globules/equilibrium/equilibrium'+str(i)+'.dat', skiprows=1)    
+    
     structure = df[:,1:] #remove first column
+    #structure = df
     Oijx, Oijy = compute_Orientation_OP(xyz=structure, chrom_start=0, chrom_end=df.shape[0], vec_length=4)
+    
+    Oijx=Oijx*res
+    
+    Oijy=np.delete(Oijy,range(-round((max(Oijx)-cutoff)/res),0)) #ignore high-frequency data at large separation
+    Oijx=np.delete(Oijx,range(-round((max(Oijx)-cutoff)/res),0)) #ignore high-frequency data at large separation
     
     Oijx_list.append(Oijx)
     Oijy_list.append(Oijy)
+    
+    xf, yf = compute_FFT_from_Oij(Oijy=Oijy, resolution=res)
+    xf_list.append(xf)
+    yf_list.append(yf)
     print(i)
 
-curr_max = np.zeros(1)
-#get longest oijx
-for o in Oijx_list:
-    if o.shape[0]>curr_max.shape[0]:
-        curr_max=o
+# curr_max = np.zeros(1)
+# #get longest oijx
+# for o in Oijx_list:
+#     if o.shape[0]>curr_max.shape[0]:
+#         curr_max=o
 
-#average Oijy at each frequency
-Oijy_avg, error = tolerant_mean(Oijy_list)
+# #average Oijy at each frequency
+# Oijy_avg, error = tolerant_mean(Oijy_list)
 
-Oijx_avg=np.arange(0,curr_max.shape[0])
-Oijx_avg=Oijx_avg*5000
+# Oijx_avg=np.arange(0,curr_max.shape[0])
+# Oijx_avg=Oijx_avg*res
 
-testy=Oijy_avg
-testx=Oijx_avg
+# Oijy_avg=np.delete(Oijy_avg,range(-round((max(Oijx_avg)-cutoff)/res),0)) #ignore high-frequency data at large separation
+# Oijx_avg=np.delete(Oijx_avg,range(-round((max(Oijx_avg)-cutoff)/res),0)) #ignore high-frequency data at large separation
 
-Oijy_avg=testy
-Oijx_avg=testx
+#plt.plot(Oijx_avg,Oijy_avg)
 
-Oijy_avg=np.delete(Oijy_avg,range(-round((max(Oijx_avg)-2*10**7)/5000),0)) #ignore high-frequency data at large separation
-Oijx_avg=np.delete(Oijx_avg,range(-round((max(Oijx_avg)-2*10**7)/5000),0)) #ignore high-frequency data at large separation
+for i in range(len(yf_list)):
+    #plt.plot(Oijx_list[i],Oijy_list[i], color='#1f77b4', alpha = 0.04)
+    plt.plot(Oijx_list[i],Oijy_list[i], color='#2ca02c', alpha = 0.04)
+    #plt.plot(Oijx_list[i],Oijy_list[i], color='#bcbd22', alpha = 0.04)
 
-plt.plot(Oijx_avg,Oijy_avg)
 plt.xscale('log',base=10)
-plt.xlabel('bp')
-plt.ylabel("Orientation Order Parameter")
-plt.title('symbiodinium_microadriaticum_coccoid')
+plt.xlabel('bp', fontsize=16)
+plt.ylabel('Orientation Order Parameter', fontsize=16)
+#plt.title('symbiodinium_microadriaticum')
+plt.title('symbiodinium_kawagutii')
+#plt.title('Equilibrium Globlues')
+ax = plt.gca()
+ax.set_ylim([-1, 1])
+ax.tick_params(axis='both', which='major', labelsize=16)
+#ax.errorbar(Oijx_avg, Oijy_avg, yerr=error[0:1001])
 plt.show()
 
-xf, yf = compute_FFT_from_Oij(Oijy=Oijy_avg)
-plt.plot(xf/5000,yf)
+for i in range(len(yf_list)):
+    #plt.plot(xf_list[i],yf_list[i], color='#1f77b4', alpha = 0.04)
+    plt.plot(xf_list[i],yf_list[i], color='#2ca02c', alpha = 0.04)
+    #plt.plot(xf_list[i],yf_list[i], color='#bcbd22', alpha = 0.04)
+    
+#plt.plot(xf,yf)
+plt.xlabel('1/bp', fontsize=16)
+plt.ylabel('FT of Orientation Order Parameter', fontsize=12)
 plt.xscale('log',base=10) 
-plt.xlabel('1/bp')
-plt.ylabel('FT of Orientation Order Parameter')
-plt.title('symbiodinium_microadriaticum_coccoid')
+# plt.axvline(x=1/(2*65000), color='#1f77b4', linestyle='dashed')
+#plt.title('symbiodinium_microadriaticum')
+plt.title('symbiodinium_kawagutii')
+#plt.title('Equilibrium Globlues')
+ax = plt.gca()
+ax.set_ylim([0, 0.05])
+ax.tick_params(axis='both', which='major', labelsize=16)
 plt.show()
 
 #/Users/lucasphilipp/Downloads/cholesteric_CSynth_D4.txt

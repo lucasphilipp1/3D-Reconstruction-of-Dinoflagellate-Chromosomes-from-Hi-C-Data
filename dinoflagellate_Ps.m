@@ -3,7 +3,7 @@ clear
 
 %f = fullfile('myfolder','mysubfolder','myfile.m')
 
-resolution = 1000;
+resolution = 5000;
 
 microadriaticum_coccoid_Ps = {};
 microadriaticum_coccoid_s = {};

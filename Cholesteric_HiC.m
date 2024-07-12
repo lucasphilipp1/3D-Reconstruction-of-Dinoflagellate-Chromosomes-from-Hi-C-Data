@@ -611,6 +611,8 @@ view(30,30)
 %euclidian distance between monomers
 %D = pdist(model); %in microns
 %D = pdist(new_model); %in microns
+
+
 D = pdist(chromosome_w_inter_and_intra_disc_loops); %in microns
 
 D = squareform(D);

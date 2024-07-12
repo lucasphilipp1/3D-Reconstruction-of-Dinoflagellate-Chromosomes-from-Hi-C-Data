@@ -1,8 +1,40 @@
+automatic_CSynth.js
+Cholesteric_HiC.m
+chrom_length_order.py
+chromosome_3D_alignment.m
+colour_TADs_using_bed.js
+colour_TPM_using_bed.js
+constrained_RW_1D.m
+constrained_self_avoiding_RW_3D.m
+contact_probability_xyz.m
+convert_hic_to_CSynth_.py
+CSynth_FISH_Compare_Su_Cell_2020.m
+CSynth_FISH_Compare_Wang_Science_2016.r
+CSynth_structure_volume.py m dinoflagellate_Ps.m
+Figures m fractal_equilbrium_load.m
+increase_contact_strength.m miter_Cholesteric_HiC.m
+juicer_tools.2.20.00.jar
+Orientation_Order_Parameter.y
+plot_P(s)_dinoflagellate.py
+plot_P(s)_tree_of_life.py
+Ps_from_CSynth.m
+repeats_and_GC.M m RNAsea_align_to_CSynth_agg_chr.m
+space_delimited_to_tab_delimited.m
+straw.R
+
 # Request Access to Data Hosted by Zenodo.
 Create a zenodo account: https://zenodo.org/ you can login using your github account.\
 Confirm your email attached to your zenodo account by clicking the link in the email sent to you by zenodo.\
 Go to: https://zenodo.org/record/8277338. \
 Request access to the data.\
+
+
+# Viewing HiC Data:
+.cool & .mcool format:
+https://resgen.io/
+account creation is required to download a dataset
+.hic format:
+https://www.aidenlab.org/juicebox/
 
 # Install the Following Python Packages:
 ```
@@ -279,7 +311,9 @@ Why is the relative error high near the main diagonal?
 
 ### assess uniqueness of dinoflagellate chromosome structure compared to other eukaryotes
 
-the DIMES paper also has a way of clustering conformations using t-sne. this method doesn’t require the length of the polymer to be the same. Use this equation: <img width="915" alt="Screenshot 2023-08-28 at 4 11 32 PM" src="https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/33a04980-623a-4733-a2cf-dacd431b7738">
+the DIMES paper also has a way of clustering conformations using t-sne. to overcome chromosomes being different lengths. we only care about comparing chromosome topology. so. sample 2500 points uniformly throughout the conformation. that way the input to Dnm will always be a 2500x2500 matrix regardless of chromosome length.
+
+Use this equation: <img width="915" alt="Screenshot 2023-08-28 at 4 11 32 PM" src="https://github.com/lucasphilipp1/Dinoflagellate/assets/94249076/33a04980-623a-4733-a2cf-dacd431b7738">
 
 we can compare CSynth structures from different eukaryotic organisms (see: HiC Data for Many Eukaryotes). hopefully we see dinoflagellate chromosomes cluster together, but away from other eukaryotic chromosomes
 

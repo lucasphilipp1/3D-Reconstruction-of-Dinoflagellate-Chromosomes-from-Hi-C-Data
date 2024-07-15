@@ -76,9 +76,6 @@ Description: Possibly useless. Used to compute contact probability "P(s)" curves
 ### fractal_equilbrium_load.m
 Description: Used to compute contact probability "P(s)" curves from fractal and equilibrium globule conformations as a positive control for the calculation.
 
-### Cholesteric_HiC.m
-Description: Generate cholesteric polymer model with extra chromosomal loops. Vary loop length, number of discs, cholesteric pitch, and other model parameters. Compute cholesteric HiC matrix and contact probability "P(s)" curve.
-
 ### iter_Cholesteric_HiC.m
 Description: Generate cholesteric polymer model with extra chromosomal loops. Vary loop length, number of discs, cholesteric pitch, and other model parameters. Compute cholesteric HiC matrix and contact probability "P(s)" curve.
 

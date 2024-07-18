@@ -11,8 +11,10 @@ Ps_avg = cell(1, num_chroms); %cell array for contact probability
 total_chromosome_length = 4000; %number of monomers
 P_agg = zeros(total_chromosome_length); %collect contact probability maps for different chromosomes
 
-for d = 1:1:num_chroms
+disc_diameter = []; %in number of monomers
 
+for d = 1:1:num_chroms
+    d
     chromosome=[]; %position of DNA
     %7.655Mbp/(10 layers)∗1monomer/5kbp≈(150 monomers)/layer
     num_mon = 150; %number of monomers in the thickest cholesteric disk
@@ -85,10 +87,17 @@ for d = 1:1:num_chroms
             %every second line of monomers y->-y so ordering does a "weave"
             [c,ia,ib] = unique(xEllipse);
             flip_these=[];
+            max_diameter = 0;
             for k = 1:2:length(c)
-                length(c)
                 flip_these = [flip_these; find(ib==k)];
+                temp = size(find(ib==k),1);
+                if temp > max_diameter
+                    max_diameter=temp;
+                end
             end
+            
+            disc_diameter = [disc_diameter max_diameter];
+
             yEllipse(flip_these) = -1.*yEllipse(flip_these);
 
             R=[cosd((i-1)*dtheta_layer) -sind((i-1)*dtheta_layer); sind((i-1)*dtheta_layer) cosd((i-1)*dtheta_layer)]; %create 2D rotation matix, applies to (X,Y) pairs
@@ -248,16 +257,16 @@ for d = 1:1:num_chroms
     %INTER DISK LOOPS
     idx=find(diff(chromosome(:,3))>0); %new disc starts when z coordinate changes
     num_inter_disc_loops = size(idx,1);
-    mean_looplength = wanted_total_inter_disc_loop_length/num_inter_disc_loops;
+    mean_loop_length = wanted_total_inter_disc_loop_length/num_inter_disc_loops;
     % Generate inter disc loops with variable looplength drawn from an exponential distribution
     % Total length of inter disc loops adds up to the wanted length of inter disc loops
     inter_disc_loop_lengths = [];
 
     for i = 1:1:num_inter_disc_loops
-        new_loop = round(exprnd(mean_looplength));
+        new_loop = round(exprnd(mean_loop_length));
         % Reject loops lengths of 0
         while new_loop == 0
-            new_loop = round(exprnd(mean_looplength));
+            new_loop = round(exprnd(mean_loop_length));
         end
         inter_disc_loop_lengths = [inter_disc_loop_lengths new_loop];
     end
@@ -293,8 +302,6 @@ for d = 1:1:num_chroms
 
     count = 1;
     for i=1:1:num_inter_disc_loops
-        i
-        inter_disc_loop_lengths(i)
         %adjacent disks connected
         if mod(count,2)==1
             %convert 2D array to cell
@@ -502,13 +509,13 @@ for d = 1:1:num_chroms
     intra_disc_loop_lengths = [];
 
     while sum(intra_disc_loop_lengths) <= wanted_total_intra_disc_loop_length
-        new_loop = round(exprnd(mean_looplength));
+        new_loop = round(exprnd(mean_loop_length));
         % Reject loops lengths of 0
         while new_loop == 0
-            new_loop = round(exprnd(mean_looplength));
+            new_loop = round(exprnd(mean_loop_length));
         end
         if sum(intra_disc_loop_lengths)+new_loop > wanted_total_intra_disc_loop_length
-            break; %CHECK THIS!!!
+            break;
         end
         intra_disc_loop_lengths = [intra_disc_loop_lengths new_loop];
     end
@@ -598,7 +605,6 @@ for d = 1:1:num_chroms
             end
             j=j+1;
         end
-        i
     end
 
     % insert intra-disc loops into primary sequence in chromosome
@@ -614,27 +620,27 @@ for d = 1:1:num_chroms
 
     skip=numPoints;
 
-    f=figure
-    screen = get(0, 'Screensize');
-    screen(3)=screen(3)/1.75;
-    set(gcf, 'Position', screen);
-    hold on
-    plot3(chromosome_w_inter_and_intra_disc_loops(:,1),chromosome_w_inter_and_intra_disc_loops(:,2),chromosome_w_inter_and_intra_disc_loops(:,3),'Color', [.6 .6 .6])
-    colormap jet
-    axis equal
-    xlim([min(chromosome(:,1))*1.5 max(chromosome(:,1))*1.5])
-    ylim([min(chromosome(:,2))*1.5 max(chromosome(:,2))*1.5])
-    zlim([min(chromosome(:,3))*1.1 max(chromosome(:,3))*1.1])
-    set(gca,'XTick',[], 'YTick', [], 'ZTick', [])
-    caxis([min(MyColor) max(MyColor)])
-    c = colorbar;
-    c.Position = c.Position - [.1 0 0 0];
-    c.Ticks = linspace(0, total_chromosome_length, round(total_chromosome_length/500)+1);
-    c.TickLabels = num2cell(linspace(0, total_chromosome_length*resolution, round(total_chromosome_length/500)+1));
-    c.Label.String = 'primary sequence [bp]';
-    c.FontSize = 32;
-    patch('Faces', Faces(:,:) ,'Vertices', chromosome_w_inter_and_intra_disc_loops(:,:) ,'FaceColor', 'none', 'FaceVertexCData', MyColor(:,:) ,'EdgeColor','interp' ,'LineWidth',5, 'FaceAlpha',.5,'EdgeAlpha',.5);
-    view(45,5)
+    % f=figure
+    % screen = get(0, 'Screensize');
+    % screen(3)=screen(3)/1.75;
+    % set(gcf, 'Position', screen);
+    % hold on
+    % plot3(chromosome_w_inter_and_intra_disc_loops(:,1),chromosome_w_inter_and_intra_disc_loops(:,2),chromosome_w_inter_and_intra_disc_loops(:,3),'Color', [.6 .6 .6])
+    % colormap jet
+    % axis equal
+    % xlim([min(chromosome(:,1))*1.5 max(chromosome(:,1))*1.5])
+    % ylim([min(chromosome(:,2))*1.5 max(chromosome(:,2))*1.5])
+    % zlim([min(chromosome(:,3))*1.1 max(chromosome(:,3))*1.1])
+    % set(gca,'XTick',[], 'YTick', [], 'ZTick', [])
+    % caxis([min(MyColor) max(MyColor)])
+    % c = colorbar;
+    % c.Position = c.Position - [.1 0 0 0];
+    % c.Ticks = linspace(0, total_chromosome_length, round(total_chromosome_length/500)+1);
+    % c.TickLabels = num2cell(linspace(0, total_chromosome_length*resolution, round(total_chromosome_length/500)+1));
+    % c.Label.String = 'primary sequence [bp]';
+    % c.FontSize = 32;
+    % patch('Faces', Faces(:,:) ,'Vertices', chromosome_w_inter_and_intra_disc_loops(:,:) ,'FaceColor', 'none', 'FaceVertexCData', MyColor(:,:) ,'EdgeColor','interp' ,'LineWidth',5, 'FaceAlpha',.5,'EdgeAlpha',.5);
+    % view(45,5)
 
     % for i=skip+1:skip:numPoints
     %     clf(f)
@@ -692,10 +698,6 @@ for d = 1:1:num_chroms
     % zlabel('z','FontSize', 24)
     % view(30,30)
 
-    %output for GEM
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %writematrix(round(P,3,"significant"),'cholesteric_GEM_HiC.txt','Delimiter','tab')
-
     P_loci = zeros(size(P,1),1);
     count = 0;
     for i=1:1:size(P,1)
@@ -724,9 +726,8 @@ for d = 1:1:num_chroms
 
     PCSynth(:,3) = round(PCSynth(:,3),3,"significant");
     %writematrix(PCSynth,sprintf('cholesteric_CSynth_D4_%d.txt',d),'Delimiter','tab')
-    
-    writematrix(chromosome_w_inter_and_intra_disc_loops,sprintf('cholesteric_monomer_locations_short_%d.txt',d),'Delimiter','tab')
 
+    %writematrix(chromosome_w_inter_and_intra_disc_loops,sprintf('cholesteric_monomer_locations_short_%d.txt',d),'Delimiter','tab');
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -855,6 +856,8 @@ set(ax,'YScale', 'log')
 plot(s_agg.*resolution,Ps_agg, 'Linewidth', 2)
 xlabel('s','FontSize', 24)
 ylabel('P(s)','FontSize', 24)
+xline(2*(mean(mon_per_disc)+mean_loop_length)*resolution,'--',{'2x Sequence in Layer'})
+xline(2*(mean(disc_diameter))*resolution,'--',{'2x Disc Diameter'})
 ax = gca;
 ax.FontSize = 16;
 ylim([10^-6 10^0])
@@ -876,7 +879,7 @@ for i=1:1:round(total_chromosome_length*0.95)
 end
 
 PCSynth(:,3) = round(PCSynth(:,3),3,"significant");
-writematrix(PCSynth,strcat('cholesteric_short_frac_loops_0.1_CSynth_D4_aggregated_num_chroms_',num2str(num_chroms),'.txt'),'Delimiter','tab')
+%writematrix(PCSynth,strcat('cholesteric_short_frac_loops_0.1_CSynth_D4_aggregated_num_chroms_',num2str(num_chroms),'.txt'),'Delimiter','tab');
 
 % Vertically concatenate, pad with NaNs
 maxNumCol = max(cellfun(@(c) size(c,2), Ps_avg));  % max number of columns
@@ -903,17 +906,16 @@ s_avg = cellfun(@transpose,s_avg,'UniformOutput',false);
 % errorbar(s_avg{min_index}*5000,colMeans(1:size(s_avg{min_index},1)),err)
 %legendStrings = "d_{cutoff} = " + string(distance_threshold) + "um";
 %legend(legendStrings, 'Location', 'southwest')
-xlabel('Genomic separation [bp]', 'fontsize', 24)
-ylabel('Probability of contact', 'fontsize', 24)
-set(ax,'xScale', 'log')
-set(ax,'YScale', 'log')
-
-set(gca,'YLim',[10^-5 10^0],'YTick',10.^(-5:0))
-ax = gca;
-ax.FontSize = 22;
-xlim([10^4,10^7]);
-ylim([10^-5,10^0]);
-grid on
+% xlabel('Genomic separation [bp]', 'fontsize', 24)
+% ylabel('Probability of contact', 'fontsize', 24)
+% set(ax,'xScale', 'log')
+% set(ax,'YScale', 'log')
+% set(gca,'YLim',[10^-5 10^0],'YTick',10.^(-5:0))
+% ax = gca;
+% ax.FontSize = 22;
+% xlim([10^4,10^7]);
+% ylim([10^-5,10^0]);
+% grid on
 
 function sum = nat_sum(x)
 sum=0;

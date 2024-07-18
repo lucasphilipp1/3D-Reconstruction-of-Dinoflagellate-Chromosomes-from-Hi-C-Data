@@ -164,31 +164,13 @@ num_genes_in_TAD_asphericity_quartile_kawagutii{4} = num_genes_in_TAD;
 gene_density_in_TAD_asphericity_quartile_kawagutii{4} = gene_density_in_TAD;
 TPM_genes_in_TAD_asphericity_quartile_kawagutii{4} = TPM_genes_in_TAD;
 
-% figure
-% violin(num_genes_in_TAD_asphericity_quartile_kawagutii,'facecolor',[0.4660 0.6740 0.1880; 0.4660 0.6740 0.1880; 0.4660 0.6740 0.1880; 0.4660 0.6740 0.1880]);
-% xticks([1 2 3 4])
-% xticklabels({'First Quartile','Second Quartile','Third Quartile', 'Fourth Quartile'})
-% xtickangle(45)
-% ylabel('Number of Active Genes within TAD')
-% xlabel('TAD Asphericity')
-% ylim([0 750])
-% 
-% figure
-% violin(TPM_genes_in_TAD_asphericity_quartile_kawagutii,'facecolor',[0.4660 0.6740 0.1880; 0.4660 0.6740 0.1880; 0.4660 0.6740 0.1880; 0.4660 0.6740 0.1880]);
-% xticks([1 2 3 4])
-% xticklabels({'First Quartile','Second Quartile','Third Quartile', 'Fourth Quartile'})
-% xtickangle(45)
-% ylabel('TPM of Active Genes within TAD')
-% xlabel('TAD Asphericity')
-% ylim([0 100])
-
 figure
 violin(gene_density_in_TAD_asphericity_quartile_kawagutii,'facecolor',[0.4660 0.6740 0.1880; 0.4660 0.6740 0.1880; 0.4660 0.6740 0.1880; 0.4660 0.6740 0.1880]);
 xticks([1 2 3 4])
 xticklabels({'First Quartile','Second Quartile','Third Quartile', 'Fourth Quartile'})
 xtickangle(45)
-ylabel('(# of Active Genes/TAD size) [1/bp]')
-xlabel('TAD Asphericity')
+xlabel('TAD Asphericity', 'fontsize', 20)
+ylabel('(# of Active Genes/TAD size) [1/bp]', 'fontsize', 20)
 ylim([0 5*10^-4])
 
 %%%
@@ -353,31 +335,13 @@ num_genes_in_TAD_asphericity_quartile_microadriaticum{4} = num_genes_in_TAD;
 gene_density_in_TAD_asphericity_quartile_microadriaticum{4} = gene_density_in_TAD;
 TPM_genes_in_TAD_asphericity_quartile_microadriaticum{4} = TPM_genes_in_TAD;
 
-% figure
-% violin(num_genes_in_TAD_asphericity_quartile_microadriaticum,'facecolor',[0 0.4470 0.7410; 0 0.4470 0.7410; 0 0.4470 0.7410; 0 0.4470 0.7410]);
-% xticks([1 2 3 4])
-% xticklabels({'First Quartile','Second Quartile','Third Quartile', 'Fourth Quartile'})
-% xtickangle(45)
-% ylabel('Number of Active Genes within TAD')
-% xlabel('TAD Asphericity')
-% ylim([0 750])
-% 
-% figure
-% violin(TPM_genes_in_TAD_asphericity_quartile_microadriaticum,'facecolor',[0 0.4470 0.7410; 0 0.4470 0.7410; 0 0.4470 0.7410; 0 0.4470 0.7410]);
-% xticks([1 2 3 4])
-% xticklabels({'First Quartile','Second Quartile','Third Quartile', 'Fourth Quartile'})
-% xtickangle(45)
-% ylabel('TPM of Active Genes within TAD')
-% xlabel('TAD Asphericity')
-% ylim([0 100])
-
 figure
 violin(gene_density_in_TAD_asphericity_quartile_microadriaticum,'facecolor',[0 0.4470 0.7410; 0 0.4470 0.7410; 0 0.4470 0.7410; 0 0.4470 0.7410]);
 xticks([1 2 3 4])
 xticklabels({'First Quartile','Second Quartile','Third Quartile', 'Fourth Quartile'})
 xtickangle(45)
-ylabel('(# of Active Genes/TAD size) [1/bp]')
-xlabel('TAD Asphericity')
+xlabel('TAD Asphericity', 'fontsize', 20)
+ylabel('(# of Active Genes/TAD size) [1/bp]', 'fontsize', 20)
 ylim([0 5*10^-4])
 
 %%% OLS regression: gene density vs asphericity 
@@ -415,8 +379,8 @@ b1 = asphericity_gene_density_in_TAD(:,1)\asphericity_gene_density_in_TAD(:,2);
 yCalc1 = b1*asphericity_gene_density_in_TAD(:,1);
 hold on
 plot(asphericity_gene_density_in_TAD(:,1),yCalc1)
-xlabel('TAD Asphericity')
-ylabel('(# of Active Genes/TAD size) [1/bp]')
+xlabel('TAD Asphericity', 'fontsize', 20)
+ylabel('(# of Active Genes/TAD size) [1/bp]', 'fontsize', 20)
 title('Symbiodinium microadriatium')
 
 tbl = table(asphericity_gene_density_in_TAD(:,2),asphericity_gene_density_in_TAD(:,1));
@@ -460,14 +424,13 @@ b1 = asphericity_gene_density_in_TAD(:,1)\asphericity_gene_density_in_TAD(:,2);
 yCalc1 = b1*asphericity_gene_density_in_TAD(:,1);
 hold on
 plot(asphericity_gene_density_in_TAD(:,1),yCalc1)
-xlabel('TAD Asphericity')
-ylabel('(# of Active Genes/TAD size) [1/bp]')
+xlabel('TAD Asphericity', 'fontsize', 20)
+ylabel('(# of Active Genes/TAD size) [1/bp]', 'fontsize', 20)
 title('Symbiodinium kawagutii')
 
 tbl = table(asphericity_gene_density_in_TAD(:,2),asphericity_gene_density_in_TAD(:,1));
 mdl = fitlm(tbl,'Var1 ~ Var2');
 [p,F] = coefTest(mdl)
-
 
 %__________________________________________________________________________
 % violin.m - Simple violin plot using matlab default kernel density estimation

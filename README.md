@@ -134,4 +134,4 @@ Genome Assembly:
 http://sampgr.org.cn/index.php/download (V3)
 
 # Questions
-If you have questions about the scripts please contact Lucas Philipp (lucas.philipp@mail.mcgill.ca).
+If you have questions about this repository please contact Lucas Philipp (lucas.philipp@mail.mcgill.ca).

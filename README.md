@@ -1,14 +1,10 @@
 # This GitHub repository contains the code to recreate the analyses of:
 Philipp, L., Marinov G., Todd S., Weber S., 3D Reconstruction of Dinoflagellate Chromosomes from Hi-C Data Refutes the Cholesteric Liquid Crystal Hypothesis. In review.
 
-# Zenodo
+bioRxiv link to pre-print: __________
 
-# Viewing HiC Data:
-.cool & .mcool format:
-https://resgen.io/
-account creation is required to download a dataset
-.hic format:
-https://www.aidenlab.org/juicebox/
+# Zenodo
+Symbiodinium kawagutii and Symbiodinium microadriaticum chromosome structures have been deposited at: 
 
 # Descriptions of code:
 
@@ -19,7 +15,6 @@ Description: Used to load divergent colourmap for visualizing strand-specific tr
 Description: Used to simulate Hi-C contact map from CSynth structure. Compare this to original Hi-C map for an assessment of CSynth accuracy.
 
 %Fig S3 A & G in paper
-
 
 ### RNAseq_align_to_CSynth_agg_chr.m
 Description: Spatial patterns of active transcription determined by mapping RNA-seq data to 3D position on CSynth structure. An aggregate analysis is done where chromosomes are isotropically scaled to the same size, and integrated in cylindrical coordinates to show the average transcription level vs distance to centre/surface of the chromosome. Consider adding 1D line plot.
@@ -100,13 +95,6 @@ Su, J. H., et al. (2020). Genome-scale imaging of the 3D organization and transc
 Lieberman-Aiden E., et al. Comprehensive mapping of long-range interactions reveals folding principles of the human genome. Science 2009 Oct 9;326(5950):289-93. PMID: 19815776. See: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE18199.
 GEO Accession #: GSE18199
 
-https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE102740
-From Gibcus, J. H., Samejima, K., Goloborodko, A., Samejima, I., Naumova, N., Nuebler, J., ... & Dekker, J. (2018). A pathway for mitotic chromosome formation. Science, 359(6376), eaao6135. \
-human (HeLa) cells, not synchronized: \
-GSM2745898_17MAY11_HSC02RPAB-PE50_CCHiC-HeLa-NS-R1_23-05-2011_kittlere.5.10000.cool \
-human (HeLa) cells, mitosis: \
-GSM2745897_18FEB15_PE50_C66B1AC-A_Sample_HiC1-aka-CCHiC-HeLaS3CCL2p2-M-98.1000.cool
-
 From: Marinov, G. K., Trevino, A. E., Xiang, T., Kundaje, A., Grossman, A. R., & Greenleaf, W. J. (2021). Transcription-dependent domain-scale three-dimensional genome organization in the dinoflagellate Breviolum minutum. Nature Genetics, 53(5), 613-617. \
 GSM4658994	Dinoflagellate Breviolum minutum
 
@@ -120,6 +108,24 @@ SRR25948348
 
 Genome Assembly:
 http://sampgr.org.cn/index.php/download (V3)
+
+Hi-C data pre-processing:
+For an overview of how dinoflagellate contact maps are assembled from raw reads see (Marinov, G., et al. 2024). Previously published Hi-C assisted genome assemblies and contact strengths were accessed at: GEO accession: GSE152150, GSE152150_HiC-Dplus.smic1.1N.mapq_30.1000.mcool (Nand, A., et al., 2021), https://doi.org/10.5281/zenodo.10035644 (Marinov, G., et al. 2024) (check to see that link is working), and GSE153950 (Marinov, G., et al. 2021).
+![image](https://github.com/user-attachments/assets/a1750e38-96a1-44f8-a8b6-c16ec75fafd7)
+
+Human control Hi-C and FISH data:
+Previously published human IMR90 Hi-C data (Rao, S. S., et al. 2014) was accessed from the GEO using accession number: GSE63525. Previously published IMR90 FISH probe 3D locations (Su, J. H., et al. 2020) were downloaded from: https://doi.org/10.5281/zenodo.3928890.
+
+Equilibrium globule structures:
+Equilibrium globule structures were downloaded from the GEO using the accession number: GSE18199 (Lieberman-Aiden, E., et al., 2009).
+
+Spatial Organization of Transcription Analysis:
+RNA-seq data used in this study can be accessed via the SRA using the accession numbers:
+SRR3337493 (S. microadriaticum, (Liew, Y. J., et al., 2017)), SRR9417753 SRR9417755 SRR9417756 SRR1300302 SRR1300303 SRR1300304 SRR1300305 (S. kawagutii, (Li, T., et al., 2020; Keeling, P. J., et al., 2014)).
+
+Alignment to the genome assembly was performed following the methods outlined in (Marinov, G., et al., 2021).
+![image](https://github.com/user-attachments/assets/6e8fbd3b-3ed2-474f-87f8-ffa4e78209b3)
+
 
 # Questions
 If you have questions about this repository please contact Lucas Philipp (lucas.philipp@mail.mcgill.ca).

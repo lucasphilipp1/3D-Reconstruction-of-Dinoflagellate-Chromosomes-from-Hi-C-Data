@@ -1,7 +1,13 @@
 % %Author: Lucas Philipp
+% Fig S3 C,D,E,F in paper
+
+% optomization of CSynth parameters using Hi-C data and multiplexed FISH data
+
 % clc
 % clear
-%
+
+% write human IMR90 chr 21 Hi-C data in CSynth compatible format
+%%%
 % chr21_Su_HiC = readtable('Hi-C_contacts_chromosome21.csv');
 % chr21_Su_HiC=table2array(chr21_Su_HiC);
 % %output for CSynth
@@ -25,6 +31,7 @@
 clc
 clear
 
+%determines how many FISH measurements to load, there are a lot!
 rows=10000;
 
 chromosome21_FISH_table = readtable("chromosome21.tsv", "FileType","text",'Delimiter', '\t');
@@ -72,12 +79,32 @@ for i=1:1:cells
                 ydiff=abs(chromosome21_FISH(pos1_rowindex,3)-chromosome21_FISH(pos2_rowindex,3));
                 zdiff=abs(chromosome21_FISH(pos1_rowindex,1)-chromosome21_FISH(pos2_rowindex,1));
 
-                F(j,k) = F(j,k) + sqrt(xdiff^2+ydiff^2+zdiff^2);
+                F(j,k) = F(j,k) + sqrt(xdiff^2+ydiff^2+zdiff^2); %F, storage of FISH distances
             else
             end
         end
     end
     i
+
+    %Fig S3 C, visualization of FISH probes in a single cell
+    if i == 1
+        chromosome21_FISH_plot=chromosome21_FISH(find(chromosome21_FISH(:,6)==1),:);
+        figure
+        scatter3(chromosome21_FISH_plot(:,1),chromosome21_FISH_plot(:,2),chromosome21_FISH_plot(:,3),100,chromosome21_FISH_plot(:,4),'filled')
+
+        xlim([min(chromosome21_FISH_plot(:,1))*1.5 max(chromosome21_FISH_plot(:,1))*1.5])
+        ylim([min(chromosome21_FISH_plot(:,2))*1.5 max(chromosome21_FISH_plot(:,2))*1.5])
+        zlim([min(chromosome21_FISH_plot(:,3))*1.5 max(chromosome21_FISH_plot(:,3))*1.5])
+        cb=colorbar;
+        axis equal
+        cb.Label.String = '[bp]';
+        cb.FontSize = 18;
+        caxis([0 46709983]); %hg38 assembly
+        xlabel('x [nm]','FontSize', 24)
+        ylabel('y [nm]','FontSize', 24)
+        zlabel('z [nm]','FontSize', 24)
+        view(45,15)
+    end
 end
 
 %take cell average of FISH distances
@@ -96,6 +123,7 @@ F = F./count;
 % cb.Label.String = 'Cell-averaged probe separation [nm]';
 % cb.FontSize = 18;
 
+%load CSynth structures generated with different parameters
 CSynth_structures={
     'Su_Cell_2020_chr21_CSynth_output_SP_0_CF_20_PP_-1.xyz' ...
     'Su_Cell_2020_chr21_CSynth_output_SP_0_CF_40_PP_-1.xyz' ...
@@ -159,7 +187,6 @@ CSynth_structures={
     'Su_Cell_2020_chr21_CSynth_output_SP_-2_CF_100_PP_-4.xyz' ...
     };
 
-pearson=zeros(size(CSynth_structures,2),1);
 avg_RE=zeros(size(CSynth_structures,2),1); %average relative error
 CSynth_chr_21 = tdfread(CSynth_structures{1});
 names_chr21 = fieldnames(CSynth_chr_21);
@@ -178,10 +205,10 @@ for q = 1:1:size(CSynth_structures,2)
     HiC(:,3) = getfield(CSynth_chr_21,names_chr21{3}); %column 3: y position, arb units
     HiC(:,4) = getfield(CSynth_chr_21,names_chr21{4}); %column 4: z position, arb units
 
-    H = zeros(num_probes);
+    H = zeros(num_probes); %H, storage of CSynth-predicted distances from Hi-C
 
     %FISH probes are not genomically uniformly distributed
-    %map HiC coordinates to probe
+    %map HiC coordinates to individual probes
     for i=1:1:num_probes
         for j=1:1:num_probes
 
@@ -216,7 +243,7 @@ for q = 1:1:size(CSynth_structures,2)
 
     scale_Factor = mean_seperate;
 
-    %rescale CSynth coordinates, all axes equally
+    %rescale CSynth coordinates isotropically to best-match with microscopy
     HiC(:,2) = HiC(:,2)*scale_Factor;
     HiC(:,3) = HiC(:,3)*scale_Factor;
     HiC(:,4) = HiC(:,4)*scale_Factor;
@@ -226,9 +253,6 @@ for q = 1:1:size(CSynth_structures,2)
 
     %recompute CSynth probe distances will rescaled axes
     H = zeros(num_probes);
-
-    %FISH probes are not genomically uniformly distributed
-    %map HiC coordinates to probe
     for i=1:1:num_probes
         for j=1:1:num_probes
 
@@ -268,7 +292,7 @@ for q = 1:1:size(CSynth_structures,2)
 
     RE(idiag(size(RE),-1)) = NaN(size(RE,1)-1,1);
     RE(idiag(size(RE),1)) = NaN(size(RE,1)-1,1);
-    
+
     RE_vec = RE(:);
     F_vec = F(:);
     H_vec = H(:);
@@ -283,12 +307,13 @@ for q = 1:1:size(CSynth_structures,2)
 
     %we want to minimize the average relative error as a function of CSynth parameters
     %disp('Average relative error')
-    avg_RE(q)=mean(RE_vec)
+    avg_RE(q)=median(RE_vec)
     q
 
     %diagonal set to zero for plotting purposes
     RE(isinf(RE))=0;
 
+    %Fig S3 D & F
     figure
     fig=gcf;
     fig.Position(3:4)=[750,600];
@@ -297,7 +322,7 @@ for q = 1:1:size(CSynth_structures,2)
     ylabel('FISH probe #', 'fontsize', 24)
     title({'Relative Error'},{append('- ',CSynth_structures{q},' human IMR90 cells')}, 'FontSize', 24, 'Interpreter', 'none')
     cb=colorbar;
-    cb.Label.String = 'abs(H_{ij}-F_{ij})/F_{ij}';
+    cb.Label.String = 'Relative Error';
     cb.FontSize = 18;
     caxis([0 1]);
 
@@ -314,16 +339,10 @@ for q = 1:1:size(CSynth_structures,2)
     % subtitle(append('- ',CSynth_structures{q},' human IMR90 cells'), 'Interpreter', 'none')
     % xlim([min(F_vec) max(F_vec)])
     % ylim([0 max(RE_vec)])
-
-    %pearson correlation between H and F matrix, ignoring diagonal entries
-    %this does not depend on scaleFactor
-    pearson_temp=corrcoef(H_vec,F_vec);
-    %disp('Pearson correlation between FISH/HiC separation matricies')
-    pearson(q)=pearson_temp(1,2);
-
 end
 
-%plot ALL structures simultaneously
+%plot all CSynth structures simultaneously, Fig S3 E
+%%%
 % figure
 % hold on
 % for q = 1:1:size(CSynth_structures,2)
@@ -343,40 +362,24 @@ end
 % zlim([min(temp_z(:)) max(temp_z(:))])
 % view(-30,15)
 
-param_pearson=zeros(size(CSynth_structures,2),4);
-param_pearson(:,1) = pearson;
-param_pearson(:,2) = [0 0 0 0 0 -1 -1 -1 -1 -1 -2 -2 -2 -2 -2 0 0 0 0 0 -1 -1 -1 -1 -1 -2 -2 -2 -2 -2 0 0 0 0 0 -1 -1 -1 -1 -1 -2 -2 -2 -2 -2 0 0 0 0 0 -1 -1 -1 -1 -1 -2 -2 -2 -2 -2]; %SP, spring power
-param_pearson(:,3) = [20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100]; %CF, contact force
-param_pearson(:,4) = [-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4]; %PP, pushapart power
 param_avg_RE=zeros(size(CSynth_structures,2),4);
 param_avg_RE(:,1) = avg_RE;
 param_avg_RE(:,2) = [0 0 0 0 0 -1 -1 -1 -1 -1 -2 -2 -2 -2 -2 0 0 0 0 0 -1 -1 -1 -1 -1 -2 -2 -2 -2 -2 0 0 0 0 0 -1 -1 -1 -1 -1 -2 -2 -2 -2 -2 0 0 0 0 0 -1 -1 -1 -1 -1 -2 -2 -2 -2 -2]; %SP, spring power
 param_avg_RE(:,3) = [20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100 20 40 60 80 100]; %CF, contact force
 param_avg_RE(:,4) = [-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -2 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -3 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4 -4]; %PP, pushapart power
 
-figure
-scatter3(param_pearson(:,2),param_pearson(:,3),param_pearson(:,4),500,param_pearson(:,1),'filled')
-ax = gca;
-view(-30,15)
-xlabel('SP, spring power', 'fontsize', 18)
-ylabel('CF, contact force', 'fontsize', 18)
-zlabel('PP, pushapart power', 'fontsize', 18)
-cb = colorbar;
-cb.Label.String = 'pearson correlation between FISH & CSynth distance matrices';
-cb.FontSize = 14;
-caxis([0 1]);
-
+%visualization of relative error v.s. CSynth parameters
 figure
 scatter3(param_avg_RE(:,2),param_avg_RE(:,3),param_avg_RE(:,4),500,param_avg_RE(:,1),'filled')
 ax = gca;
 view(-30,15)
-xlabel('SP, spring power','fontsize', 18)
-ylabel('CF, contact force', 'fontsize', 18)
-zlabel('PP, pushapart power', 'fontsize', 18)
+xlabel('spring power','fontsize', 18)
+ylabel('contact force', 'fontsize', 18)
+zlabel('pushapart power', 'fontsize', 18)
 cb = colorbar;
-cb.Label.String = 'average relative error between FISH & CSynth distances';
+cb.Label.String = 'Relative Error';
 cb.FontSize = 14;
-caxis([0 1]);
+%caxis([0 1]);
 
 function sum = nat_sum(x)
 sum=0;

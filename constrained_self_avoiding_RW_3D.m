@@ -1,4 +1,5 @@
-function walk = constrained_self_avoiding_RW_3D_test(start,finish,steps,step_size)
+function walk = constrained_self_avoiding_RW_3D(start,finish,steps,step_size)
+%contrained self avoiding 3D random walk
 isunique=0;
 while isunique==0
     x = constrained_RW_1D(start(:,1),finish(:,1),steps,step_size);
@@ -22,7 +23,7 @@ while isunique==0
     end
     walk = [x y z];
 
-    %nearly self avoiding 3D, some overlap allowed
+    %nearly self avoiding 3D, some overlap allowed, otherwise simulation time is long
     if steps > 100
         if size(unique(walk, "rows"),1) >= steps*0.75
             isunique=1;

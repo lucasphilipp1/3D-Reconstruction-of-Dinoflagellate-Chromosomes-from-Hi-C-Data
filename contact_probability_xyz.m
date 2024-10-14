@@ -1,3 +1,4 @@
+%see: Naumova, N., Imakaev, M., Fudenberg, G., Zhan, Y., Lajoie, B. R., Mirny, L. A., & Dekker, J. (2013). Organization of the mitotic chromosome. Science, 342(6161), 948-953.
 function [s Ps] = contact_probability_xyz(model,distance_threshold)
 Ps=zeros(size(model,1)-1,1);
 s=1:1:size(model,1)-1;

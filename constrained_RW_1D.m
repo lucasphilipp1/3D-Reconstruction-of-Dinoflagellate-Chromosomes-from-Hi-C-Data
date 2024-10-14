@@ -1,4 +1,5 @@
 function walk = constrained_RW_1D(start,finish,requested_steps,step_size)
+%constrainted random walk in one dimension
 %walk does not include start point
 
 %actual steps might be +1 requested steps

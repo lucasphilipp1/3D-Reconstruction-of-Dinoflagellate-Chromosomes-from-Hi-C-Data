@@ -1,20 +1,21 @@
-chromosome = importdata('Su_Cell_2020_chr21_CSynth_output_SP_0_CF_60_PP_-4.xyz');
+%Fig S3 A & G in paper
 
+chromosome = importdata('Su_Cell_2020_chr21_CSynth_output_SP_0_CF_60_PP_-4.xyz');
 input_HiC = importdata('Hi-C_contacts_chromosome21.csv');
 
-resolution = 50000;
+resolution = 50000; %bp per bin/monomer
 
+%Hi-C & FISH data is not for the entire chromosome, only about ~75% of the total chromosome
+%CSynth expects first monomer to start at 1bp
 rows = input_HiC(:,1);
 rows(1) = [];
-
 input_HiC(:,1) = [];
 input_HiC(1,:) = [];
-
 sto=10400001:50000:46650001;
 remove=setxor(sto,rows);
 remove=(remove-10400001)./resolution;
 
-input_HiC=input_HiC./nanmedian(nanmedian(input_HiC));
+input_HiC=input_HiC./nanmedian(nanmedian(input_HiC)); %match contact probability color intensity
 figure
 imagesc(input_HiC);
 hold on;
@@ -30,6 +31,7 @@ maj_axis_chr.Label.String = 'Contact Probability';
 maj_axis_chr.FontSize = 18;
 caxis([10^0 10^4]);
 
+%simulate Hi-C contact map for human IMR90 chr 21
 P = 1./squareform(pdist(chromosome(:,2:4))).^4;
 P=P./nanmedian(nanmedian(P));
 
@@ -51,6 +53,7 @@ maj_axis_chr.Label.String = 'Contact Probability';
 maj_axis_chr.FontSize = 18;
 caxis([10^0 10^4]);
 
+%omit main and 1st off diagonal for relative error calculation
 input_HiC(idiag(size(input_HiC),-1)) = NaN(size(input_HiC,1)-1,1);
 input_HiC(idiag(size(input_HiC),0)) = NaN(size(input_HiC,1),1);
 input_HiC(idiag(size(input_HiC),1)) = NaN(size(input_HiC,1)-1,1);
@@ -65,9 +68,8 @@ P(isnan(P))=0;
 input_HiC(isinf(input_HiC))=0;
 P(isinf(P))=0;
 
-pearson_temp=corrcoef(input_HiC,P);
-pearson_temp(1,2)
-
+%relative error
+mean(mean((input_HiC-P)./P,'omitnan'),'omitnan')*100
 
 function [I J] = idiag(sz, k)
 if isscalar(sz)

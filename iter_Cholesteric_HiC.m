@@ -1,23 +1,32 @@
 clc
 clear
 %Author: Lucas Philipp
-%REQUIRES STATISTICS AND MACHINE LEARNING TOOLBOX!
+%iteratively create CLC chromosomes with various parameters
+%simulate CLC Hi-C contact maps/contact probability curves
+%
+%requires: statistics and machine learning toolbox
 
-num_chroms = 75;
-resolution = 5000; %number of base pairs represented by 1 monomer
-s_avg = cell(1, num_chroms); %cell array for separation
+num_chroms = 50; %number of simulated chromosomes
+resolution = 5000; %number of base pairs per monomer
+
+%contact probability curve data
+s_avg = cell(1, num_chroms); %cell array for genomic separation
 Ps_avg = cell(1, num_chroms); %cell array for contact probability
 
 total_chromosome_length = 4000; %number of monomers
-P_agg = zeros(total_chromosome_length); %collect contact probability maps for different chromosomes
+P_agg = zeros(total_chromosome_length); %collect Hi-C contact maps for different chromosomes
 
-disc_diameter = []; %in number of monomers
+disc_diameter = []; %collect disc_diameter for different chromosomes
+mon_per_disc_agg = []; %collect number of monomers per disc for different chromosomes
+mean_loop_length_agg = []; %collect mean loop length for different chromosomes
 
 for d = 1:1:num_chroms
     d
     chromosome=[]; %position of DNA
     %7.655Mbp/(10 layers)∗1monomer/5kbp≈(150 monomers)/layer
-    num_mon = 150; %number of monomers in the thickest cholesteric disk
+    num_mon_per_disc = 150; %number of monomers in the thickest cholesteric disc
+    %num_mon_per_disc = random('Normal',150,40); %number of monomers in the thickest cholesteric disc
+    %num_mon_per_disc = random('Uniform',75,150); %number of monomers in the thickest cholesteric disc
 
     frac_tot_sequence_in_loops = 0.1; %Fraction
     frac_loop_sequence_inter_disc = 0.5; %Fraction
@@ -29,12 +38,12 @@ for d = 1:1:num_chroms
     %ellipse parameters for overall chromosome profile
     min_axis_chr=0.5; %radius of cholesteric disc, in microns
 
-    %ellipse minor/major axes ratio for a cholesteric disc, for circle set ell_ratio=1
-    %major axis of cholesteric disc ellipse = minor axis of chromosome ellipse
-    ell_ratio = 1;
+    % optional slanted discs (discs not perpendicular to chromosome long axis)
+    tilt_angle = 0; %in degrees, 0 is perpendicular to chromosome long axis
+    %tilt_angle = random('Normal',0,30); %in degrees
 
-    xy_spacing = min_axis_chr*sqrt(pi/num_mon); %mesh spacing in microns
-    z_spacing = xy_spacing/2;
+    xy_spacing = min_axis_chr*sqrt(pi/num_mon_per_disc); %mesh spacing in microns
+    z_spacing = xy_spacing;
 
     %distance cutoff to count as HiC contact
     distance_threshold = xy_spacing*2;
@@ -49,18 +58,19 @@ for d = 1:1:num_chroms
 
     dtheta_layer=360*z_spacing/pitch; %DNA fibres in a layer are rotated dtheta_layer degrees counterclockwise relative to the previous layer
 
-    % Find the target total length of core and loops
+    % Find the target total length of sequence in core and in loops
     wanted_total_core_length = total_chromosome_length-(frac_tot_sequence_in_loops*total_chromosome_length);
     wanted_total_inter_disc_loop_length = (total_chromosome_length-wanted_total_core_length)*frac_loop_sequence_inter_disc;
     wanted_total_intra_disc_loop_length = total_chromosome_length-wanted_total_core_length-wanted_total_inter_disc_loop_length;
 
-    chol_layers = round(wanted_total_core_length/num_mon);
+    chol_layers = round(wanted_total_core_length/num_mon_per_disc);
     mon_per_disc=zeros(chol_layers,1);
     maj_axis_chr=chol_layers*z_spacing; %in microns
 
     while size(chromosome,1) < wanted_total_core_length
 
         chromosome = [];
+        %discs are different sizes, need cell array
         discs = {};
 
         chol_layers = chol_layers +1;
@@ -76,11 +86,11 @@ for d = 1:1:num_chroms
 
             [X,Y] = meshgrid(x,y);
 
-            % MAKE r A CONSTANT = maj_axis_chr (get longest distance parabola from origin)
-            r = (min_axis_chr/maj_axis_chr)*sqrt(maj_axis_chr^2-z^2); %major axis of disk at this z position
+            %chromosome discs are wider at center than at either end
+            r = (min_axis_chr/maj_axis_chr)*sqrt(maj_axis_chr^2-z^2); %major axis of disc at this z position
 
             %mask for a single cholesteric disc
-            indicator = sqrt((X./r).^2 + (Y./(r.*ell_ratio)).^2) - 1 < 0;
+            indicator = sqrt((X./r).^2 + (Y./r).^2) - 1 < 0;
             xEllipse = X(indicator);
             yEllipse = Y(indicator);
 
@@ -95,11 +105,12 @@ for d = 1:1:num_chroms
                     max_diameter=temp;
                 end
             end
-            
+
             disc_diameter = [disc_diameter max_diameter];
 
             yEllipse(flip_these) = -1.*yEllipse(flip_these);
 
+            %perform rotation for each disc
             R=[cosd((i-1)*dtheta_layer) -sind((i-1)*dtheta_layer); sind((i-1)*dtheta_layer) cosd((i-1)*dtheta_layer)]; %create 2D rotation matix, applies to (X,Y) pairs
             rotcoord=[];
             for j=1:1:size(xEllipse,1)
@@ -121,7 +132,9 @@ for d = 1:1:num_chroms
         end
 
     end
+    mon_per_disc_agg = [mon_per_disc_agg; mon_per_disc];
 
+    %%%
     %orientation of DNA fibres, no longituindal component: fvec=(cos(az), sin(az), 0)
     lin_vec_0=ones(size(chromosome));
     %orientation of DNA fibres, longitudnal component=b fvec=(cos(az), sin(az), b) %normalize to unit length???
@@ -135,10 +148,7 @@ for d = 1:1:num_chroms
     lin_vec_b(:,2) = lin_vec_y;
     lin_vec_b(:,3) = b.*ones(size(chromosome(:,3))); %not affected by normalization
 
-    %another way to taper: no taper, elliptical, hockey rink
-    %z = 0-(spacing*(chol_layers-1))/2:spacing:spacing*(chol_layers-1)-(spacing*(chol_layers-1))/2;
-    %r = (min_axis_chr/maj_axis_chr)*sqrt(maj_axis_chr^2-z.^2);
-
+    %visualize oblique TEM cross-section through CLC model
     %DNA FIBRES HAVE NO LONGITUDINAL COMPONENT
     % figure
     % set(gcf, 'Position', get(0, 'Screensize'));
@@ -210,13 +220,13 @@ for d = 1:1:num_chroms
     % ylabel('y','FontSize', 24)
     % zlabel('z','FontSize', 24)
     % title('Rotated model for oblique cross-section viewing','FontSize', 24)
+    %%%
 
-    %INTRA DISK LOOPS
-    %choose potential intra-disc loop start positions, i.e. perimeter points on discs
+    %INTRA DISC LOOPS
+    %choose potential intra-disc loop start positions, i.e. nucleoplasm-exposed monomers on discs
     intra_disc_loop_potential_starts_ind = sort(intra_disc_loop_potential_starts_ind);
 
     append=[];
-    %RENAME IDX2
     for i = 1:1:size(intra_disc_loop_potential_starts_ind,1)
         [match, idx2] = ismember(chromosome(intra_disc_loop_potential_starts_ind(i),:), chromosome, 'rows');
         intra_disc_loop_potential_starts_ind(i)=idx2;
@@ -241,23 +251,26 @@ for d = 1:1:num_chroms
 
     intra_disc_loop_potential_starts_ind(save)=[];
 
+    % visualize intra-disc loop potential start positions
     % figure
     % hold on
     % plot3(chromosome(:,1),chromosome(:,2),chromosome(:,3),'-','Color','k')
     % plot3(chromosome(intra_disc_loop_potential_starts_ind,1),chromosome(intra_disc_loop_potential_starts_ind,2),chromosome(intra_disc_loop_potential_starts_ind,3),'o','MarkerFaceColor','r')
     % xlim([min(chromosome(:,1))*2 max(chromosome(:,1))*2])
     % ylim([min(chromosome(:,2))*2 max(chromosome(:,2))*2])
+    % set(gca,'XTick',[], 'YTick', [], 'ZTick', [])
     % for i = 0:0.05:1
-    % zlim([max(chromosome(:,3))*(i-0.04) max(chromosome(:,3))*(i+0.04)])
-    % pause(5)
+    %     zlim([max(chromosome(:,3))*(i-0.03) max(chromosome(:,3))*(i+0.03)])
+    %     pause(5)
     % end
     % view(0,90)
     % hold off
 
-    %INTER DISK LOOPS
+    %INTER DISC LOOPS
     idx=find(diff(chromosome(:,3))>0); %new disc starts when z coordinate changes
     num_inter_disc_loops = size(idx,1);
     mean_loop_length = wanted_total_inter_disc_loop_length/num_inter_disc_loops;
+    mean_loop_length_agg = [mean_loop_length_agg; mean_loop_length];
     % Generate inter disc loops with variable looplength drawn from an exponential distribution
     % Total length of inter disc loops adds up to the wanted length of inter disc loops
     inter_disc_loop_lengths = [];
@@ -273,6 +286,8 @@ for d = 1:1:num_chroms
 
     inter_disc_loops = cell(1, num_inter_disc_loops); %cell array containing the loops
 
+    %because of disc rotation all chromosome monomers are no longer on the same lattice
+    %loop random walks are on the original xyz lattice
     disc_spine_1 = zeros(num_inter_disc_loops+1, 3); %on lattice points
     disc_spine_2 = zeros(num_inter_disc_loops+1, 3);  %on lattice points
     save_disc_starts = zeros(num_inter_disc_loops+1, 3); %remains off-latice, matches chromosome coordinates
@@ -300,9 +315,10 @@ for d = 1:1:num_chroms
         disc_spine_2(i,:)=xy_spacing*round(disc_spine_2(i,:)./xy_spacing);
     end
 
+    %extra-chromosomal loops avoid the condensed chromosome core
     count = 1;
     for i=1:1:num_inter_disc_loops
-        %adjacent disks connected
+        %adjacent discs connected
         if mod(count,2)==1
             %convert 2D array to cell
             inter_disc_loops{i}=num2cell(constrained_self_avoiding_RW_3D(disc_spine_1(count,:),disc_spine_1(count+1,:),inter_disc_loop_lengths(i),z_spacing));
@@ -372,7 +388,7 @@ for d = 1:1:num_chroms
         sum_inter_disc_loops = sum_inter_disc_loops+size(inter_disc_loops{i},1);
     end
 
-    % Generate loop length while the desired total length is not hit
+    %generate another loop while the desired total amount of sequence in loops is not yet reached
     while sum_inter_disc_loops >= wanted_total_inter_disc_loop_length
         temp=randperm(size(inter_disc_loops,2),1);
         inter_disc_loops(:,temp) = [];
@@ -391,101 +407,33 @@ for d = 1:1:num_chroms
         sum_inter_disc_loops = sum_inter_disc_loops+size(inter_disc_loops{i},1);
     end
 
-    % insert inter-disc loops into primary sequence in model
+    % insert inter-disc loops into proper primary sequence locations in 3D model
     chromosome_w_inter_disc_loops = insert_loops(num_inter_disc_loops, sum_inter_disc_loops, chromosome, inter_disc_loops, idx);
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    [Xcyl,Ycyl,Zcyl] = cylinder(min_axis_chr);
-    Zcyl = Zcyl*(max(chromosome(:,3))-min(chromosome(:,3)));
-    Zcyl = Zcyl - max(chromosome(:,3));
-
-    % f=figure
-    % fig=gcf;
-    % fig.Position(3:4)=[1500,1500];
-    % count=1;
-    % for i=1:1:numloops
-    %     clf(f)
-    %     hold on
-    %     surf(Xcyl,Ycyl,Zcyl,'FaceAlpha',0.2);
-    %
-    %     if mod(count,2)==1
-    %         plot3(disc_starts(count,1),disc_starts(count,2),disc_starts(count,3),'o','Color','g')
-    %         plot3(disc_starts(count+1,1),disc_starts(count+1,2),disc_starts(count+1,3),'o','Color','r')
-    %         count = count + 1;
-    %     else
-    %         plot3(disc_ends(count,1),disc_ends(count,2),disc_ends(count,3),'o','Color','g')
-    %         plot3(disc_ends(count+1,1),disc_ends(count+1,2),disc_ends(count+1,3),'o','Color','r')
-    %         count = count + 1;
-    %     end
-    %
-    %     plot3(loops(:,1,i),loops(:,2,i),loops(:,3,i),'-','Color','k')
-    %     plot3(loops(1,1,i),loops(1,2,i),loops(1,3,i),'o','MarkerFaceColor','g')
-    %     plot3(loops(end,1,i),loops(end,2,i),loops(end,3,i),'o','MarkerFaceColor','r')
-    %
-    %     xlim([min(model(:,1))*2 max(model(:,1))*2])
-    %     ylim([min(model(:,2))*2 max(model(:,2))*2])
-    %     zlim([min(model(:,3))*2 max(model(:,3))*2])
-    %     view(0,90)
-    %     pause(0.1)
-    % end
-    % hold off
-
-    % figure
-    % hold on
-    % count=1;
-    % for i=1:1:numloops
-    %     if mod(count,2)==1
-    %         plot3(disc_starts(count,1),disc_starts(count,2),disc_starts(count,3),'o','Color','g')
-    %         plot3(disc_starts(count+1,1),disc_starts(count+1,2),disc_starts(count+1,3),'o','Color','r')
-    %         count = count + 1;
-    %     else
-    %         plot3(disc_ends(count,1),disc_ends(count,2),disc_ends(count,3),'o','Color','g')
-    %         plot3(disc_ends(count+1,1),disc_ends(count+1,2),disc_ends(count+1,3),'o','Color','r')
-    %         count = count + 1;
-    %     end
-    %
-    %     plot3(loops(:,1,i),loops(:,2,i),loops(:,3,i),'-','Color','k')
-    %     plot3(loops(1,1,i),loops(1,2,i),loops(1,3,i),'o','MarkerFaceColor','g')
-    %     plot3(loops(end,1,i),loops(end,2,i),loops(end,3,i),'o','MarkerFaceColor','r')
-    %
-    %     xlim([min(model(:,1))*2 max(model(:,1))*2])
-    %     ylim([min(model(:,2))*2 max(model(:,2))*2])
-    %     zlim([min(model(:,3))*2 max(model(:,3))*2])
-    %     view(30,30)
-    % end
-    % plot3(model(:,1),model(:,2),model(:,3))
-
-    % figure
-    % plot3(new_model(:,1),new_model(:,2),new_model(:,3))
-    % xlim([min(model(:,1))*2 max(model(:,1))*2])
-    % ylim([min(model(:,2))*2 max(model(:,2))*2])
-    % zlim([min(model(:,3))*2 max(model(:,3))*2])
-    % xlabel('x','FontSize', 24)
-    % ylabel('y','FontSize', 24)
-    % zlabel('z','FontSize', 24)
-    % view(30,30)
-
-    %INTRA DISK LOOPS
+    %INTRA DISC LOOPS
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %RENAME IDX3
-    %this maps the list of indicies for intra-disc loop starts from chromosome -> chromosome_w_inter_disc_loops
+    %this maps the list of monomer positions for intra-disc loop starts from chromosome -> chromosome_w_inter_disc_loops
     for i = 1:1:size(intra_disc_loop_potential_starts_ind,1)
         [match, idx3] = ismember(chromosome(intra_disc_loop_potential_starts_ind(i),:), chromosome_w_inter_disc_loops, 'rows');
         intra_disc_loop_potential_starts_ind(i)=idx3;
     end
 
+    % visualize that intra-disc loop coordinates were properly mapped
     % figure
     % hold on
-    % plot3(chromosome_w_inter_disc_loops(:,1),chromosome_w_inter_disc_loops(:,2),chromosome_w_inter_disc_loops(:,3),'-','Color','k')
+    % plot3(chromosome_w_inter_disc_loops(:,1),chromosome_w_inter_disc_loops(:,2),chromosome_w_inter_disc_loops(:,3),'o','MarkerFaceColor','k')
     % plot3(chromosome_w_inter_disc_loops(intra_disc_loop_potential_starts_ind,1),chromosome_w_inter_disc_loops(intra_disc_loop_potential_starts_ind,2),chromosome_w_inter_disc_loops(intra_disc_loop_potential_starts_ind,3),'o','MarkerFaceColor','r')
     % xlim([min(chromosome_w_inter_disc_loops(:,1))*2 max(chromosome_w_inter_disc_loops(:,1))*2])
     % ylim([min(chromosome_w_inter_disc_loops(:,2))*2 max(chromosome_w_inter_disc_loops(:,2))*2])
+    % set(gca,'XTick',[], 'YTick', [], 'ZTick', [])
+    % i=0;
     % for i = 0:0.05:1
-    % zlim([max(chromosome_w_inter_disc_loops(:,3))*(i-0.04) max(chromosome_w_inter_disc_loops(:,3))*(i+0.04)])
-    % pause(5)
+    %     zlim([min(chromosome_w_inter_disc_loops(:,3))+(i-0.03) min(chromosome_w_inter_disc_loops(:,3))+(i+0.03)])
+    %    pause(5)
     % end
     % view(0,90)
     % hold off
@@ -504,8 +452,8 @@ for d = 1:1:num_chroms
         end
     end
 
-    % Generate loops with looplength as mean from an exponential distribution
-    % Total length of loops adds up to the wanted length of intra disc loops
+    %generate loops with looplength as mean from an exponential distribution
+    %total length of loops adds up to the wanted length of intra disc loops
     intra_disc_loop_lengths = [];
 
     while sum(intra_disc_loop_lengths) <= wanted_total_intra_disc_loop_length
@@ -537,19 +485,6 @@ for d = 1:1:num_chroms
         intra_disc_loop_potential_starts_ind(find(del)) = [];
     end
 
-    % figure
-    % hold on
-    % plot3(chromosome_w_inter_disc_loops(:,1),chromosome_w_inter_disc_loops(:,2),chromosome_w_inter_disc_loops(:,3),'-','Color','k')
-    % plot3(chromosome_w_inter_disc_loops(intra_disc_loop_potential_starts_ind,1),chromosome_w_inter_disc_loops(intra_disc_loop_potential_starts_ind,2),chromosome_w_inter_disc_loops(intra_disc_loop_potential_starts_ind,3),'o','MarkerFaceColor','r')
-    % xlim([min(chromosome_w_inter_disc_loops(:,1))*2 max(chromosome_w_inter_disc_loops(:,1))*2])
-    % ylim([min(chromosome_w_inter_disc_loops(:,2))*2 max(chromosome_w_inter_disc_loops(:,2))*2])
-    % for i = 0:0.05:1
-    % zlim([max(chromosome_w_inter_disc_loops(:,3))*(i-0.04) max(chromosome_w_inter_disc_loops(:,3))*(i+0.04)])
-    % pause(5)
-    % end
-    % view(0,90)
-    % hold off
-
     %number of random intra disc loops starts and ends correspond to num_intra_disc_loops and are chosen randomly from all possible locations
     intra_disc_loop_potential_starts_ind=intra_disc_loop_potential_starts_ind(find(diff(intra_disc_loop_potential_starts_ind)==1));
     p = randperm(size(intra_disc_loop_potential_starts_ind,1),num_intra_disc_loops);
@@ -564,6 +499,7 @@ for d = 1:1:num_chroms
         intra_disc_loop_ends(i,:)=xy_spacing*round(chromosome_w_inter_disc_loops(intra_disc_loop_ends_ind(i),:)./xy_spacing);
     end
 
+    %visualize intra-disc loop start/end positions
     % figure
     % hold on
     % plot3(chromosome_w_inter_disc_loops(:,1),chromosome_w_inter_disc_loops(:,2),chromosome_w_inter_disc_loops(:,3))
@@ -577,7 +513,8 @@ for d = 1:1:num_chroms
     % zlabel('z','FontSize', 24)
     % view(30,30)
 
-    %Generate intra-disc loops
+    %generate intra-disc loops
+    %random walk avoids condensed chromosome core
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     for i=1:1:size(intra_disc_loop_lengths,2)
         intra_disc_loops{i}=num2cell(constrained_self_avoiding_RW_3D(intra_disc_loop_starts(i,:),intra_disc_loop_ends(i,:),intra_disc_loop_lengths(i),z_spacing));
@@ -610,8 +547,20 @@ for d = 1:1:num_chroms
     % insert intra-disc loops into primary sequence in chromosome
     chromosome_w_inter_and_intra_disc_loops = insert_loops(num_intra_disc_loops, sum(intra_disc_loop_lengths), chromosome_w_inter_disc_loops, intra_disc_loops, intra_disc_loop_starts_ind);
 
+    % optional slanted discs (discs not perpendicular to chromosome long axis)
+    tilt_bins = 50;
+    if abs(tilt_angle) > 0
+        tilt_x_coords=linspace(min(chromosome_w_inter_and_intra_disc_loops(:,1)),max(chromosome_w_inter_and_intra_disc_loops(:,1)),tilt_bins);
+        tilt_z_coords=linspace(0,atan(tilt_angle*pi/180)*(max(tilt_x_coords)-min(tilt_x_coords)),tilt_bins-1);
+        for i = 1:1:tilt_bins-1
+            chromosome_w_inter_and_intra_disc_loops(find(tilt_x_coords(i+1) > chromosome_w_inter_and_intra_disc_loops(:,1) & chromosome_w_inter_and_intra_disc_loops(:,1) > tilt_x_coords(i)),3) = chromosome_w_inter_and_intra_disc_loops(find(tilt_x_coords(i+1) > chromosome_w_inter_and_intra_disc_loops(:,1) & chromosome_w_inter_and_intra_disc_loops(:,1) > tilt_x_coords(i)),3) + tilt_z_coords(i);
+        end
+    else
+    end
+
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+    % visualize primary sequence throughout chromosome
     numPoints = size(chromosome_w_inter_and_intra_disc_loops,1);
 
     MyColor = linspace(1,numPoints,numPoints)';
@@ -619,7 +568,7 @@ for d = 1:1:num_chroms
     Faces = [1:(numPoints-1); 2:numPoints]';
 
     skip=numPoints;
-
+    % 
     % f=figure
     % screen = get(0, 'Screensize');
     % screen(3)=screen(3)/1.75;
@@ -628,9 +577,9 @@ for d = 1:1:num_chroms
     % plot3(chromosome_w_inter_and_intra_disc_loops(:,1),chromosome_w_inter_and_intra_disc_loops(:,2),chromosome_w_inter_and_intra_disc_loops(:,3),'Color', [.6 .6 .6])
     % colormap jet
     % axis equal
-    % xlim([min(chromosome(:,1))*1.5 max(chromosome(:,1))*1.5])
-    % ylim([min(chromosome(:,2))*1.5 max(chromosome(:,2))*1.5])
-    % zlim([min(chromosome(:,3))*1.1 max(chromosome(:,3))*1.1])
+    % xlim([min(chromosome_w_inter_and_intra_disc_loops(:,1))*1.5 max(chromosome_w_inter_and_intra_disc_loops(:,1))*1.5])
+    % ylim([min(chromosome_w_inter_and_intra_disc_loops(:,2))*1.5 max(chromosome_w_inter_and_intra_disc_loops(:,2))*1.5])
+    % zlim([min(chromosome_w_inter_and_intra_disc_loops(:,3))*1.1 max(chromosome_w_inter_and_intra_disc_loops(:,3))*1.1])
     % set(gca,'XTick',[], 'YTick', [], 'ZTick', [])
     % caxis([min(MyColor) max(MyColor)])
     % c = colorbar;
@@ -640,28 +589,25 @@ for d = 1:1:num_chroms
     % c.Label.String = 'primary sequence [bp]';
     % c.FontSize = 32;
     % patch('Faces', Faces(:,:) ,'Vertices', chromosome_w_inter_and_intra_disc_loops(:,:) ,'FaceColor', 'none', 'FaceVertexCData', MyColor(:,:) ,'EdgeColor','interp' ,'LineWidth',5, 'FaceAlpha',.5,'EdgeAlpha',.5);
-    % view(45,5)
+    % view(0,0)
 
     % for i=skip+1:skip:numPoints
     %     clf(f)
-    %     plot3(new_new_model(:,1),new_new_model(:,2),new_new_model(:,3),'Color', [.6 .6 .6])
-    %     xlim([min(model(:,1))*2 max(model(:,1))*2])
-    %     ylim([min(model(:,2))*2 max(model(:,2))*2])
-    %     zlim([min(model(:,3))*2 max(model(:,3))*2])
+    %     plot3(chromosome_w_inter_and_intra_disc_loops(:,1),chromosome_w_inter_and_intra_disc_loops(:,2),chromosome_w_inter_and_intra_disc_loops(:,3),'Color', [.6 .6 .6])
+    %     xlim([min(chromosome_w_inter_and_intra_disc_loops(:,1))*2 max(chromosome_w_inter_and_intra_disc_loops(:,1))*2])
+    %     ylim([min(chromosome_w_inter_and_intra_disc_loops(:,2))*2 max(chromosome_w_inter_and_intra_disc_loops(:,2))*2])
+    %     zlim([min(chromosome_w_inter_and_intra_disc_loops(:,3))*2 max(chromosome_w_inter_and_intra_disc_loops(:,3))*2])
     %     view(30,30)
     %     caxis([min(MyColor) max(MyColor)])
     %     c = colorbar;
     %     c.Label.String = 'primary sequence';
-    %     patch('Faces', Faces(i-skip:i-1,:) ,'Vertices', new_new_model(1:i,:) ,'FaceColor', 'none', 'FaceVertexCData', MyColor(1:i,:) ,'EdgeColor','interp' ,'LineWidth',5, 'FaceAlpha',.5,'EdgeAlpha',.5);
+    %     patch('Faces', Faces(i-skip:i-1,:) ,'Vertices', chromosome_w_inter_and_intra_disc_loops(1:i,:) ,'FaceColor', 'none', 'FaceVertexCData', MyColor(1:i,:) ,'EdgeColor','interp' ,'LineWidth',5, 'FaceAlpha',.5,'EdgeAlpha',.5);
     %     pause(0.5);
     % end
 
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    %%%
-    %y=y_0 + 1/(a sin(phi)*cos(phi))*log(abs(sin(x*a*sin(phi))+btan(phi))
-    %%%
-
+    %simluate Hi-C contact map
     %euclidian distance between monomers
     D = pdist(chromosome_w_inter_and_intra_disc_loops); %in microns
 
@@ -671,45 +617,35 @@ for d = 1:1:num_chroms
     %P = spacing./D;
     P = (xy_spacing/10)./D.^4;
     P(isinf(P)) = 1; %self contact probabilities are 1
-
-    %are these coming from disc/loop connections?
-    %this is very important! as long extrachromosomal loops might have
-    %overlapping monomers
     P(P>1) = 1; %no contact probabilities above 1
 
+    %figure S1B in paper
     % figure
     % hold on
     % plot3(chromosome(:,1),chromosome(:,2),chromosome(:,3))
     % for j = 1:1:size(inter_disc_loops,2)
-    %     plot3(cell2mat(inter_disc_loops{j}(:,1)),cell2mat(inter_disc_loops{j}(:,2)),cell2mat(inter_disc_loops{j}(:,3)),'-','Color','r')
+    %     plot3(cell2mat(inter_disc_loops{j}(:,1)),cell2mat(inter_disc_loops{j}(:,2)),cell2mat(inter_disc_loops{j}(:,3)),'-o','LineWidth',5,'Color','r')
     % end
     % for k = 1:1:size(intra_disc_loops,2)
-    %     plot3(cell2mat(intra_disc_loops{k}(:,1)),cell2mat(intra_disc_loops{k}(:,2)),cell2mat(intra_disc_loops{k}(:,3)),'-','Color','g')
+    %     plot3(cell2mat(intra_disc_loops{k}(:,1)),cell2mat(intra_disc_loops{k}(:,2)),cell2mat(intra_disc_loops{k}(:,3)),'-o','LineWidth',5,'Color','g')
     % end
-    % for i = 1:1:size(find(diag(D,1)>0.5),1)
-    %     far=find(diag(D,1)>0.5);
-    %     plot3(chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,1),chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,2),chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,3),'-o','Color','k')
-    % end
+    % % for i = 1:1:size(find(diag(D,1)>0.5),1)
+    % %     far=find(diag(D,1)>0.5);
+    % %     plot3(chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,1),chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,2),chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,3),'-o','Color','k')
+    % % end
+    % plot3(chromosome_w_inter_and_intra_disc_loops(:,1),chromosome_w_inter_and_intra_disc_loops(:,2),chromosome_w_inter_and_intra_disc_loops(:,3),'-','Color','k')
     % xlim([min(chromosome_w_inter_disc_loops(:,1))*2 max(chromosome_w_inter_disc_loops(:,1))*2])
     % ylim([min(chromosome_w_inter_disc_loops(:,2))*2 max(chromosome_w_inter_disc_loops(:,2))*2])
     % zlim([min(chromosome_w_inter_disc_loops(:,3))*2 max(chromosome_w_inter_disc_loops(:,3))*2])
+    % set(gca,'XTick',[], 'YTick', [], 'ZTick', [])
     % xlabel('x','FontSize', 24)
     % ylabel('y','FontSize', 24)
     % zlabel('z','FontSize', 24)
-    % view(30,30)
-
-    P_loci = zeros(size(P,1),1);
-    count = 0;
-    for i=1:1:size(P,1)
-        count = count + 1;
-        P_loci(count,1)=i*resolution;
-    end
-
-    %writematrix(P_loci,'cholesteric_GEM_loci.txt','Delimiter','tab')
+    % view(30,2)
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    %output for CSynth
+    %output for CSynth: single cell contact probability
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     PCSynth = zeros(nat_sum(size(P,1)),3);
     count = 0;
@@ -725,12 +661,15 @@ for d = 1:1:num_chroms
     end
 
     PCSynth(:,3) = round(PCSynth(:,3),3,"significant");
+    %%monomer coordinates in CSynth compatible format
     %writematrix(PCSynth,sprintf('cholesteric_CSynth_D4_%d.txt',d),'Delimiter','tab')
-
-    %writematrix(chromosome_w_inter_and_intra_disc_loops,sprintf('cholesteric_monomer_locations_short_%d.txt',d),'Delimiter','tab');
+    %%monomer coordinates in xyz format
+    %writematrix(chromosome_w_inter_and_intra_disc_loops,sprintf('cholesteric_monomer_locations_54_discs_%d.txt',d),'Delimiter','tab');
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+    %figure S1B in paper
+    %annotate location of cholesteric discs on contact map
     discs_indicies = [];
     discs_starts = [];
     discs_ends = [];
@@ -757,16 +696,16 @@ for d = 1:1:num_chroms
     % daspect([100 1 1]) %squish height of figure
     % hold off
     % ax1=gca;
-
-    % f2=figure
-    % %plot intra-disc loops track
-    % histogram(intra_disc_loop_indicies, size(chromosome_w_inter_and_intra_disc_loops,1), 'EdgeColor', 'r')
-    % title('Intra Disc Loop Locations')
-    % box off
-    % axis off
-    % daspect([100 1 1]) %squish height of figure
-    % ax2=gca;
-
+    %
+    % % f2=figure
+    % % %plot intra-disc loops track
+    % % histogram(intra_disc_loop_indicies, size(chromosome_w_inter_and_intra_disc_loops,1), 'EdgeColor', 'r')
+    % % title('Intra Disc Loop Locations')
+    % % box off
+    % % axis off
+    % % daspect([100 1 1]) %squish height of figure
+    % % ax2=gca;
+    %
     % f2=figure
     % %plot hic matrix
     % imagesc(P);
@@ -784,9 +723,9 @@ for d = 1:1:num_chroms
     % maj_axis_chr.Label.String = 'Probability of Contact';
     % maj_axis_chr.FontSize = 18;
     % caxis([10^(-3) 10^0]);
-    % 
+    %
     % ax2=gca;
-    % 
+    %
     % figure
     % tcl=tiledlayout(8,1); % 8 by 1 tile layout
     % ax1.Parent=tcl;
@@ -801,22 +740,25 @@ for d = 1:1:num_chroms
     % close(f1)
     % close(f2)
 
-    %(The possible number of pairs of genomic positions separated by d on a given chromosome is Lc-d, where Lc is the length of the chromosome.)
+    %calculate contact probability curve
+    %number of pairs of genomic positions separated by s on a given chromosome is Lc-s, where Lc is the length of the chromosome
     [s Ps] = contact_probability_xyz(chromosome_w_inter_and_intra_disc_loops,distance_threshold);
 
     s_avg{d} = s';
     Ps_avg{d} = Ps';
 
+    %truncate end of chromosomes that are slightly longer, portions of
+    %discs are not deleted
     if size(P,1)<total_chromosome_length
         P=padarray(P,[total_chromosome_length-size(P,1) total_chromosome_length-size(P,1)],0,'post');
     end
 
-    P_agg = P_agg+P(1:total_chromosome_length,1:total_chromosome_length);
+    P_agg = P_agg+P(1:total_chromosome_length,1:total_chromosome_length); %single cell contact maps are superimposed, then averaged
 end
 
 P_agg=P_agg./num_chroms;
 
-%aggregated HiC contact map
+%population level (aggregate) Hi-C contact map
 figure
 imagesc(P_agg);
 hold on;
@@ -841,7 +783,7 @@ for i=1:1:round(total_chromosome_length*0.95)
     Ps_agg = [Ps_agg; sum(diag(P_agg,i))/(total_chromosome_length-i)];
 end
 
-%scale so P(s=0) matches empirical dinoflagellate data, P(s=0)=10^-2
+%shift y-axis so P(s=0) matches empirical dinoflagellate data, P(s=0)=10^-2
 Ps_agg = Ps_agg./Ps_agg(1).*10^-2;
 
 figure
@@ -856,14 +798,14 @@ set(ax,'YScale', 'log')
 plot(s_agg.*resolution,Ps_agg, 'Linewidth', 2)
 xlabel('s','FontSize', 24)
 ylabel('P(s)','FontSize', 24)
-xline(2*(mean(mon_per_disc)+mean_loop_length)*resolution,'--',{'2x Sequence in Layer'})
+xline(2*(mean(mon_per_disc_agg)+mean(mean_loop_length_agg))*resolution,'--',{'2x Sequence in Layer'})
 xline(2*(mean(disc_diameter))*resolution,'--',{'2x Disc Diameter'})
 ax = gca;
 ax.FontSize = 16;
 ylim([10^-6 10^0])
 xlim([10^4 2.5*10^7])
 
-%output for CSynth
+%output for CSynth: population level (aggregate) contact probability
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 PCSynth = zeros(nat_sum(round(total_chromosome_length*0.95)),3);
 count = 0;
@@ -881,7 +823,8 @@ end
 PCSynth(:,3) = round(PCSynth(:,3),3,"significant");
 %writematrix(PCSynth,strcat('cholesteric_short_frac_loops_0.1_CSynth_D4_aggregated_num_chroms_',num2str(num_chroms),'.txt'),'Delimiter','tab');
 
-% Vertically concatenate, pad with NaNs
+%calculate error bar for contact proability curve
+%vertically concatenate single cell contact probability curves, pad with NaNs
 maxNumCol = max(cellfun(@(c) size(c,2), Ps_avg));  % max number of columns
 aMat = cell2mat(cellfun(@(c){padarray(c,[0,maxNumCol-size(c,2)],NaN,'Post')}, Ps_avg)');
 colMeans = mean(aMat,1,'omitnan')';

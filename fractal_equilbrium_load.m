@@ -1,3 +1,6 @@
+%validation of contact probability curve calculation from xyz coorindates
+%using equilibrium and fractal globule structures: GSE18199 (Lieberman-Aiden, E., et al., 2009).
+
 clc
 clear
 
@@ -112,7 +115,6 @@ lgd.FontSize = 20;
 xlim([4 10^2])
 ylim([10^-2 10^0])
 legend boxoff
-
 
 figure
 hold on

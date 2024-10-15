@@ -3,7 +3,7 @@ Philipp, L., Marinov G., Todd S., Weber S., 3D Reconstruction of Dinoflagellate 
 
 bioRxiv link to pre-print: __________
 
-# Data Availability
+# Data Availability:
 S. kawagutii & S. microadriaticum CSynth structures, aligned RNA-seq .bed files, and TAD .bed files, have been deposited to: 
 
 # Descriptions of code:

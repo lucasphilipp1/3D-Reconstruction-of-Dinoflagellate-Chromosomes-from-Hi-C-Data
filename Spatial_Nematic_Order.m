@@ -1,4 +1,4 @@
-%Fig 3 C in paper
+%Fig 3C in paper
 %nematic order parameter calculation from chromosome structures
 %following the methods of: https://www.nature.com/articles/s41467-023-39908-1
 

@@ -1,5 +1,5 @@
 // file CSynthSerial.js
-// Load a series of xyz files from single drop, an handle them serially.
+// Load a series of xyz files from single drop, and handle them serially.
 // Drag drop this text onto CSynth first,
 // That will override the standard drag-drop hanling for the remainder of the session
 // Then dragdrop the entire set of .xyz files

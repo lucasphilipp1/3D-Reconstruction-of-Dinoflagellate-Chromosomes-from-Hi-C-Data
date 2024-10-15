@@ -51,9 +51,12 @@ Description: Function used to generate extrachromosomal loops. Combines random w
 Description: Function used to compute contact probability curves from a 3D structure. Calculation is different from computing contact probability curve from Hi-C matrix. See: Naumova, N., Imakaev, M., Fudenberg, G., Zhan, Y., Lajoie, B. R., Mirny, L. A., & Dekker, J. (2013). Organization of the mitotic chromosome. Science, 342(6161), 948-953. for detailed methods.
 
 ### convert_hic_to_CSynth.py
-Description: A way to directly convert .hic formatted Hi-C data to a format accepted by CSynth. Column 1: primary sequence location [bp], Column 2: primary sequence location [bp], Column 3: Hi-C contact strength. Missing values are likely due to repetative regions in the assembly.
+Description: Convert .hic formatted Hi-C data to a format readable by CSynth. Create separate files for each chromosome. Column 1: primary sequence location [bp], Column 2: primary sequence location [bp], Column 3: Hi-C contact strength. Missing values are likely due to repetative regions in the assembly.
 
 <img width="183" alt="Screenshot 2024-10-14 at 3 28 36 PM" src="https://github.com/user-attachments/assets/9855140a-cfe3-4e90-b4b7-09638ab92f7f">
+
+### convert_cool_to_CSynth.sh
+Description: Convert .cool or .mcool formatted Hi-C data to a format readable by CSynth. Create separate files for each chromosome. Run in a new terminal window after installing the cooler package: https://github.com/open2c/cooler. 
 
 ### cool_plot_HiC.m
 Description: Visualize Hi-C contact maps using the cooltools package. A minor modification of:

@@ -88,5 +88,5 @@ Equilibrium globule structures were downloaded from the GEO using the accession 
 RNA-seq data used in this study can be accessed via the SRA using the accession numbers:
 SRR3337493 (S. microadriaticum, (Liew, Y. J., et al., 2017)), SRR9417753 SRR9417755 SRR9417756 SRR1300302 SRR1300303 SRR1300304 SRR1300305 (S. kawagutii, (Li, T., et al., 2020; Keeling, P. J., et al., 2014)).
 
-# Questions
+# Questions:
 If you have questions about this repository please contact Lucas Philipp (lucas.philipp@mail.mcgill.ca).

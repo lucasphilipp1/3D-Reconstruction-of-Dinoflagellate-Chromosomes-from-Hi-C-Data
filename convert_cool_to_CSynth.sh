@@ -1,0 +1,2 @@
+for i in $(seq 1 94); 
+do cooler dump -t pixels -r chr${i}_pilon -r2 chr${i}_pilon -o temp.txt --join --balanced GSE152150_HiC-Dplus.smic1.1N.mapq_30.1000.mcool::/resolutions/5000; cut -f 2,5,8 temp.txt | column -t -s $"\t" > symbiodinium_microadriaticum_chr${i}.txt; rm -f temp.txt; done

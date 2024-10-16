@@ -8,7 +8,7 @@
 clc
 clear
 
-num_chroms = 50;
+num_chroms = 50; %don't increase beyond 50. TADs were not annotated for smaller HiC scaffolds.
 
 %%% OLS regression: gene density vs asphericity
 TADs_microadriaticum_asphericity_all = importdata('symbiodinium_microadriaticum_allchroms_TADs_asphericity_tensor.txt');
@@ -56,6 +56,8 @@ for i=1:num_chroms
         % File does not exist.
     end
 end
+
+sum(data(:,3))/sum(microadriaticum_chrom_sizes.data(1:num_chroms)) %fraction of genome covered by TADs
 
 idx_outliers = find(data(:,1)>0.95); %remove outliers
 data(idx_outliers,:) = [];
@@ -155,6 +157,8 @@ for i=1:num_chroms
         % File does not exist.
     end
 end
+
+sum(data(:,3))/sum(kawagutii_chrom_sizes.data(1:num_chroms)) %fraction of genome covered by TADs
 
 idx_outliers = find(data(:,1)>0.95); %remove outliers
 data(idx_outliers,:) = [];

@@ -32,15 +32,15 @@ for i=1:num_chroms
     P_axis_2=prctile(chromosome_PCA(:,2)-min(chromosome_PCA(:,2)),95);
     P_axis_3=prctile(chromosome_PCA(:,3)-min(chromosome_PCA(:,3)),95);
 
-    volume = 4*pi*(P_axis_1/2)*(P_axis_2/2)*(P_axis_3/2)/3;
-    volume_core = 4*pi*((P_axis_1/2*(1-0.3))*(P_axis_2/2*(1-0.3))*(P_axis_3/2*(1-0.3)))/3;
-    exposed_shell_deep = [exposed_shell_deep; ((volume-volume_core)/volume)*expression_coverage(1,i)]; %not all DNA is a gene, multiply by active gene density
+    volume = 4*pi*P_axis_1*P_axis_2*P_axis_3/3;
+    volume_core = 4*pi*((P_axis_1*(1-0.3))*(P_axis_2*(1-0.3))*(P_axis_3*(1-0.3)))/3;
+    exposed_shell_deep = [exposed_shell_deep; ((volume-volume_core)/volume)*expression_coverage(1,i)];
 
-    volume_core = 4*pi*((P_axis_1/2*(1-0.2))*(P_axis_2/2*(1-0.2))*(P_axis_3/2*(1-0.2)))/3;
-    exposed_shell_med = [exposed_shell_med; ((volume-volume_core)/volume)*expression_coverage(1,i)]; %not all DNA is a gene, multiply by active gene density
+    volume_core = 4*pi*((P_axis_1*(1-0.2))*(P_axis_2*(1-0.2))*(P_axis_3*(1-0.2)))/3;
+    exposed_shell_med = [exposed_shell_med; ((volume-volume_core)/volume)*expression_coverage(1,i)];
 
-    volume_core = 4*pi*((P_axis_1/2*(1-0.1))*(P_axis_2/2*(1-0.1))*(P_axis_3/2*(1-0.1)))/3;
-    exposed_shell_shallow = [exposed_shell_shallow; ((volume-volume_core)/volume)*expression_coverage(1,i)]; %not all DNA is a gene, multiply by active gene density
+    volume_core = 4*pi*((P_axis_1*(1-0.1))*(P_axis_2*(1-0.1))*(P_axis_3*(1-0.1)))/3;
+    exposed_shell_shallow = [exposed_shell_shallow; ((volume-volume_core)/volume)*expression_coverage(1,i)];
 end
 
 figure
@@ -51,12 +51,9 @@ for i = 1:num_chroms
     yline(exposed_shell_shallow(i),'--g')
     hold on
 end
-hxl = yline(exposed_shell_deep(end),'--k','30% Radial Penetration')
-hxl.FontSize = 14;
-hxl = yline(exposed_shell_med(end),'--k','20% Radial Penetration')
-hxl.FontSize = 14;
-hxl = yline(exposed_shell_shallow(end),'--k','10% Radial Penetration')
-hxl.FontSize = 14;
+hxl = yline(exposed_shell_deep(end),'--k','Chr Surface Area/Volume')
+hxl.FontSize = 16;
+hxl.LabelHorizontalAlignment='left';
 ylabel('% Chromosome Sequence with TPM > x')
 xlabel('x [TPM]')
 ax = gca;
@@ -92,15 +89,15 @@ for i=1:num_chroms
     P_axis_2=prctile(chromosome_PCA(:,2)-min(chromosome_PCA(:,2)),95);
     P_axis_3=prctile(chromosome_PCA(:,3)-min(chromosome_PCA(:,3)),95);
 
-    volume = 4*pi*(P_axis_1/2)*(P_axis_2/2)*(P_axis_3/2)/3;
-    volume_core = 4*pi*((P_axis_1/2*(1-0.3))*(P_axis_2/2*(1-0.3))*(P_axis_3/2*(1-0.3)))/3;
-    exposed_shell_deep = [exposed_shell_deep; ((volume-volume_core)/volume)*expression_coverage(1,i)]; %not all DNA is a gene, multiply by active gene density
+    volume = 4*pi*P_axis_1*P_axis_2*P_axis_3/3;
+    volume_core = 4*pi*((P_axis_1*(1-0.3))*(P_axis_2*(1-0.3))*(P_axis_3*(1-0.3)))/3;
+    exposed_shell_deep = [exposed_shell_deep; ((volume-volume_core)/volume)*expression_coverage(1,i)];
 
-    volume_core = 4*pi*((P_axis_1/2*(1-0.2))*(P_axis_2/2*(1-0.2))*(P_axis_3/2*(1-0.2)))/3;
-    exposed_shell_med = [exposed_shell_med; ((volume-volume_core)/volume)*expression_coverage(1,i)]; %not all DNA is a gene, multiply by active gene density
+    volume_core = 4*pi*((P_axis_1*(1-0.2))*(P_axis_2*(1-0.2))*(P_axis_3*(1-0.2)))/3;
+    exposed_shell_med = [exposed_shell_med; ((volume-volume_core)/volume)*expression_coverage(1,i)];
 
-    volume_core = 4*pi*((P_axis_1/2*(1-0.1))*(P_axis_2/2*(1-0.1))*(P_axis_3/2*(1-0.1)))/3;
-    exposed_shell_shallow = [exposed_shell_shallow; ((volume-volume_core)/volume)*expression_coverage(1,i)]; %not all DNA is a gene, multiply by active gene density
+    volume_core = 4*pi*((P_axis_1*(1-0.1))*(P_axis_2*(1-0.1))*(P_axis_3*(1-0.1)))/3;
+    exposed_shell_shallow = [exposed_shell_shallow; ((volume-volume_core)/volume)*expression_coverage(1,i)];
 end
 
 %kawagutii
@@ -112,12 +109,9 @@ for i = 1:num_chroms
     yline(exposed_shell_shallow(i),'--g')
     hold on
 end
-hxl = yline(exposed_shell_deep(end),'--k','30% Radial Penetration')
-hxl.FontSize = 14;
-hxl = yline(exposed_shell_med(end),'--k','20% Radial Penetration')
-hxl.FontSize = 14;
-hxl = yline(exposed_shell_shallow(end),'--k','10% Radial Penetration')
-hxl.FontSize = 14;
+hxl = yline(exposed_shell_deep(end),'--k','10%')
+hxl.FontSize = 16;
+hxl.LabelHorizontalAlignment='left';
 ylabel('% Chromosome Sequence with TPM > x')
 xlabel('x [TPM]')
 ax = gca;

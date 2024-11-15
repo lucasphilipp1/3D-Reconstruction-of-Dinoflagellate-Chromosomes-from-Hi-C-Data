@@ -18,7 +18,7 @@ data = [];
 
 for i=1:num_chroms
 
-    idx = find(contains(TADs_microadriaticum_asphericity_all.textdata,sprintf('chr%i_pilon',i)));
+    idx = find(strcmp(TADs_microadriaticum_asphericity_all.textdata,sprintf('chr%i_pilon',i)));
 
     if size(idx,1)>0
         % File exists.
@@ -50,7 +50,7 @@ for i=1:num_chroms
                 average_TPM = 0;
                 avg_gene_array_length = 0;
             end
-            data = [data; asphericity sum(RNAseq.data(idx_RNA,2)-RNAseq.data(idx_RNA,1)) TAD_end-TAD_start average_TPM avg_gene_array_length];
+            data = [data; asphericity sum(RNAseq.data(idx_RNA,2)-RNAseq.data(idx_RNA,1)) TAD_end-TAD_start average_TPM avg_gene_array_length i];
         end
     else
         % File does not exist.
@@ -110,6 +110,13 @@ xlabel('TAD Size [bp]', 'fontsize', 24)
 xlim([0 5*10^6])
 ylim([0 80])
 
+%number of TADs/chromosome
+figure
+histogram(data(:,6),'FaceColor', [0 0.4470 0.7410])
+ax = gca;
+ax.FontSize = 16;
+ylabel('TADs/chromosome', 'fontsize', 24)
+xlabel('Chromosome Number', 'fontsize', 24)
 
 TADs_kawagutii_asphericity_all = importdata('symbiodinium_kawagutii_allchroms_TADs_asphericity_tensor.txt');
 %TADs_kawagutii_asphericity_all = importdata('symbiodinium_kawagutii_allchroms_TADs_asphericity_PCA.txt');
@@ -118,7 +125,7 @@ data = [];
 
 for i=1:num_chroms
 
-    idx = find(contains(TADs_kawagutii_asphericity_all.textdata,sprintf('HiC_scaffold_%i',i)));
+    idx = find(strcmp(TADs_kawagutii_asphericity_all.textdata,sprintf('HiC_scaffold_%i',i)));
 
     if size(idx,1)>0
         % File exists.
@@ -151,7 +158,7 @@ for i=1:num_chroms
                 avg_gene_array_length = 0;
             end
 
-            data = [data; asphericity sum(RNAseq.data(idx_RNA,2)-RNAseq.data(idx_RNA,1)) TAD_end-TAD_start average_TPM avg_gene_array_length];
+            data = [data; asphericity sum(RNAseq.data(idx_RNA,2)-RNAseq.data(idx_RNA,1)) TAD_end-TAD_start average_TPM avg_gene_array_length i];
         end
     else
         % File does not exist.
@@ -211,3 +218,11 @@ ylabel('Count', 'fontsize', 24)
 xlabel('TAD Size [bp]', 'fontsize', 24)
 xlim([0 5*10^6])
 ylim([0 80])
+
+%number of TADs/chromosome
+figure
+histogram(data(:,6),'FaceColor',[0.4660 0.6740 0.1880])
+ax = gca;
+ax.FontSize = 16;
+ylabel('TADs/chromosome', 'fontsize', 24)
+xlabel('Chromosome Number', 'fontsize', 24)

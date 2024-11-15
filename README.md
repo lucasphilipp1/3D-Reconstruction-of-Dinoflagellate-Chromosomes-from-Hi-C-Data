@@ -1,10 +1,10 @@
 # This GitHub repository contains the code to recreate the analyses of:
-Philipp, L., Marinov G., Todd S., Weber S., 3D Reconstruction of Dinoflagellate Chromosomes from Hi-C Data Refutes the Cholesteric Liquid Crystal Hypothesis. In review.
+Philipp, L., Marinov G. K., Todd S., Weber S. C., 3D Reconstruction of Dinoflagellate Chromosomes from Hi-C Data Refutes the Cholesteric Liquid Crystal Hypothesis. In review.
 
 bioRxiv link to pre-print: __________
 
 # Data Availability:
-S. kawagutii & S. microadriaticum CSynth structures, aligned RNA-seq .bed files, and TAD .bed files, have been deposited to: 
+S. kawagutii & S. microadriaticum CSynth structures, aligned RNA-seq .bed files, and TAD .bed files, have been deposited to: __________
 
 # Descriptions of code:
 

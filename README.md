@@ -4,7 +4,7 @@ Philipp, L., Marinov G. K., Todd S., Weber S. C., 3D Reconstruction of Dinoflage
 bioRxiv link to pre-print: __________
 
 # Data Availability:
-S. kawagutii & S. microadriaticum CSynth structures, aligned RNA-seq .bed files, and TAD .bed files, have been deposited to: 
+S. kawagutii & S. microadriaticum CSynth structures, aligned RNA-seq .bed files, and TAD .bed files, have been deposited to: __________
 
 # Descriptions of code:
 

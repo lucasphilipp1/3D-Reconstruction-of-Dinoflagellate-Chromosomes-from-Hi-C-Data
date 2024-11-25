@@ -24,7 +24,7 @@ Description: Used to compute the average correlation between two tangent vectors
 Description: Visualization of spatial variation in transcription levels determined by mapping RNA-seq data to 3D position on CSynth structure. An aggregate analysis is done where chromosomes are isotropically scaled to the same size, viewed using cylindrical coordinates to show the average transcription level vs distance to centre/surface of the chromosome. See: Fig 3D & S10 in paper.
 
 ### Spatial_Nematic_Order.m
-Description: Used to calculate alignment (nematic order parameter) of tangent vectors to DNA that are in close spatial proximity. See: Fig 3C in paper.
+Description: Used to calculate alignment (nematic order parameter) of tangent vectors to DNA that are in close spatial proximity. See: Fig 2C in paper.
 
 ### TAD_asphericity_correlations.m
 Description: Fig 4 D,E,F in paper. D) Active gene density is not correlated with TAD asphericity. E) Transcription magnitude (transcripts per million) is not correlated with TAD asphericity. F) The length of active gene arrays is not correlated with TAD asphericity. Also Fig S12 B in paper: histograph of TAD sizes.

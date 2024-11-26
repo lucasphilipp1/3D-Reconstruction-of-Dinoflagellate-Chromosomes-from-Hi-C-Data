@@ -27,7 +27,7 @@ Description: Visualization of spatial variation in transcription levels determin
 Description: Used to calculate alignment (nematic order parameter) of tangent vectors to DNA that are in close spatial proximity. See: Fig 2C in paper.
 
 ### TAD_asphericity_correlations.m
-Description: Fig 4 D,E,F in paper. D) Active gene density is not correlated with TAD asphericity. E) Transcription magnitude (transcripts per million) is not correlated with TAD asphericity. F) The length of active gene arrays is not correlated with TAD asphericity. Also Fig S12 B in paper: histograph of TAD sizes.
+Description: Fig 4 C,D,E in paper. C) Active gene density is not correlated with TAD asphericity. D) Transcription magnitude (transcripts per million) is not correlated with TAD asphericity. E) The length of active gene arrays is not correlated with TAD asphericity. Also Fig S12 B in paper: histograph of TAD sizes.
 
 ### TAD_analysis.m
 Description: Used to calculate average level and strand of transcription near TAD boundary. See: Fig 4B in paper: histograms of TAD asphericity. See: Fig S11 in paper: convergent transcription at TAD boundaries.

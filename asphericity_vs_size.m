@@ -170,7 +170,7 @@ plot(region_sizes, all_asphericity_tensor_mean(:,3), 'LineWidth',2, 'Color',[0.8
 plot(region_sizes, all_asphericity_tensor_mean(:,4), 'LineWidth',2, 'Color',[0.9290 0.6940 0.1250])
 plot(region_sizes, all_asphericity_tensor_mean(:,5), 'LineWidth',2, 'Color', [0 0.4470 0.7410])
 plot(region_sizes, all_asphericity_tensor_mean(:,6), 'LineWidth',2, 'Color', [0.4660 0.6740 0.1880])
-xline((mean(asphericity_PCA_TADs_microadriaticum(:,1))+mean(asphericity_PCA_TADs_kawagutii(:,1)))/2,'--',{'Mean TAD Size'});
+xline((mean(TAD_size_microadriaticum)+mean(TAD_size_kawagutii))/2,'--',{'Mean TAD Size'});
 xlabel('Region Size [bp]', 'fontsize', 24)
 ylabel('Asphericity (tensor)', 'fontsize', 24)
 ax = gca;
@@ -189,7 +189,7 @@ plot(region_sizes, all_asphericity_PCA_mean(:,3), 'LineWidth',2, 'Color',[0.8 0.
 plot(region_sizes, all_asphericity_PCA_mean(:,4), 'LineWidth',2, 'Color',[0.9290 0.6940 0.1250])
 plot(region_sizes, all_asphericity_PCA_mean(:,5), 'LineWidth',2, 'Color', [0 0.4470 0.7410])
 plot(region_sizes, all_asphericity_PCA_mean(:,6), 'LineWidth',2, 'Color', [0.4660 0.6740 0.1880])
-xline((mean(asphericity_PCA_TADs_microadriaticum(:,1))+mean(asphericity_PCA_TADs_kawagutii(:,1)))/2,'--',{'Mean TAD Size'});
+xline((mean(TAD_size_microadriaticum)+mean(TAD_size_kawagutii))/2,'--',{'Mean TAD Size'});
 xlabel('Region Size [bp]', 'fontsize', 24)
 ylabel('Asphericity (PCA)', 'fontsize', 24)
 ax = gca;
@@ -199,7 +199,5 @@ legend('random regions CLC (16 discs)','random regions CLC (27 discs)','random r
 ylim([1 7.5])
 legend boxoff
 hold off
-
-
 
 

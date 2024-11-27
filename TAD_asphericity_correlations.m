@@ -1,7 +1,7 @@
-%Fig 4 D,E,F in paper:
-%D) Active gene density is not correlated with TAD asphericity. 
-%E) Transcription magnitude (transcripts per million) is not correlated with TAD asphericity.
-%F) The length of active gene arrays is not correlated with TAD asphericity.
+%Fig 4 C,D,E in paper:
+%C) Active gene density is not correlated with TAD asphericity. 
+%D) Transcription magnitude (transcripts per million) is not correlated with TAD asphericity.
+%E) The length of active gene arrays is not correlated with TAD asphericity.
 
 %Fig S12 B, histograph of TAD sizes
 

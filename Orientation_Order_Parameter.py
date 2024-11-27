@@ -154,7 +154,7 @@ plt.axvline(x=5.8961*10**4, color='#1f77b4', linestyle='dashed') #mean tandem ge
 ax.axvspan(4.4072*10**4, 7.3851*10**4, alpha=0.5, color='#1f77b4') #+/- one std of tandem gene array length (microadriaticum)
 
 #plt.axvline(x=2.3123*10**6 , color='#2ca02c', linestyle='dotted') #mean tad size (kawagutii)
-plt.axvline(x=2.7436*10**6 , color='#1f77b4', linestyle='dotted') #mean tad size (microadriaticum)
+plt.axvline(x=1.6559*10**6 , color='#1f77b4', linestyle='dotted') #mean tad size (microadriaticum)
 
 #plt.axvline(x=4.3748*10**3, color='#2ca02c', linestyle='dashdot') #mean gene length (kawagutii)
 #plt.axvline(x=5.0781*10**3 , color='#1f77b4', linestyle='dashdot') #mean gene length (microadriaticum)
@@ -174,7 +174,7 @@ plt.xlabel('1/bp', fontsize=16)
 plt.xscale('log',base=10) 
 
 plt.axvline(x=1/(7.3418*10**4), color='#2ca02c', linestyle='dashed') #mean tandem gene array length (kawagutii)
-plt.axvline(x=1/(2.3123*10**6) , color='#2ca02c', linestyle='dotted') #mean tad size (kawagutii)
+plt.axvline(x=1/(1.5122*10**6) , color='#2ca02c', linestyle='dotted') #mean tad size (kawagutii)
 #plt.axvline(x=1/(4.3748*10**3), color='#2ca02c', linestyle='dashdot') #mean gene length (kawagutii)
 
 #plt.axvline(x=1/(5.8961*10**4), color='#1f77b4', linestyle='dashed') #mean tandem gene array length (microadriaticum)

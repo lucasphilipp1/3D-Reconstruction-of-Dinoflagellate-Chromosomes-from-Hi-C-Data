@@ -1,8 +1,8 @@
-%Fig 3C in paper
+%Fig 2C in paper
 %nematic order parameter calculation from chromosome structures
 %following the methods of: https://www.nature.com/articles/s41467-023-39908-1
 
-num_chroms = 70;
+num_chroms = 75;
 nBins = 4; %nBins x nBins x nBins = number of voxels, if error message try reducing nBins
 
 %save order parameter values for each voxel 
@@ -103,18 +103,21 @@ for k = 1:1:6 %import data
         chrom_ybins = linspace(min(chromosome_PCA(:,2)),max(chromosome_PCA(:,2))*1,nBins+1);
         chrom_zbins = linspace(min(chromosome_PCA(:,3)),max(chromosome_PCA(:,3))*1,nBins+1);
 
-        %Fig 3 C chromosome and inset in paper
+        %Fig 2C chromosome and inset in paper
         % figure
         % hold on
-        % plot3(xx,yy,zz)
-        % quiver3(chromosome_PCA(:,1)-bond_vectors(:,1),chromosome_PCA(:,2)-bond_vectors(:,2),chromosome_PCA(:,3)-bond_vectors(:,3),bond_vectors(:,1),bond_vectors(:,2),bond_vectors(:,3))
+        % plot3(xx,yy,zz,LineWidth=2.5)
+        % quiver3(chromosome_PCA(:,1)-bond_vectors(:,1),chromosome_PCA(:,2)-bond_vectors(:,2),chromosome_PCA(:,3)-bond_vectors(:,3),bond_vectors(:,1),bond_vectors(:,2),bond_vectors(:,3),1.25,'Linewidth',2)
         % axis equal
         % xlim([chrom_xbins(round(end/2)) chrom_xbins(round(end/2)+1)])
         % ylim([chrom_ybins(round(end/2)) chrom_ybins(round(end/2)+1)])
         % zlim([chrom_zbins(round(end/2)) chrom_zbins(round(end/2)+1)])
         % view(45,22.5)
+        % set(gca,'XTick',[])
+        % set(gca,'YTick',[])
+        % set(gca,'ZTick',[])
         % hold off
-        %
+        % 
         % bounding_box = ...
         % [chrom_xbins(round(end/2)) chrom_ybins(round(end/2)) chrom_zbins(round(end/2));
         % chrom_xbins(round(end/2)+1) chrom_ybins(round(end/2)) chrom_zbins(round(end/2));
@@ -125,18 +128,21 @@ for k = 1:1:6 %import data
         % chrom_xbins(round(end/2)+1) chrom_ybins(round(end/2)+1) chrom_zbins(round(end/2)+1);
         % chrom_xbins(round(end/2)) chrom_ybins(round(end/2)+1) chrom_zbins(round(end/2)+1)];
         % idx = [4 8 5 1 4; 1 5 6 2 1; 2 6 7 3 2; 3 7 8 4 3; 5 8 7 6 5; 1 4 3 2 1]';
-        %
+        % 
         % xc = bounding_box(:,1);
         % yc = bounding_box(:,2);
         % zc = bounding_box(:,3);
-        %
+        % 
         % figure
         % hold on
-        % plot3(xx,yy,zz)
-        % quiver3(chromosome_PCA(:,1)-bond_vectors(:,1),chromosome_PCA(:,2)-bond_vectors(:,2),chromosome_PCA(:,3)-bond_vectors(:,3),bond_vectors(:,1),bond_vectors(:,2),bond_vectors(:,3))
-        % patch(xc(idx),yc(idx),zc(idx), 'r', 'facealpha', 0.1);
+        % plot3(xx,yy,zz,LineWidth=1.2)
+        % quiver3(chromosome_PCA(1:8:end,1)-bond_vectors(1:8:end,1),chromosome_PCA(1:8:end,2)-bond_vectors(1:8:end,2),chromosome_PCA(1:8:end,3)-bond_vectors(1:8:end,3),bond_vectors(1:8:end,1),bond_vectors(1:8:end,2),bond_vectors(1:8:end,3),1.5,'Linewidth',1)
+        % patch(xc(idx),yc(idx),zc(idx), 'r', 'facealpha', 0.2);
         % axis equal
         % view(45,22.5)
+        % set(gca,'XTick',[])
+        % set(gca,'YTick',[])
+        % set(gca,'ZTick',[])
         % hold off
 
         %code adapted from: https://www.mathworks.com/matlabcentral/answers/802966-binning-a-3d-scatter-plot#answer_676356
@@ -382,12 +388,12 @@ for k = 1:1:6
     end
 end
 
-all_alignment = [all_alignment_4bins(:,1) all_alignment_6bins(:,1) all_alignment_4bins(:,2) all_alignment_6bins(:,2) all_alignment_4bins(:,3) all_alignment_6bins(:,3) all_alignment_4bins(:,4) all_alignment_6bins(:,4) all_alignment_4bins(:,5) all_alignment_6bins(:,5) all_alignment_4bins(:,6) all_alignment_6bins(:,6)];
+all_alignment = [all_alignment_4bins(:,1) all_alignment_6bins(:,1) all_alignment_4bins(:,2) all_alignment_6bins(:,2) all_alignment_4bins(:,3) all_alignment_6bins(:,3) all_alignment_4bins(:,4) all_alignment_6bins(:,4) all_alignment_4bins(:,6) all_alignment_6bins(:,6) all_alignment_4bins(:,5) all_alignment_6bins(:,5)];
 
 figure
-violin(all_alignment,'facecolor',[0 0 0; 0 0 0; 0 0 0; 0 0 0; 0 0 0; 0 0 0; 0.9290 0.6940 0.1250; 0.9290 0.6940 0.1250; 0 0.4470 0.7410; 0 0.4470 0.7410; 0.4660 0.6740 0.1880; 0.4660 0.6740 0.1880]);
+violin(all_alignment,'facecolor',[0 0 0; 0 0 0; 0 0 0; 0 0 0; 0 0 0; 0 0 0; 0.9290 0.6940 0.1250; 0.9290 0.6940 0.1250; 0.4660 0.6740 0.1880; 0.4660 0.6740 0.1880; 0 0.4470 0.7410; 0 0.4470 0.7410],'medc',[]);
 xticks([1 2 3 4 5 6 7 8 9 10 11 12])
-xticklabels({'CLC (16 discs)','CLC (16 discs)','CLC (27 discs)','CLC (27 discs)','CLC (54 discs)','CLC (54 discs)','equilibrium globule','equilibrium globule', 'S. microadriaticum','S. microadriaticum','S. kawagutii','S. kawagutii'})
+xticklabels({'CLC (16 discs)','CLC (16 discs)','CLC (27 discs)','CLC (27 discs)','CLC (54 discs)','CLC (54 discs)','Equilibrium Globule','Equilibrium Globule','\it S. kawagutii','\it S. kawagutii','\it S. microadriaticum','\it S. microadriaticum'})
 xtickangle(70)
 ylabel('Local Nematic Order Parameter','FontSize', 18)
 ylim([0 1])

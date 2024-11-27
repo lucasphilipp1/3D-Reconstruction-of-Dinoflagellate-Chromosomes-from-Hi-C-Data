@@ -71,7 +71,7 @@ figure
 N=flipud(N);
 c{1}=fliplr(c{1});
 for i = 1:1:size(N,1)
-    N(:,i)=N(:,i)./c{1}'; %cylidrical jacobian correction
+    N(:,i)=N(:,i)./c{1}'; %cylindrical jacobian correction
 end
 buffer_length=7;
 Nbuffer = cat(1,zeros(buffer_length,20),N); %add a buffer of zeros to include more of chromosome periphery in plot
@@ -81,13 +81,13 @@ imagesc(Nbuffer)
 % hold on
 % plot((telomeres(:,2).*((bins-1)/2))+(bins-1)/2+1,((-1.*telomeres(:,1))+1).*(bins-1)+1+buffer_length,'o', 'MarkerFaceColor', 'k','MarkerEdgeColor', 'k', 'MarkerSize', 4)
 % hold off
-colormap("sky")
+colormap(custom_cmap('blue'))
 cb = colorbar;
 cb.Label.String = 'Normalized Gene Density';
 cb.FontSize = 24;
 set(gca,'XTick',[])
 set(gca,'YTick',[])
-xlabel('cylidrical axis','FontSize', 24)
+xlabel('cylindrical axis','FontSize', 24)
 ylabel('radial axis','FontSize', 24)
 t=get(cb,'Limits');
 set(cb,'Ticks',[t(1),t(2)])
@@ -101,7 +101,7 @@ figure
 N=flipud(N);
 c{1}=fliplr(c{1});
 for i = 1:1:size(N,1)
-    N(:,i)=N(:,i)./c{1}'; %cylidrical jacobian correction
+    N(:,i)=N(:,i)./c{1}'; %cylindrical jacobian correction
 end
 buffer_length=7;
 Nbuffer = cat(1,zeros(buffer_length,20),N); %add a buffer of zeros to include more of chromosome periphery in plot
@@ -111,13 +111,13 @@ imagesc(Nbuffer)
 hold on
 plot((telomeres(:,2).*((bins-1)/2))+(bins-1)/2+1,((-1.*telomeres(:,1))+1).*(bins-1)+1+buffer_length,'o', 'MarkerFaceColor', 'k','MarkerEdgeColor', 'k', 'MarkerSize', 4)
 hold off
-colormap("sky")
+colormap(custom_cmap('blue'))
 cb = colorbar;
 cb.Label.String = 'Normalized Gene Density';
 cb.FontSize = 16;
 set(gca,'XTick',[])
 set(gca,'YTick',[])
-xlabel('cylidrical axis','FontSize', 24)
+xlabel('cylindrical axis','FontSize', 24)
 ylabel('radial axis','FontSize', 24)
 t=get(cb,'Limits');
 set(cb,'Ticks',[t(1),t(2)])
@@ -188,7 +188,7 @@ figure
 N=flipud(N);
 c{1}=fliplr(c{1});
 for i = 1:1:size(N,1)
-    N(:,i)=N(:,i)./c{1}'; %cylidrical jacobian correction
+    N(:,i)=N(:,i)./c{1}'; %cylindrical jacobian correction
 end
 buffer_length=7;
 Nbuffer = cat(1,zeros(buffer_length,20),N); %add a buffer of zeros to include more of chromosome periphery in plot
@@ -204,7 +204,7 @@ cb.Label.String = 'Normalized Gene Density';
 cb.FontSize = 16;
 set(gca,'XTick',[])
 set(gca,'YTick',[])
-xlabel('cylidrical axis','FontSize', 24)
+xlabel('cylindrical axis','FontSize', 24)
 ylabel('radial axis','FontSize', 24)
 t=get(cb,'Limits');
 set(cb,'Ticks',[t(1),t(2)])
@@ -218,7 +218,7 @@ figure
 N=flipud(N);
 c{1}=fliplr(c{1});
 for i = 1:1:size(N,1)
-    N(:,i)=N(:,i)./c{1}'; %cylidrical jacobian correction
+    N(:,i)=N(:,i)./c{1}'; %cylindrical jacobian correction
 end
 buffer_length=7;
 Nbuffer = cat(1,zeros(buffer_length,20),N); %add a buffer of zeros to include more of chromosome periphery in plot
@@ -234,7 +234,7 @@ cb.Label.String = 'Normalized Gene Density';
 cb.FontSize = 16;
 set(gca,'XTick',[])
 set(gca,'YTick',[])
-xlabel('cylidrical axis','FontSize', 24)
+xlabel('cylindrical axis','FontSize', 24)
 ylabel('radial axis','FontSize', 24)
 t=get(cb,'Limits');
 set(cb,'Ticks',[t(1),t(2)])

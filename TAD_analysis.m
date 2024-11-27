@@ -4,9 +4,6 @@
 %also writes chr #, TAD start, TAD end, TAD asphericity tensor, TAD asphericity PCA
 %to a text file
 
-clc
-clear
-
 num_chroms = 50;
 dist_to_TAD = 45000;
 bin_size = 1000;
@@ -182,12 +179,23 @@ xlabel('Distance from TAD Boundary [kbp]','FontSize', 24)
 ylabel('TPM','FontSize', 24)
 
 %TAD asphericity
+edges = linspace(0, 1, 21);
+idx = randi(250,1,75);
+
+[N1,e1]=histcounts(all_asphericity_tensor(idx,4,1:2,1:2), edges);
+[N2,e2]=histcounts(asphericity_tensor_TADs_microadriaticum, edges);
+[N3,e3]=histcounts(asphericity_tensor_chromosome_microadriaticum, edges);
+e1 = e1(2:end) - (e1(2)-e1(1))/2;
+e2 = e2(2:end) - (e2(2)-e2(1))/2;
+e3 = e3(2:end) - (e3(2)-e3(1))/2;
+
 figure
 hold on
-%histogram(all_asphericity_tensor(:,4,1:2,1:2), 20, FaceColor = [0.9290 0.6940 0.1250])
-histogram(asphericity_tensor_TADs_microadriaticum, linspace(0,1,50), FaceColor = [0 0.4470 0.7410]./3) %a lighter colour
-histogram(asphericity_tensor_chromosome_microadriaticum, linspace(0,1,50), FaceColor = [0 0.4470 0.7410])
+plot(e1,N1, Color = [0.9290 0.6940 0.1250], LineWidth=4)
+plot(e2,N2, '--', Color = [0 0.4470 0.7410]./2, LineWidth=3) %a lighter colour
+plot(e3,N3, Color = [0 0.4470 0.7410], LineWidth=4)
 lgd=legend({'Equilibrium Globule Regions','TADs Only','Entire Chromosome'});
+lgd.FontSize = 20;
 legend boxoff
 hold off
 xlim([0 1])
@@ -348,12 +356,19 @@ xlabel('Distance from TAD Boundary [kbp]','FontSize', 24)
 ylabel('TPM','FontSize', 24)
 
 %TAD asphericity
+[N1,e1]=histcounts(all_asphericity_tensor(idx,4,1:2,1:2), edges);
+[N2,e2]=histcounts(asphericity_tensor_TADs_kawagutii, edges);
+[N3,e3]=histcounts(asphericity_tensor_chromosome_kawagutii, edges);
+e1 = e1(2:end) - (e1(2)-e1(1))/2;
+e2 = e2(2:end) - (e2(2)-e2(1))/2;
+e3 = e3(2:end) - (e3(2)-e3(1))/2;
 figure
 hold on 
-%histogram(all_asphericity_tensor(:,4,1:2,1:2), 20, FaceColor = [0.9290 0.6940 0.1250])
-histogram(asphericity_tensor_TADs_kawagutii, linspace(0,1,50), FaceColor = [0.4660 0.6740 0.1880]./3)  %a lighter colour
-histogram(asphericity_tensor_chromosome_kawagutii, linspace(0,1,50), FaceColor = [0.4660 0.6740 0.1880])
+plot(e1,N1, Color = [0.9290 0.6940 0.1250], LineWidth=4)
+plot(e2,N2, '--', Color = [0.4660 0.6740 0.1880]./2, LineWidth=3) %a lighter colour
+plot(e3,N3, Color = [0.4660 0.6740 0.1880], LineWidth=4)
 lgd=legend({'Equilibrium Globule Regions','TADs Only','Entire Chromosome'});
+lgd.FontSize = 20;
 legend boxoff
 hold off
 xlim([0 1])

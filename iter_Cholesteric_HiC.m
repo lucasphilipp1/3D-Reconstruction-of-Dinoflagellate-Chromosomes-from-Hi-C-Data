@@ -6,7 +6,7 @@ clear
 %
 %requires: statistics and machine learning toolbox
 
-num_chroms = 1; %number of simulated chromosomes
+num_chroms = 100; %number of simulated chromosomes
 resolution = 5000; %number of base pairs per monomer
 
 %contact probability curve data
@@ -24,7 +24,7 @@ for d = 1:1:num_chroms
     d
     chromosome=[]; %position of DNA
     %7.655Mbp/(10 layers)∗1monomer/5kbp≈(150 monomers)/layer
-    num_mon_per_disc = 150; %number of monomers in the thickest cholesteric disc
+    num_mon_per_disc = 75; %number of monomers in the thickest cholesteric disc
     %num_mon_per_disc = random('Normal',150,40); %number of monomers in the thickest cholesteric disc
     %num_mon_per_disc = random('Uniform',75,150); %number of monomers in the thickest cholesteric disc
 
@@ -573,28 +573,29 @@ for d = 1:1:num_chroms
 
     skip=numPoints;
 
-    f=figure
-    screen = get(0, 'Screensize');
-    screen(3)=screen(3)/1.75;
-    set(gcf, 'Position', screen);
-    hold on
-    plot3(chromosome_w_inter_and_intra_disc_loops(:,1),chromosome_w_inter_and_intra_disc_loops(:,2),chromosome_w_inter_and_intra_disc_loops(:,3),'Color', [.6 .6 .6])
-    %plot3(chromosome_w_inter_and_intra_disc_loops_100kb_res(:,1),chromosome_w_inter_and_intra_disc_loops_100kb_res(:,2),chromosome_w_inter_and_intra_disc_loops_100kb_res(:,3),'Color', [.6 .6 .6]) %low res CLC structure
-    colormap jet
-    axis equal
-    xlim([min(chromosome_w_inter_and_intra_disc_loops(:,1))*1.5 max(chromosome_w_inter_and_intra_disc_loops(:,1))*1.5])
-    ylim([min(chromosome_w_inter_and_intra_disc_loops(:,2))*1.5 max(chromosome_w_inter_and_intra_disc_loops(:,2))*1.5])
-    zlim([min(chromosome_w_inter_and_intra_disc_loops(:,3))*1.1 max(chromosome_w_inter_and_intra_disc_loops(:,3))*1.1])
-    set(gca,'XTick',[], 'YTick', [], 'ZTick', [])
-    caxis([min(MyColor) max(MyColor)])
-    c = colorbar;
-    c.Position = c.Position - [.1 0 0 0];
-    c.Ticks = linspace(0, total_chromosome_length, round(total_chromosome_length/500)+1);
-    c.TickLabels = num2cell(linspace(0, total_chromosome_length*resolution, round(total_chromosome_length/500)+1));
-    c.Label.String = 'primary sequence [bp]';
-    c.FontSize = 32;
-    patch('Faces', Faces(:,:) ,'Vertices', chromosome_w_inter_and_intra_disc_loops_100kb_res(:,:) ,'FaceColor', 'none', 'FaceVertexCData', MyColor(:,:) ,'EdgeColor','interp' ,'LineWidth',5, 'FaceAlpha',.5,'EdgeAlpha',.5);
-    view(90,0)
+    % f=figure
+    % screen = get(0, 'Screensize');
+    % screen(3)=screen(3)/1.75;
+    % set(gcf, 'Position', screen);
+    % hold on
+    % plot3(chromosome_w_inter_and_intra_disc_loops(:,1),chromosome_w_inter_and_intra_disc_loops(:,2),chromosome_w_inter_and_intra_disc_loops(:,3),'Color', [.6 .6 .6])
+    % %plot3(chromosome_w_inter_and_intra_disc_loops_100kb_res(:,1),chromosome_w_inter_and_intra_disc_loops_100kb_res(:,2),chromosome_w_inter_and_intra_disc_loops_100kb_res(:,3),'Color', [.6 .6 .6]) %low res CLC structure
+    % colormap jet
+    % axis equal
+    % xlim([min(chromosome_w_inter_and_intra_disc_loops(:,1))*1.5 max(chromosome_w_inter_and_intra_disc_loops(:,1))*1.5])
+    % ylim([min(chromosome_w_inter_and_intra_disc_loops(:,2))*1.5 max(chromosome_w_inter_and_intra_disc_loops(:,2))*1.5])
+    % zlim([min(chromosome_w_inter_and_intra_disc_loops(:,3))*1.1 max(chromosome_w_inter_and_intra_disc_loops(:,3))*1.1])
+    % set(gca,'XTick',[], 'YTick', [], 'ZTick', [])
+    % caxis([min(MyColor) max(MyColor)])
+    % c = colorbar;
+    % c.Position = c.Position - [.1 0 0 0];
+    % c.Ticks = linspace(0, total_chromosome_length, round(total_chromosome_length/500)+1);
+    % c.TickLabels = num2cell(linspace(0, total_chromosome_length*resolution, round(total_chromosome_length/500)+1));
+    % c.Label.String = 'primary sequence [bp]';
+    % c.FontSize = 32;
+    % patch('Faces', Faces(:,:) ,'Vertices', chromosome_w_inter_and_intra_disc_loops(:,:) ,'FaceColor', 'none', 'FaceVertexCData', MyColor(:,:) ,'EdgeColor','interp' ,'LineWidth',5, 'FaceAlpha',.5,'EdgeAlpha',.5);
+    % %patch('Faces', Faces(:,:) ,'Vertices', chromosome_w_inter_and_intra_disc_loops_100kb_res(:,:) ,'FaceColor', 'none', 'FaceVertexCData', MyColor(:,:) ,'EdgeColor','interp' ,'LineWidth',5, 'FaceAlpha',.5,'EdgeAlpha',.5); %low res CLC structure
+    % view(90,0)
 
     % for i=skip+1:skip:numPoints
     %     clf(f)
@@ -800,11 +801,11 @@ plot(xA,A*xA.^(-0.5),'--k', 'Linewidth', 2)
 plot(xA,A/100*xA.^(-0.2),'--r', 'Linewidth', 2)
 set(ax,'xScale', 'log')
 set(ax,'YScale', 'log')
-plot(s_agg.*resolution,Ps_agg, 'Linewidth', 2)
+plot(s_agg.*resolution,Ps_agg,'Color',[0.4 0.4 0.4],'Linewidth', 2)
 xlabel('s','FontSize', 24)
 ylabel('P(s)','FontSize', 24)
-xline(2*(mean(mon_per_disc_agg)+mean(mean_loop_length_agg))*resolution,'--',{'2x Sequence in Layer'})
-xline(2*(mean(disc_diameter))*resolution,'--',{'2x Disc Diameter'})
+xline(2*(mean(mon_per_disc_agg)+mean(mean_loop_length_agg))*resolution,'--',{'2x Sequence',' in Layer'},'FontSize', 19)
+xline(2*(mean(disc_diameter))*resolution,'--',{'2x Disc',' Diameter'},'FontSize', 19)
 ax = gca;
 ax.FontSize = 16;
 ylim([10^-6 10^0])

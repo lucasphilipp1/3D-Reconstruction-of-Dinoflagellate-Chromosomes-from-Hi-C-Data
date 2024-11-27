@@ -107,11 +107,11 @@ yf_list.clear()
 
 #calculate orientation order parameter (OOP) and its Fourier transform
 for i in range(1, 76):
-    #df = np.loadtxt('/Users/lucasphilipp/Desktop/Research/GitHub/Dinoflagellate_Large_Files/CSynth 3D smicroadriaticum/structures/combined/symbiodinium_microadriaticum_chr'+str(i)+'_3D.xyz')
-    df = np.loadtxt('/Users/lucasphilipp/Desktop/Research/GitHub/Dinoflagellate_Large_Files/CSynth 3D skawagutii/structures/s_kawagutii_V3_HiC_scaffold_'+str(i)+'.xyz')
+    df = np.loadtxt('/Users/lucasphilipp/Desktop/Research/GitHub/Dinoflagellate_Large_Files/CSynth 3D smicroadriaticum/structures/combined/symbiodinium_microadriaticum_chr'+str(i)+'_3D.xyz')
+    #df = np.loadtxt('/Users/lucasphilipp/Desktop/Research/GitHub/Dinoflagellate_Large_Files/CSynth 3D skawagutii/structures/s_kawagutii_V3_HiC_scaffold_'+str(i)+'.xyz')
     #df = np.loadtxt('/Users/lucasphilipp/Desktop/Research/GitHub/Dinoflagellate_Large_Files/GSE18199_Globules/equilibrium/equilibrium'+str(i)+'.dat', skiprows=1)    
         
-    structure = df[:,1:] #remove first column, don't confuse primary sequence with spatial position
+    structure = df[:,1:] #remove first column (primary sequence), don't confuse primary sequence with x coordinate
     #structure = df
     Oijx, Oijy = compute_Orientation_OP(xyz=structure, chrom_start=0, chrom_end=df.shape[0], vec_length=4)
     
@@ -131,8 +131,8 @@ for i in range(1, 76):
 
 #plot OOP
 for i in range(len(yf_list)):
-    #plt.plot(Oijx_list[i],Oijy_list[i], color='#1f77b4', alpha = 0.04) #microadriaticum
-    plt.plot(Oijx_list[i],Oijy_list[i], color='#2ca02c', alpha = 0.04) #kawagutii
+    plt.plot(Oijx_list[i],Oijy_list[i], color='#1f77b4', alpha = 0.04) #microadriaticum
+    #plt.plot(Oijx_list[i],Oijy_list[i], color='#2ca02c', alpha = 0.04) #kawagutii
     #plt.plot(Oijx_list[i],Oijy_list[i], color='#bcbd22', alpha = 0.04) #equilibrium globule
     #plt.plot(Oijx_list[i],Oijy_list[i], color='#000000', alpha = 1) #CLC
     
@@ -153,7 +153,7 @@ ax.tick_params(axis='both', which='major', labelsize=16)
 plt.axvline(x=5.8961*10**4, color='#1f77b4', linestyle='dashed') #mean tandem gene array length (microadriaticum)
 ax.axvspan(4.4072*10**4, 7.3851*10**4, alpha=0.5, color='#1f77b4') #+/- one std of tandem gene array length (microadriaticum)
 
-#plt.axvline(x=2.3123*10**6 , color='#2ca02c', linestyle='dotted') #mean tad size (kawagutii)
+#plt.axvline(x=1.5122*10**6 , color='#2ca02c', linestyle='dotted') #mean tad size (kawagutii)
 plt.axvline(x=1.6559*10**6 , color='#1f77b4', linestyle='dotted') #mean tad size (microadriaticum)
 
 #plt.axvline(x=4.3748*10**3, color='#2ca02c', linestyle='dashdot') #mean gene length (kawagutii)
@@ -163,8 +163,8 @@ plt.show()
 
 #plot OOP Fourier transform
 for i in range(len(yf_list)):
-    #plt.plot(xf_list[i],yf_list[i], color='#1f77b4', alpha = 0.04) #microadriaticum
-    plt.plot(xf_list[i],yf_list[i], color='#2ca02c', alpha = 0.04) #kawagutii
+    plt.plot(xf_list[i],yf_list[i], color='#1f77b4', alpha = 0.04) #microadriaticum
+    #plt.plot(xf_list[i],yf_list[i], color='#2ca02c', alpha = 0.04) #kawagutii
     #plt.plot(xf_list[i],yf_list[i], color='#bcbd22', alpha = 0.04) #equilibrium globule
     #plt.plot(xf_list[i],yf_list[i], color='#000000', alpha = 1) #CLC
     
@@ -173,12 +173,12 @@ plt.xlabel('1/bp', fontsize=16)
 #plt.ylabel('FT of Orientation Order Parameter', fontsize=12)
 plt.xscale('log',base=10) 
 
-plt.axvline(x=1/(7.3418*10**4), color='#2ca02c', linestyle='dashed') #mean tandem gene array length (kawagutii)
-plt.axvline(x=1/(1.5122*10**6) , color='#2ca02c', linestyle='dotted') #mean tad size (kawagutii)
+#plt.axvline(x=1/(7.3418*10**4), color='#2ca02c', linestyle='dashed') #mean tandem gene array length (kawagutii)
+#plt.axvline(x=1/(1.5122*10**6) , color='#2ca02c', linestyle='dotted') #mean tad size (kawagutii)
 #plt.axvline(x=1/(4.3748*10**3), color='#2ca02c', linestyle='dashdot') #mean gene length (kawagutii)
 
-#plt.axvline(x=1/(5.8961*10**4), color='#1f77b4', linestyle='dashed') #mean tandem gene array length (microadriaticum)
-#plt.axvline(x=1/(2.7436*10**6), color='#1f77b4', linestyle='dotted') #mean tad size (microadriaticum)
+plt.axvline(x=1/(5.8961*10**4), color='#1f77b4', linestyle='dashed') #mean tandem gene array length (microadriaticum)
+plt.axvline(x=1/(1.6559*10**6), color='#1f77b4', linestyle='dotted') #mean tad size (microadriaticum)
 #plt.axvline(x=1/(5.0781*10**3), color='#1f77b4', linestyle='dashdot') #mean gene length (microadriaticum)
 
 #plt.axvline(x=1/(2**10**5), color='#000000', linestyle='dashed')
@@ -190,8 +190,8 @@ ax = plt.gca()
 ax.set_ylim([0, 0.05])
 ax.tick_params(axis='both', which='major', labelsize=16)
 
-#ax.axvspan(1/(7.3851*10**4), 1/(4.4072*10**4), alpha=0.5, color='#1f77b4') #+/- one std of tandem gene array length (microadriaticum)
-ax.axvspan(1/(9.1933*10**4), 1/(5.4902*10**4), alpha=0.5, color='#2ca02c') #+/- one std of tandem gene array length (kawagutii)
+ax.axvspan(1/(7.3851*10**4), 1/(4.4072*10**4), alpha=0.5, color='#1f77b4') #+/- one std of tandem gene array length (microadriaticum)
+#ax.axvspan(1/(9.1933*10**4), 1/(5.4902*10**4), alpha=0.5, color='#2ca02c') #+/- one std of tandem gene array length (kawagutii)
 
 plt.show()
 

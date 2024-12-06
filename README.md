@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/51000776-cc71-49cc-8f74-8a33c46b2050)# This GitHub repository contains the code to recreate the analyses of:
+# This GitHub repository contains the code to recreate the analyses of:
 Philipp, L., Marinov G. K., Todd S., Weber S. C., 3D Reconstruction of Dinoflagellate Chromosomes from Hi-C Data Refutes the Cholesteric Liquid Crystal Hypothesis. In review.
 
 bioRxiv link to pre-print: __________

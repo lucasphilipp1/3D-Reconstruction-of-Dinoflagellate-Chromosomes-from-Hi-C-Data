@@ -4,6 +4,9 @@
 %also writes chr #, TAD start, TAD end, TAD asphericity tensor, TAD asphericity PCA
 %to a text file
 
+clc
+clear
+
 num_chroms = 50;
 dist_to_TAD = 45000;
 bin_size = 1000;
@@ -126,6 +129,11 @@ for i=1:num_chroms
             xcm = sum(TAD_PCA(:,1))/(size(TAD_PCA,1));
             ycm = sum(TAD_PCA(:,2))/(size(TAD_PCA,1));
             zcm = sum(TAD_PCA(:,3))/(size(TAD_PCA,1));
+
+            R_g = (sum(TAD_PCA(:,1).^2+TAD_PCA(:,2).^2+TAD_PCA(:,3).^2)/size(TAD_PCA,1))^0.5; %radius of gyration
+            [k v] = boundary(TAD_PCA(:,1),TAD_PCA(:,2),TAD_PCA(:,3));
+            density = size(TAD_PCA,1)/v; %number of monomers/volume = DNA density
+
             Gyration_tensor = (1/size(TAD_PCA,1)).*[[sum((TAD_PCA(:,1)-xcm).^2) sum((TAD_PCA(:,1)-xcm).*(TAD_PCA(:,2)-ycm)) sum((TAD_PCA(:,1)-xcm).*(TAD_PCA(:,3)-zcm))]; [sum((TAD_PCA(:,1)-xcm).*(TAD_PCA(:,2)-ycm)) sum((TAD_PCA(:,2)-ycm).^2) sum((TAD_PCA(:,2)-ycm).*(TAD_PCA(:,3)-zcm))]; [sum((TAD_PCA(:,1)-xcm).*(TAD_PCA(:,3)-zcm)) sum((TAD_PCA(:,2)-ycm).*(TAD_PCA(:,3)-zcm)) sum((TAD_PCA(:,3)-zcm).^2)]];
             eigenvalues = eig(Gyration_tensor);
             eigenvalues=sort(eigenvalues,'descend');
@@ -134,6 +142,8 @@ for i=1:num_chroms
             asphericity_tensor_TADs_microadriaticum_write{end,2} = TADs_microadriaticum(j,1);
             asphericity_tensor_TADs_microadriaticum_write{end,3} = TADs_microadriaticum(j,2);
             asphericity_tensor_TADs_microadriaticum_write{end,4} = (3/(2*sum(eigenvalues)^2))*((eigenvalues(1)-mean(eigenvalues))^2+(eigenvalues(2)-mean(eigenvalues))^2+(eigenvalues(3)-mean(eigenvalues))^2);
+            asphericity_tensor_TADs_microadriaticum_write{end,5} = density;
+            asphericity_tensor_TADs_microadriaticum_write{end,6} = R_g;
 
             P_axis_1=prctile(TAD_PCA(:,1)-min(TAD_PCA(:,1)),95);
             P_axis_2=prctile(TAD_PCA(:,2)-min(TAD_PCA(:,2)),95);
@@ -182,16 +192,16 @@ ylabel('TPM','FontSize', 24)
 edges = linspace(0, 1, 21);
 idx = randi(250,1,75);
 
-[N1,e1]=histcounts(all_asphericity_tensor(idx,4,1:2,1:2), edges);
+%[N1,e1]=histcounts(all_asphericity_tensor(idx,4,1:2,1:2), edges);
 [N2,e2]=histcounts(asphericity_tensor_TADs_microadriaticum, edges);
 [N3,e3]=histcounts(asphericity_tensor_chromosome_microadriaticum, edges);
-e1 = e1(2:end) - (e1(2)-e1(1))/2;
+%e1 = e1(2:end) - (e1(2)-e1(1))/2;
 e2 = e2(2:end) - (e2(2)-e2(1))/2;
 e3 = e3(2:end) - (e3(2)-e3(1))/2;
 
 figure
 hold on
-plot(e1,N1, Color = [0.9290 0.6940 0.1250], LineWidth=4)
+%plot(e1,N1, Color = [0.9290 0.6940 0.1250], LineWidth=4)
 plot(e2,N2, '--', Color = [0 0.4470 0.7410]./2, LineWidth=3) %a lighter colour
 plot(e3,N3, Color = [0 0.4470 0.7410], LineWidth=4)
 lgd=legend({'Equilibrium Globule Regions','TADs Only','Entire Chromosome'});
@@ -303,6 +313,11 @@ for i=1:num_chroms
             xcm = sum(TAD_PCA(:,1))/(size(TAD_PCA,1));
             ycm = sum(TAD_PCA(:,2))/(size(TAD_PCA,1));
             zcm = sum(TAD_PCA(:,3))/(size(TAD_PCA,1));
+
+            R_g = (sum(TAD_PCA(:,1).^2+TAD_PCA(:,2).^2+TAD_PCA(:,3).^2)/size(TAD_PCA,1))^0.5; %radius of gyration
+            [k v] = boundary(TAD_PCA(:,1),TAD_PCA(:,2),TAD_PCA(:,3));
+            density = size(TAD_PCA,1)/v; %number of monomers/volume = DNA density
+
             Gyration_tensor = (1/size(TAD_PCA,1)).*[[sum((TAD_PCA(:,1)-xcm).^2) sum((TAD_PCA(:,1)-xcm).*(TAD_PCA(:,2)-ycm)) sum((TAD_PCA(:,1)-xcm).*(TAD_PCA(:,3)-zcm))]; [sum((TAD_PCA(:,1)-xcm).*(TAD_PCA(:,2)-ycm)) sum((TAD_PCA(:,2)-ycm).^2) sum((TAD_PCA(:,2)-ycm).*(TAD_PCA(:,3)-zcm))]; [sum((TAD_PCA(:,1)-xcm).*(TAD_PCA(:,3)-zcm)) sum((TAD_PCA(:,2)-ycm).*(TAD_PCA(:,3)-zcm)) sum((TAD_PCA(:,3)-zcm).^2)]];
             eigenvalues = eig(Gyration_tensor);
             eigenvalues=sort(eigenvalues,'descend');
@@ -311,6 +326,8 @@ for i=1:num_chroms
             asphericity_tensor_TADs_kawagutii_write{end,2} = TADs_kawagutii(j,1);
             asphericity_tensor_TADs_kawagutii_write{end,3} = TADs_kawagutii(j,2);
             asphericity_tensor_TADs_kawagutii_write{end,4} = (3/(2*sum(eigenvalues)^2))*((eigenvalues(1)-mean(eigenvalues))^2+(eigenvalues(2)-mean(eigenvalues))^2+(eigenvalues(3)-mean(eigenvalues))^2);
+            asphericity_tensor_TADs_kawagutii_write{end,5} = density;
+            asphericity_tensor_TADs_kawagutii_write{end,6} = R_g;
 
             P_axis_1=prctile(TAD_PCA(:,1)-min(TAD_PCA(:,1)),95);
             P_axis_2=prctile(TAD_PCA(:,2)-min(TAD_PCA(:,2)),95);
@@ -356,15 +373,15 @@ xlabel('Distance from TAD Boundary [kbp]','FontSize', 24)
 ylabel('TPM','FontSize', 24)
 
 %TAD asphericity
-[N1,e1]=histcounts(all_asphericity_tensor(idx,4,1:2,1:2), edges);
+%[N1,e1]=histcounts(all_asphericity_tensor(idx,4,1:2,1:2), edges);
 [N2,e2]=histcounts(asphericity_tensor_TADs_kawagutii, edges);
 [N3,e3]=histcounts(asphericity_tensor_chromosome_kawagutii, edges);
-e1 = e1(2:end) - (e1(2)-e1(1))/2;
+%e1 = e1(2:end) - (e1(2)-e1(1))/2;
 e2 = e2(2:end) - (e2(2)-e2(1))/2;
 e3 = e3(2:end) - (e3(2)-e3(1))/2;
 figure
 hold on 
-plot(e1,N1, Color = [0.9290 0.6940 0.1250], LineWidth=4)
+%plot(e1,N1, Color = [0.9290 0.6940 0.1250], LineWidth=4)
 plot(e2,N2, '--', Color = [0.4660 0.6740 0.1880]./2, LineWidth=3) %a lighter colour
 plot(e3,N3, Color = [0.4660 0.6740 0.1880], LineWidth=4)
 lgd=legend({'Equilibrium Globule Regions','TADs Only','Entire Chromosome'});

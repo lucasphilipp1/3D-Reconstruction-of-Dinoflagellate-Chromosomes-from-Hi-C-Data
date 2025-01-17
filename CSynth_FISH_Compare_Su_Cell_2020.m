@@ -85,18 +85,26 @@ for i=1:1:cells
         end
     end
     i
+    
+    if i == 1
+    % read image and process it
+    margins = [7 7 15 11]; % N S E W
+    A = imread('/Users/lucasphilipp/Downloads/image.png');
+    A = A(1+margins(1):end-margins(2),1+margins(4):end-margins(3),:);
+    CT0 = permute(mean(im2double(A),1),[2 3 1]);
+    CT0 = CT0([true; ~all(diff(CT0,1,1)==0,2)],:); % remove duplicate rows
+    % CT0 is now a fixed-length color table
+    % make it whatever length we want
+    N = 32; % specify the number of colors in table
+    na = size(CT0,1);
+    CT = interp1(linspace(0,1,na),CT0,linspace(0,1,N));
 
     %Fig S3 C, visualization of FISH probes in a single cell
-    if i == 1
         chromosome21_FISH_plot=chromosome21_FISH(find(chromosome21_FISH(:,6)==1),:);
         figure
-        scatter3(chromosome21_FISH_plot(:,1),chromosome21_FISH_plot(:,2),chromosome21_FISH_plot(:,3),100,chromosome21_FISH_plot(:,4),'filled')
-
-        xlim([min(chromosome21_FISH_plot(:,1))*1.5 max(chromosome21_FISH_plot(:,1))*1.5])
-        ylim([min(chromosome21_FISH_plot(:,2))*1.5 max(chromosome21_FISH_plot(:,2))*1.5])
-        zlim([min(chromosome21_FISH_plot(:,3))*1.5 max(chromosome21_FISH_plot(:,3))*1.5])
+        scatter3(chromosome21_FISH_plot(:,1)-min(chromosome21_FISH_plot(:,1)),chromosome21_FISH_plot(:,2)-min(chromosome21_FISH_plot(:,2)),chromosome21_FISH_plot(:,3)-min(chromosome21_FISH_plot(:,3)),100,chromosome21_FISH_plot(:,4),'filled')
+        colormap(CT)
         cb=colorbar;
-        axis equal
         cb.Label.String = '[bp]';
         cb.FontSize = 18;
         caxis([0 46709983]); %hg38 assembly
@@ -314,17 +322,17 @@ for q = 1:1:size(CSynth_structures,2)
     RE(isinf(RE))=0;
 
     %Fig S3 D & F
-    figure
-    fig=gcf;
-    fig.Position(3:4)=[750,600];
-    imagesc(RE);
-    xlabel('FISH probe #', 'fontsize', 24)
-    ylabel('FISH probe #', 'fontsize', 24)
-    title({'Relative Error'},{append('- ',CSynth_structures{q},' human IMR90 cells')}, 'FontSize', 24, 'Interpreter', 'none')
-    cb=colorbar;
-    cb.Label.String = 'Relative Error';
-    cb.FontSize = 18;
-    caxis([0 1]);
+    % figure
+    % fig=gcf;
+    % fig.Position(3:4)=[750,600];
+    % imagesc(RE);
+    % xlabel('FISH probe #', 'fontsize', 24)
+    % ylabel('FISH probe #', 'fontsize', 24)
+    % title({'Relative Error'},{append('- ',CSynth_structures{q},' human IMR90 cells')}, 'FontSize', 24, 'Interpreter', 'none')
+    % cb=colorbar;
+    % cb.Label.String = 'Relative Error';
+    % cb.FontSize = 18;
+    % caxis([0 1]);
 
     %are larger distortions happening at larger probe separations?
     % figure
@@ -341,26 +349,29 @@ for q = 1:1:size(CSynth_structures,2)
     % ylim([0 max(RE_vec)])
 end
 
-%plot all CSynth structures simultaneously, Fig S3 E
-%%%
-% figure
-% hold on
-% for q = 1:1:size(CSynth_structures,2)
-%     plot3(ALL_CSynth_structures(:,2,q),ALL_CSynth_structures(:,3,q),ALL_CSynth_structures(:,4,q),'-')
-% end
-% xlabel('x', 'fontsize', 18)
-% ylabel('y', 'fontsize', 18)
-% zlabel('z', 'fontsize', 18)
-% title('CSynth 3D Prediction - IMR90 HiC chr 21')
-% grid on
-% axis equal
-% temp_x = ALL_CSynth_structures(:,2,:);
-% temp_y = ALL_CSynth_structures(:,3,:);
-% temp_z = ALL_CSynth_structures(:,4,:);
-% xlim([min(temp_x(:)) max(temp_x(:))])
-% ylim([min(temp_y(:)) max(temp_y(:))])
-% zlim([min(temp_z(:)) max(temp_z(:))])
-% view(-30,15)
+% plot all CSynth structures simultaneously, Fig S3 E
+%%
+figure
+hold on
+for q = 1:1:size(CSynth_structures,2)
+    plot3(ALL_CSynth_structures(:,2,q),ALL_CSynth_structures(:,3,q),ALL_CSynth_structures(:,4,q),'-')
+end
+xlabel('x', 'fontsize', 18)
+ylabel('y', 'fontsize', 18)
+zlabel('z', 'fontsize', 18)
+title('CSynth 3D Prediction - IMR90 HiC chr 21')
+grid on
+temp_x = ALL_CSynth_structures(:,2,:);
+temp_y = ALL_CSynth_structures(:,3,:);
+temp_z = ALL_CSynth_structures(:,4,:);
+xlim([min(temp_x(:)) max(temp_x(:))])
+ylim([min(temp_y(:)) max(temp_y(:))])
+zlim([min(temp_z(:)) max(temp_z(:))])
+view(-30,15)
+set(gca,'XTick',[])
+set(gca,'YTick',[])
+set(gca,'ZTick',[])
+axis equal
 
 param_avg_RE=zeros(size(CSynth_structures,2),4);
 param_avg_RE(:,1) = avg_RE;

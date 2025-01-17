@@ -106,7 +106,7 @@ for k = 1:1:6 %import data
         %Fig 2C chromosome and inset in paper
         % figure
         % hold on
-        % plot3(xx,yy,zz,LineWidth=2.5)
+        % plot3(xx,yy,zz,'k',LineWidth=5)
         % quiver3(chromosome_PCA(:,1)-bond_vectors(:,1),chromosome_PCA(:,2)-bond_vectors(:,2),chromosome_PCA(:,3)-bond_vectors(:,3),bond_vectors(:,1),bond_vectors(:,2),bond_vectors(:,3),1.25,'Linewidth',2)
         % axis equal
         % xlim([chrom_xbins(round(end/2)) chrom_xbins(round(end/2)+1)])

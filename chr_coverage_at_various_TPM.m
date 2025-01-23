@@ -1,4 +1,4 @@
-%Fig S9
+%Fig S8
 %Cumulative chromosomal coverage of active gene sequence with TPM > x. 
 %chromosome surface area to volume ratio
 

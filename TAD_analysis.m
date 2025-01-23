@@ -1,11 +1,8 @@
-%Fig 4 B in paper: histograms of TAD asphericity
-%Fig S11 in paper: convergent transcription at TAD boundaries
+%Fig 3 D in paper: histograms of TAD asphericity
+%Fig S10 in paper: convergent transcription at TAD boundaries
 
 %also writes chr #, TAD start, TAD end, TAD asphericity tensor, TAD asphericity PCA
 %to a text file
-
-clc
-clear
 
 num_chroms = 50;
 dist_to_TAD = 45000;
@@ -188,46 +185,6 @@ ax.FontSize = 16;
 xlabel('Distance from TAD Boundary [kbp]','FontSize', 24)
 ylabel('TPM','FontSize', 24)
 
-%TAD asphericity
-edges = linspace(0, 1, 21);
-idx = randi(250,1,75);
-
-%[N1,e1]=histcounts(all_asphericity_tensor(idx,4,1:2,1:2), edges);
-[N2,e2]=histcounts(asphericity_tensor_TADs_microadriaticum, edges);
-[N3,e3]=histcounts(asphericity_tensor_chromosome_microadriaticum, edges);
-%e1 = e1(2:end) - (e1(2)-e1(1))/2;
-e2 = e2(2:end) - (e2(2)-e2(1))/2;
-e3 = e3(2:end) - (e3(2)-e3(1))/2;
-
-figure
-hold on
-%plot(e1,N1, Color = [0.9290 0.6940 0.1250], LineWidth=4)
-plot(e2,N2, '--', Color = [0 0.4470 0.7410]./2, LineWidth=3) %a lighter colour
-plot(e3,N3, Color = [0 0.4470 0.7410], LineWidth=4)
-lgd=legend({'Equilibrium Globule Regions','TADs Only','Entire Chromosome'});
-lgd.FontSize = 20;
-legend boxoff
-hold off
-xlim([0 1])
-ax = gca;
-ax.FontSize = 16;
-xlabel('Asphericity (tensor)','FontSize', 24)
-ylabel('Count','FontSize', 24)
-
-%TAD asphericity
-figure
-hold on
-histogram(asphericity_PCA_TADs_microadriaticum, linspace(1,3,20), FaceColor = [0 0.4470 0.7410]./3) %a lighter colour
-histogram(asphericity_PCA_chromosome_microadriaticum, FaceColor = [0 0.4470 0.7410])
-lgd=legend({'TADs Only','Entire Chromosome'});
-legend boxoff
-hold off
-ax = gca;
-ax.FontSize = 16;
-xlabel('Asphericity (PCA)','FontSize', 24)
-ylabel('Count','FontSize', 24)
-xlim([1 3])
-
 for i=1:num_chroms
     TADs_kawagutii = [];
     temp_TAD_boundary = [];
@@ -372,44 +329,109 @@ ax.FontSize = 16;
 xlabel('Distance from TAD Boundary [kbp]','FontSize', 24)
 ylabel('TPM','FontSize', 24)
 
+%250mon/disc*5000bp/mon = 16 discs
+%150mon/disc*5000bp/mon = 27 discs
+%75mon/disc*5000bp/mon = 54 discs
+
+asphericity_tensor_disc = [];
+asphericity_PCA_disc = [];
+
+asphericity_tensor_CLC_16_discs = [];
+asphericity_tensor_CLC_27_discs = [];
+asphericity_tensor_CLC_54_discs = [];
+
+for k = 1:1:3
+    for i = 1:num_chroms
+        if k == 1
+            chromosome = importdata(sprintf('cholesteric_monomer_locations_16_discs_%i.txt',i));
+            chromosome = [(1:1:size(chromosome,1))' chromosome];
+            ndiscs = 16;
+        elseif k == 2
+            chromosome = importdata(sprintf('cholesteric_monomer_locations_27_discs_%i.txt',i));
+            chromosome = [(1:1:size(chromosome,1))' chromosome];
+            ndiscs = 27;
+        elseif k == 3
+            chromosome = importdata(sprintf('cholesteric_monomer_locations_54_discs_%i.txt',i));
+            chromosome = [(1:1:size(chromosome,1))' chromosome];
+            ndiscs = 54;
+        end
+
+        chromosome(:,2) = chromosome(:,2) - mean(chromosome(:,2));
+        chromosome(:,3) = chromosome(:,3) - mean(chromosome(:,3));
+        chromosome(:,4) = chromosome(:,4) - mean(chromosome(:,4));
+
+        %break up into individual disks
+        for i = 1:1:ndiscs
+            [coeff,score] = pca(chromosome(1+(i-1)*ndiscs:i*ndiscs,2:4));
+            disc_PCA = score;
+
+            disc_PCA(:,1) = disc_PCA(:,1) - mean(disc_PCA(:,1));
+            disc_PCA(:,2) = disc_PCA(:,2) - mean(disc_PCA(:,2));
+            disc_PCA(:,3) = disc_PCA(:,3) - mean(disc_PCA(:,3));
+
+            xcm = sum(disc_PCA(:,1))/(size(disc_PCA,1));
+            ycm = sum(disc_PCA(:,2))/(size(disc_PCA,1));
+            zcm = sum(disc_PCA(:,3))/(size(disc_PCA,1));
+            Gyration_tensor = (1/size(disc_PCA,1)).*[[sum((disc_PCA(:,1)-xcm).^2) sum((disc_PCA(:,1)-xcm).*(disc_PCA(:,2)-ycm)) sum((disc_PCA(:,1)-xcm).*(disc_PCA(:,3)-zcm))]; [sum((disc_PCA(:,1)-xcm).*(disc_PCA(:,2)-ycm)) sum((disc_PCA(:,2)-ycm).^2) sum((disc_PCA(:,2)-ycm).*(disc_PCA(:,3)-zcm))]; [sum((disc_PCA(:,1)-xcm).*(disc_PCA(:,3)-zcm)) sum((disc_PCA(:,2)-ycm).*(disc_PCA(:,3)-zcm)) sum((disc_PCA(:,3)-zcm).^2)]];
+            eigenvalues = eig(Gyration_tensor);
+            eigenvalues=sort(eigenvalues,'descend');
+            asphericity_tensor_disc = [asphericity_tensor_disc; (3/(2*sum(eigenvalues)^2))*((eigenvalues(1)-mean(eigenvalues))^2+(eigenvalues(2)-mean(eigenvalues))^2+(eigenvalues(3)-mean(eigenvalues))^2)];
+
+            %average ratio of PCs
+            P_axis_1=prctile(disc_PCA(:,1)-min(disc_PCA(:,1)),95);
+            P_axis_2=prctile(disc_PCA(:,2)-min(disc_PCA(:,2)),95);
+            P_axis_3=prctile(disc_PCA(:,3)-min(disc_PCA(:,3)),95);
+
+            asphericity_PCA_disc = [asphericity_PCA_disc; ((P_axis_1/P_axis_2)+(P_axis_1/P_axis_3)+(P_axis_2/P_axis_3))/3];
+
+        end
+        if k == 1
+            asphericity_tensor_CLC_16_discs = [asphericity_tensor_CLC_16_discs; asphericity_tensor_disc];
+        elseif k == 2
+            asphericity_tensor_CLC_27_discs = [asphericity_tensor_CLC_27_discs; asphericity_tensor_disc];
+        elseif k == 3
+            asphericity_tensor_CLC_54_discs = [asphericity_tensor_CLC_54_discs; asphericity_tensor_disc];
+        end
+    end
+end
+
 %TAD asphericity
-%[N1,e1]=histcounts(all_asphericity_tensor(idx,4,1:2,1:2), edges);
-[N2,e2]=histcounts(asphericity_tensor_TADs_kawagutii, edges);
-[N3,e3]=histcounts(asphericity_tensor_chromosome_kawagutii, edges);
-%e1 = e1(2:end) - (e1(2)-e1(1))/2;
+edges = linspace(0, 1, 21);
+
+[N1,e1]=histcounts(asphericity_tensor_TADs_kawagutii, edges);
+[N2,e2]=histcounts(asphericity_tensor_TADs_microadriaticum, edges);
+
+[N3,e3]=histcounts(asphericity_tensor_CLC_16_discs, edges);
+[N4,e4]=histcounts(asphericity_tensor_CLC_27_discs, edges);
+[N5,e5]=histcounts(asphericity_tensor_CLC_54_discs, edges);
+
+e1 = e1(2:end) - (e1(2)-e1(1))/2;
 e2 = e2(2:end) - (e2(2)-e2(1))/2;
 e3 = e3(2:end) - (e3(2)-e3(1))/2;
+e4 = e4(2:end) - (e4(2)-e4(1))/2;
+e5 = e5(2:end) - (e5(2)-e5(1))/2;
+
 figure
-hold on 
-%plot(e1,N1, Color = [0.9290 0.6940 0.1250], LineWidth=4)
-plot(e2,N2, '--', Color = [0.4660 0.6740 0.1880]./2, LineWidth=3) %a lighter colour
-plot(e3,N3, Color = [0.4660 0.6740 0.1880], LineWidth=4)
-lgd=legend({'Equilibrium Globule Regions','TADs Only','Entire Chromosome'});
+hold on
+plot(e1,N1, '--', Color = [0.4660 0.6740 0.1880], LineWidth=3)
+plot(e2,N2, '--', Color = [0 0.4470 0.7410], LineWidth=3)
+plot(e3,N3./400, Color = [0.2 0.2 0.2], LineWidth=3) %reduce sample size for visualization purposes
+plot(e4,N4./400, Color = [0.4 0.4 0.4], LineWidth=3)
+plot(e5,N5./400, Color = [0.6 0.6 0.6], LineWidth=3)
+
+lgd=legend({'TADs {\it S. kawagutii}','TADs {\it S. microadriaticum}','CLC 16 Discs', 'CLC 27 Discs', 'CLC 54 Discs'});
 lgd.FontSize = 20;
 legend boxoff
 hold off
 xlim([0 1])
+ylim([0 100])
 ax = gca;
 ax.FontSize = 16;
-xlabel('Asphericity (tensor)','FontSize', 24)
+xlabel('Asphericity','FontSize', 24)
 ylabel('Count','FontSize', 24)
 
-%TAD asphericity
-figure
-hold on
-histogram(asphericity_PCA_TADs_kawagutii, linspace(1,3,20), FaceColor = [0.4660 0.6740 0.1880]./3)  %a lighter colour
-histogram(asphericity_PCA_chromosome_kawagutii, FaceColor = [0.4660 0.6740 0.1880])
-lgd=legend({'TADs Only','Entire Chromosome'});
-legend boxoff
-hold off
-ax = gca;
-ax.FontSize = 16;
-xlabel('Asphericity (PCA)','FontSize', 24)
-ylabel('Count','FontSize', 24)
-xlim([1 3])
-
-writecell(asphericity_PCA_TADs_microadriaticum_write,'symbiodinium_microadriaticum_allchroms_TADs_asphericity_PCA.txt','Delimiter','\t')
-writecell(asphericity_PCA_TADs_kawagutii_write,'symbiodinium_kawagutii_allchroms_TADs_asphericity_PCA.txt','Delimiter','\t')
-
-writecell(asphericity_tensor_TADs_microadriaticum_write,'symbiodinium_microadriaticum_allchroms_TADs_asphericity_tensor.txt','Delimiter','\t')
-writecell(asphericity_tensor_TADs_kawagutii_write,'symbiodinium_kawagutii_allchroms_TADs_asphericity_tensor.txt','Delimiter','\t')
+% writecell(asphericity_PCA_TADs_microadriaticum_write,'symbiodinium_microadriaticum_allchroms_TADs_asphericity_PCA.txt','Delimiter','\t')
+% writecell(asphericity_PCA_TADs_kawagutii_write,'symbiodinium_kawagutii_allchroms_TADs_asphericity_PCA.txt','Delimiter','\t')
+% 
+% writecell(asphericity_tensor_TADs_microadriaticum_write,'symbiodinium_microadriaticum_allchroms_TADs_asphericity_tensor.txt','Delimiter','\t')
+% writecell(asphericity_tensor_TADs_kawagutii_write,'symbiodinium_kawagutii_allchroms_TADs_asphericity_tensor.txt','Delimiter','\t')

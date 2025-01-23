@@ -14,26 +14,26 @@ Description: save .png images for a set of CSynth structures. Drag & drop this f
 ### CSynth_FISH_Compare_Su_Cell_2020.m
 Description: Use to assess accuracy of CSynth conformations and to optomize CSynth parameters, using a human cell line where Hi-C data and 3D FISH data (652 probes) exist. See: Fig S3 C,D,E,F in paper.
 
-### Fig3_A_CLC_Expression.m
-Description: code to create 3D visual model of surface-localized gene expression on CLC chromosomes using a divergent strand-specific expression colormap. See: Fig 4A in paper.
+### Fig5_A_CLC_Expression.m
+Description: code to create 3D visual model of surface-localized gene expression on CLC chromosomes using a divergent strand-specific expression colormap. See: Fig 5A in paper.
 
 ### Orientation_Order_Parameter.py
-Description: Used to compute the average correlation between two tangent vectors to the 3D chromosome structure separated by a given amount of primary sequence, averaged over the entire chromosome. See: Fig 3B in paper. Code adapted from: https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.116.248101.
+Description: Used to compute the average correlation between two tangent vectors to the 3D chromosome structure separated by a given amount of primary sequence, averaged over the entire chromosome. See: Fig 4B in paper. Code adapted from: https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.116.248101.
 
 ### RNAseq_align_to_CSynth_agg_chr.m
-Description: Visualization of spatial variation in transcription levels determined by mapping RNA-seq data to 3D position on CSynth structure. An aggregate analysis is done where chromosomes are isotropically scaled to the same size, viewed using cylindrical coordinates to show the average transcription level vs distance to centre/surface of the chromosome. See: Fig 4D & S9 in paper.
+Description: Visualization of spatial variation in transcription levels determined by mapping RNA-seq data to 3D position on CSynth structure. An aggregate analysis is done where chromosomes are isotropically scaled to the same size, viewed using cylindrical coordinates to show the average transcription level vs distance to centre/surface of the chromosome. See: Fig 5D & S9 in paper.
 
 ### Spatial_Nematic_Order.m
 Description: Used to calculate alignment (nematic order parameter) of tangent vectors to DNA that are in close spatial proximity. See: Fig 3C in paper.
 
 ### TAD_analysis.m
-Description: Used to calculate average level and strand of transcription near TAD boundary. See: Fig 4B in paper: histograms of TAD asphericity. See: Fig S10 C in paper: convergent transcription at TAD boundaries.
+Description: Used to calculate average level and strand of transcription near TAD boundary. See: Fig 3C in paper for histograms of TAD asphericity. See: Fig S10 in paper for convergent transcription at TAD boundaries.
 
 ### chr_coverage_at_various_TPM.m
 Description: Cumulative chromosomal coverage of active gene sequence with TPM > x. This coverage is compared to the chromosome surface area to volume ratio. See Fig S8 in paper.
 
 ### colour_TPM_using_bed.js
-Description: Used to load divergent colourmap for visualizing strand-specific transcription levels in 3D space using CSynth GUI. Drag and drop this file into CSynth browswer window before or after loading Hi-C contact data.
+Description: Used to load divergent colourmap for visualizing strand-specific transcription levels in 3D space using CSynth GUI. Drag and drop this file into CSynth browswer window before or after loading Hi-C contact data, as in Fig 3B.
 
 ### constrained_RW_1D.m
 Description: Function used to generate extrachromosomal loops. Random walks are generated separately for each of the spatial three dimensions.
@@ -60,10 +60,10 @@ https://cooltools.readthedocs.io/en/latest/notebooks/contacts_vs_distance.html. 
 Description: Used to compute contact probability curves from fractal and equilibrium globule as a positive control to validate the code later applied to CLC model chromosomes.
 
 ### iter_Cholesteric_HiC.m
-Description: Generate model cholesteric liquid crystal (CLC) chromosomes with extra chromosomal loops. Many adjustable parameters including: loop length, number of discs, cholesteric pitch, and more. Compute single cell and population-level HiC matrices and contact probability curves.
+Description: Generate model cholesteric liquid crystal (CLC) chromosomes with extra chromosomal loops. Many adjustable parameters including: loop length, number of discs, cholesteric pitch, and more. Compute single cell and population-level HiC matrices and contact probability curves. See Fig. 1A, 2A, S1, S2, S6 in the paper.
 
 ### plot_P(s)_dinoflagellate.py
-Description: Used to compute contact probability curves from dinoflagellate Hi-C data. See: Fig 2A, B, & C in the paper.
+Description: Used to compute contact probability curves from dinoflagellate Hi-C data. See: Fig 2B, C, & D in the paper.
 
 ### sim_HiC_map_CSynth.m
 Description: Used to simulate IMR90 chr21 Hi-C contact map from CSynth structure. This contact map is compared with empirical Hi-C contact for an assessment of CSynth accuracy. See: Fig S3 A & G in paper.

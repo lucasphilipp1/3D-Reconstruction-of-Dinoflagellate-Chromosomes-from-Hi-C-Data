@@ -24,7 +24,7 @@ for d = 1:1:num_chroms
     d
     chromosome=[]; %position of DNA
     %7.655Mbp/(10 layers)∗1monomer/5kbp≈(150 monomers)/layer
-    num_mon_per_disc = 75; %number of monomers in the thickest cholesteric disc
+    num_mon_per_disc = 200; %number of monomers in the thickest cholesteric disc
     %num_mon_per_disc = random('Normal',150,40); %number of monomers in the thickest cholesteric disc
     %num_mon_per_disc = random('Uniform',75,150); %number of monomers in the thickest cholesteric disc
 
@@ -626,28 +626,28 @@ for d = 1:1:num_chroms
     P(P>1) = 1; %no contact probabilities above 1
 
     %figure S1B in paper
-    % figure
-    % hold on
-    % plot3(chromosome(:,1),chromosome(:,2),chromosome(:,3))
-    % for j = 1:1:size(inter_disc_loops,2)
-    %     plot3(cell2mat(inter_disc_loops{j}(:,1)),cell2mat(inter_disc_loops{j}(:,2)),cell2mat(inter_disc_loops{j}(:,3)),'-o','LineWidth',5,'Color','r')
+    figure
+    hold on
+    plot3(chromosome(:,1),chromosome(:,2),chromosome(:,3))
+    for j = 1:1:size(inter_disc_loops,2)
+        plot3(cell2mat(inter_disc_loops{j}(:,1)),cell2mat(inter_disc_loops{j}(:,2)),cell2mat(inter_disc_loops{j}(:,3)),'-o','LineWidth',5,'Color','r')
+    end
+    for k = 1:1:size(intra_disc_loops,2)
+        plot3(cell2mat(intra_disc_loops{k}(:,1)),cell2mat(intra_disc_loops{k}(:,2)),cell2mat(intra_disc_loops{k}(:,3)),'-o','LineWidth',5,'Color','g')
+    end
+    % for i = 1:1:size(find(diag(D,1)>0.5),1)
+    %     far=find(diag(D,1)>0.5);
+    %     plot3(chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,1),chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,2),chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,3),'-o','Color','k')
     % end
-    % for k = 1:1:size(intra_disc_loops,2)
-    %     plot3(cell2mat(intra_disc_loops{k}(:,1)),cell2mat(intra_disc_loops{k}(:,2)),cell2mat(intra_disc_loops{k}(:,3)),'-o','LineWidth',5,'Color','g')
-    % end
-    % % for i = 1:1:size(find(diag(D,1)>0.5),1)
-    % %     far=find(diag(D,1)>0.5);
-    % %     plot3(chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,1),chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,2),chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,3),'-o','Color','k')
-    % % end
-    % plot3(chromosome_w_inter_and_intra_disc_loops(:,1),chromosome_w_inter_and_intra_disc_loops(:,2),chromosome_w_inter_and_intra_disc_loops(:,3),'-','Color','k')
-    % xlim([min(chromosome_w_inter_disc_loops(:,1))*2 max(chromosome_w_inter_disc_loops(:,1))*2])
-    % ylim([min(chromosome_w_inter_disc_loops(:,2))*2 max(chromosome_w_inter_disc_loops(:,2))*2])
-    % zlim([min(chromosome_w_inter_disc_loops(:,3))*2 max(chromosome_w_inter_disc_loops(:,3))*2])
-    % set(gca,'XTick',[], 'YTick', [], 'ZTick', [])
-    % xlabel('x','FontSize', 24)
-    % ylabel('y','FontSize', 24)
-    % zlabel('z','FontSize', 24)
-    % view(30,2)
+    plot3(chromosome_w_inter_and_intra_disc_loops(:,1),chromosome_w_inter_and_intra_disc_loops(:,2),chromosome_w_inter_and_intra_disc_loops(:,3),'-','Color','k')
+    xlim([min(chromosome_w_inter_disc_loops(:,1))*2 max(chromosome_w_inter_disc_loops(:,1))*2])
+    ylim([min(chromosome_w_inter_disc_loops(:,2))*2 max(chromosome_w_inter_disc_loops(:,2))*2])
+    zlim([min(chromosome_w_inter_disc_loops(:,3))*2 max(chromosome_w_inter_disc_loops(:,3))*2])
+    set(gca,'XTick',[], 'YTick', [], 'ZTick', [])
+    xlabel('x','FontSize', 24)
+    ylabel('y','FontSize', 24)
+    zlabel('z','FontSize', 24)
+    view(30,2)
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

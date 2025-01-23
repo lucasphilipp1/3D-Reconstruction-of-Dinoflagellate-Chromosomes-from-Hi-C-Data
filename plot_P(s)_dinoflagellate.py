@@ -2,7 +2,7 @@
 a minor modification of:
 https://cooltools.readthedocs.io/en/latest/notebooks/contacts_vs_distance.html
 
-Fig 1C and Fig S7 in the paper
+Fig 2 B C D in the paper
 """
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -106,7 +106,7 @@ ax=axs[0]
 for region in df_minutum['name']:
     ax.loglog(
     cvd_smooth_minutum['s_bp'].loc[cvd_smooth_minutum['region1']==region],
-    cvd_smooth_minutum['balanced.avg.smoothed'].loc[cvd_smooth_minutum['region1']==region], alpha=0.3, color='orange', label = 'minutum'
+    cvd_smooth_minutum['balanced.avg.smoothed'].loc[cvd_smooth_minutum['region1']==region], alpha=0.3, color='sienna', label = 'minutum'
     )
     ax.loglog([x_line[0], x_line[-1]], [y_line2[0], y_line2[-1]], 'k--')
     ax.loglog([x_line[0], x_line[-1]], [y_line[0], y_line[-1]], 'r--')
@@ -147,7 +147,7 @@ for region in df_minutum['name']:
     # Calculate derivative in log-log space
     ax.semilogx(
     cvd_smooth_minutum['s_bp'].loc[cvd_smooth_minutum['region1']==region],
-    grad, alpha=0.3, color='orange', label = 'minutum')
+    grad, alpha=0.3, color='sienna', label = 'minutum')
     
 ax.set(
 xlabel='s, bp',

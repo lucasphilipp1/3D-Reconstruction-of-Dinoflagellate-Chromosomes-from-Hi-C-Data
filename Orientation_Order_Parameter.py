@@ -3,6 +3,8 @@
 """
 Created on Mon Jul 31 11:58:52 2023
 
+Fig. 4 B in the paper.
+
 code adapted from:
 https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.116.248101
 

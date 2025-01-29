@@ -45,24 +45,24 @@ end
 
 figure
 for i = 1:num_chroms
-    semilogx(x,expression_coverage(:,i), 'Color', [0 0.4470 0.7410])
-    yline(exposed_shell_deep(i),'--r')
-    yline(exposed_shell_med(i),'--y')
-    yline(exposed_shell_shallow(i),'--g')
+    semilogx(x,expression_coverage(:,i).*100, 'Color', [0 0.4470 0.7410]) %multiplication by 100 to convert fraction to percentage
+    yline(exposed_shell_deep(i).*100,'--r')
+    yline(exposed_shell_med(i).*100,'--y')
+    yline(exposed_shell_shallow(i).*100,'--g')
     hold on
 end
-hxl = yline(exposed_shell_deep(end),'--k','30% Radial Penetration')
+hxl = yline(exposed_shell_deep(end).*100,'--k','30% Radial Penetration')
 hxl.FontSize = 14;
-hxl = yline(exposed_shell_med(end),'--k','20% Radial Penetration')
+hxl = yline(exposed_shell_med(end).*100,'--k','20% Radial Penetration')
 hxl.FontSize = 14;
-hxl = yline(exposed_shell_shallow(end),'--k','10% Radial Penetration')
+hxl = yline(exposed_shell_shallow(end).*100,'--k','10% Radial Penetration')
 hxl.FontSize = 14;
 ylabel('% Chromosome Sequence with TPM > x')
 xlabel('x [TPM]')
 ax = gca;
 ax.FontSize = 16;
 xlim([10^(-3) 10^4])
-ylim([0 1])
+ylim([0 100])
 
 x = logspace(-3,4);
 expression_coverage = zeros(length(x),num_chroms);
@@ -106,21 +106,21 @@ end
 %kawagutii
 figure
 for i = 1:num_chroms
-    semilogx(x,expression_coverage(:,i), 'Color', [0.4660 0.6740 0.1880])
-    yline(exposed_shell_deep(i),'--r')
-    yline(exposed_shell_med(i),'--y')
-    yline(exposed_shell_shallow(i),'--g')
+    semilogx(x,expression_coverage(:,i).*100, 'Color', [0.4660 0.6740 0.1880]) %multiplication by 100 to convert fraction to percentage
+    yline(exposed_shell_deep(i).*100,'--r')
+    yline(exposed_shell_med(i).*100,'--y')
+    yline(exposed_shell_shallow(i).*100,'--g')
     hold on
 end
-hxl = yline(exposed_shell_deep(end),'--k','30% Radial Penetration')
+hxl = yline(exposed_shell_deep(end).*100,'--k','30% Radial Penetration')
 hxl.FontSize = 14;
-hxl = yline(exposed_shell_med(end),'--k','20% Radial Penetration')
+hxl = yline(exposed_shell_med(end).*100,'--k','20% Radial Penetration')
 hxl.FontSize = 14;
-hxl = yline(exposed_shell_shallow(end),'--k','10% Radial Penetration')
+hxl = yline(exposed_shell_shallow(end).*100,'--k','10% Radial Penetration')
 hxl.FontSize = 14;
 ylabel('% Chromosome Sequence with TPM > x')
 xlabel('x [TPM]')
 ax = gca;
 ax.FontSize = 16;
 xlim([10^(-3) 10^4])
-ylim([0 1])
+ylim([0 100])

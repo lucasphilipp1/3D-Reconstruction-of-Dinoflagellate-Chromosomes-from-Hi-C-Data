@@ -37,8 +37,7 @@ Description: Cumulative chromosomal coverage of active gene sequence with TPM > 
 Description: Used to load divergent colourmap for visualizing strand-specific transcription levels in 3D space using CSynth GUI. Drag and drop this file into CSynth browswer window before or after loading Hi-C contact data, as in Fig 3B.
 
 ![RNAseq_colormap](https://github.com/user-attachments/assets/a1b036c4-f829-4ea9-969f-de1760b14e9d)
-![image](https://github.com/user-attachments/assets/bc66eeb6-25d5-41b9-a90d-b89b9c7f91b7)
-
+<img align="right" width="100" height="100" src="<img width="880" alt="RNAseq+CSynth" src="https://github.com/user-attachments/assets/2b0820df-3fa7-4f30-9a2a-6024b9f9bfc6">
 
 ### constrained_RW_1D.m
 Description: Function used to generate extrachromosomal loops. Random walks are generated separately for each of the spatial three dimensions.

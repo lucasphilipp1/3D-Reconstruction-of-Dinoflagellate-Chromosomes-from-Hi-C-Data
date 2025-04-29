@@ -27,6 +27,7 @@ Description: Visualization of spatial variation in transcription levels determin
 
 ### Spatial_Nematic_Order.m
 Description: Used to calculate alignment (nematic order parameter) of tangent vectors to DNA that are in close spatial proximity. See: Fig 3C in paper.
+![nematic_order_param](https://github.com/user-attachments/assets/bb09b6e8-f223-44b6-b24a-973050fcd4e6)
 
 ### TAD_analysis.m
 Description: Used to calculate average level and strand of transcription near TAD boundary. See: Fig 3C in paper for histograms of TAD asphericity. See: Fig S10 in paper for convergent transcription at TAD boundaries.
@@ -37,7 +38,8 @@ Description: Cumulative chromosomal coverage of active gene sequence with TPM > 
 ### colour_TPM_using_bed.js
 Description: Used to load divergent colourmap for visualizing strand-specific transcription levels in 3D space using CSynth GUI. Drag and drop this file into CSynth browswer window before or after loading Hi-C contact data, as in Fig 3B.
 
-<img width="1096" alt="Figure_5" src="https://github.com/user-attachments/assets/cf561457-a733-4c36-b703-a7fa042ca6e9" />
+![RNAseq_colormap](https://github.com/user-attachments/assets/a1b036c4-f829-4ea9-969f-de1760b14e9d)
+![RNAseq+CSynth](https://github.com/user-attachments/assets/1436fe41-d57e-49eb-b89c-84b90b288af5)
 
 ### constrained_RW_1D.m
 Description: Function used to generate extrachromosomal loops. Random walks are generated separately for each of the spatial three dimensions.

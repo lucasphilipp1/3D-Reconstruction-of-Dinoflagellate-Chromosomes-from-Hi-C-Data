@@ -26,7 +26,6 @@ Description: Visualization of spatial variation in transcription levels determin
 ### Spatial_Nematic_Order.m
 Description: Used to calculate alignment (nematic order parameter) of tangent vectors to DNA that are in close spatial proximity. See: Fig 3C in paper.
 ![nematic_order_param](https://github.com/user-attachments/assets/bb09b6e8-f223-44b6-b24a-973050fcd4e6)
-
 ### TAD_analysis.m
 Description: Used to calculate average level and strand of transcription near TAD boundary. See: Fig 3C in paper for histograms of TAD asphericity. See: Fig S10 in paper for convergent transcription at TAD boundaries.
 

@@ -38,7 +38,7 @@ Description: Used to load divergent colourmap for visualizing strand-specific tr
 
 ![RNAseq_colormap](https://github.com/user-attachments/assets/16890451-f15c-4112-90bc-c67b7fe97f02)
 
-<img width="880" alt="RNAseq+CSynth" src="https://github.com/user-attachments/assets/bfe8a0f9-bc84-4362-825f-10e7675068cb" />
+<img width="500" img align="right" alt="RNAseq+CSynth" src="https://github.com/user-attachments/assets/bfe8a0f9-bc84-4362-825f-10e7675068cb" />
 
 
 ### constrained_RW_1D.m

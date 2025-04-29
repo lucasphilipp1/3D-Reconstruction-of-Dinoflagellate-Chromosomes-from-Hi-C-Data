@@ -1,6 +1,8 @@
 # This GitHub repository contains the code to recreate the analyses of:
 Philipp, L., Marinov G. K., Todd S., Weber S. C., 3D Reconstruction of Dinoflagellate Chromosomes from Hi-C Data Refutes the Cholesteric Liquid Crystal Hypothesis. In review.
 
+![auto_symbiodinium_microadriaticum_chr1_3D xyz](https://github.com/user-attachments/assets/1d8cd915-b809-495d-b877-2e65a52e2fd5)
+
 bioRxiv link to pre-print: [https://www.biorxiv.org/content/10.1101/2025.01.24.634729v1](https://www.biorxiv.org/content/10.1101/2025.01.24.634729v1)
 
 # Data Availability:
@@ -35,6 +37,8 @@ Description: Cumulative chromosomal coverage of active gene sequence with TPM > 
 ### colour_TPM_using_bed.js
 Description: Used to load divergent colourmap for visualizing strand-specific transcription levels in 3D space using CSynth GUI. Drag and drop this file into CSynth browswer window before or after loading Hi-C contact data, as in Fig 3B.
 
+<img width="1096" alt="Figure_5" src="https://github.com/user-attachments/assets/cf561457-a733-4c36-b703-a7fa042ca6e9" />
+
 ### constrained_RW_1D.m
 Description: Function used to generate extrachromosomal loops. Random walks are generated separately for each of the spatial three dimensions.
 
@@ -61,6 +65,8 @@ Description: Used to compute contact probability curves from fractal and equilib
 
 ### iter_Cholesteric_HiC.m
 Description: Generate model cholesteric liquid crystal (CLC) chromosomes with extra chromosomal loops. Many adjustable parameters including: loop length, number of discs, cholesteric pitch, and more. Compute single cell and population-level HiC matrices and contact probability curves. See Fig. 1A, 2A, S1, S2, S6 in the paper.
+
+<img width="1118" alt="figure_S6" src="https://github.com/user-attachments/assets/ff609024-7e67-457a-a055-ea41388e2521" />
 
 ### plot_P(s)_dinoflagellate.py
 Description: Used to compute contact probability curves from dinoflagellate Hi-C data. See: Fig 2B, C, & D in the paper.

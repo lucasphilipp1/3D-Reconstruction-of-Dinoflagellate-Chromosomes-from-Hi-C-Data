@@ -6,7 +6,7 @@ clear
 %
 %requires: statistics and machine learning toolbox
 
-num_chroms = 1; %number of simulated chromosomes
+num_chroms = 100; %number of simulated chromosomes
 resolution = 5000; %number of base pairs per monomer
 
 %contact probability curve data
@@ -39,7 +39,7 @@ for d = 1:1:num_chroms
     min_axis_chr=0.5; %radius of cholesteric disc, in microns
 
     % optional slanted discs (discs not perpendicular to chromosome long axis)
-    tilt_angle = 10; %in degrees, 0 is perpendicular to chromosome long axis
+    %tilt_angle = 10; %in degrees, 0 is perpendicular to chromosome long axis
     %tilt_angle = random('Normal',0,30); %in degrees
 
     xy_spacing = min_axis_chr*sqrt(pi/num_mon_per_disc); %mesh spacing in microns

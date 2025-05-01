@@ -15,9 +15,8 @@ sto=10400001:50000:46650001;
 remove=setxor(sto,rows);
 remove=(remove-10400001)./resolution;
 
-input_HiC=input_HiC./nanmedian(nanmedian(input_HiC)); %match contact probability color intensity
 figure
-imagesc(input_HiC);
+imagesc(input_HiC./max(max(input_HiC)));
 hold on;
 colorbar
 xlabel('primary sequence [bp]', 'fontsize', 24)
@@ -29,7 +28,7 @@ set(gca,'ColorScale','log')
 maj_axis_chr=colorbar;
 maj_axis_chr.Label.String = 'Contact Probability';
 maj_axis_chr.FontSize = 18;
-caxis([10^0 10^4]);
+caxis([10^-4 10^0]);
 
 %simulate Hi-C contact map for human IMR90 chr 21
 P = 1./squareform(pdist(chromosome(:,2:4))).^4;
@@ -39,7 +38,7 @@ P(:,remove+1) = [];
 P(remove+1,:) = [];
 
 figure
-imagesc(P);
+imagesc(P./10^4);
 hold on;
 colorbar
 xlabel('primary sequence [bp]', 'fontsize', 24)
@@ -51,7 +50,7 @@ set(gca,'ColorScale','log')
 maj_axis_chr=colorbar;
 maj_axis_chr.Label.String = 'Contact Probability';
 maj_axis_chr.FontSize = 18;
-caxis([10^0 10^4]);
+caxis([10^-4 10^0]);
 
 %omit main and 1st off diagonal for relative error calculation
 input_HiC(idiag(size(input_HiC),-1)) = NaN(size(input_HiC,1)-1,1);

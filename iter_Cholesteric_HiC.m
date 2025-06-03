@@ -6,7 +6,7 @@ clear
 %
 %requires: statistics and machine learning toolbox
 
-num_chroms = 100; %number of simulated chromosomes
+num_chroms = 1; %number of simulated chromosomes
 resolution = 5000; %number of base pairs per monomer
 
 %contact probability curve data
@@ -34,13 +34,26 @@ for d = 1:1:num_chroms
     %cholesteric pitch P: length in microns along long axis of the chromosome
     %corresponding to a full turn of the nematic director
     pitch = 1.30/2; %in microns
-
+           
     %ellipse parameters for overall chromosome profile
     min_axis_chr=0.5; %radius of cholesteric disc, in microns
+    %in the case of smaller discs radius at chromosome ends this is the maximum disc radius at the center
+
+    %CLC discs are wider at center than at either chromosome end
+    p=2; %curvature paramter
+          %p=1 diamond
+          %p=2 is a circle (min_axis_chr=maj_axis_chr) or ellipse (min_axis_chr<maj_axis_chr)
+          %p>2 is a square with rounded corners (min_axis_chr=maj_axis_chr) or rectangle with rounded corners (min_axis_chr<maj_axis_chr)
+          %p>>2 is a square (min_axis_chr=maj_axis_chr) or rectangle (min_axis_chr<maj_axis_chr)
+          %p=10 is good for all discs same radius
 
     % optional slanted discs (discs not perpendicular to chromosome long axis)
     %tilt_angle = 10; %in degrees, 0 is perpendicular to chromosome long axis
     %tilt_angle = random('Normal',0,30); %in degrees
+    tilt_angle = 0;
+
+    %add noise to z coordinate from normal dist with 0 mean and std dev z_spacing
+    noise_z = false;
 
     xy_spacing = min_axis_chr*sqrt(pi/num_mon_per_disc); %mesh spacing in microns
     z_spacing = xy_spacing;
@@ -86,8 +99,10 @@ for d = 1:1:num_chroms
 
             [X,Y] = meshgrid(x,y);
 
+            %r = min_axis_chr; %discs have constant width throughout chromosome (no taper at chromosome ends)
+
             %chromosome discs are wider at center than at either end
-            r = (min_axis_chr/maj_axis_chr)*sqrt(maj_axis_chr^2-z^2); %major axis of disc at this z position
+            r = min_axis_chr*(1-(z^2/maj_axis_chr^2)^(p/2))^(1/p); %rectellipse equation (z^2/maj_axis_chr^2)^(p/2)+(r^2/min_axis_chr)^(p/2)=1
 
             %mask for a single cholesteric disc
             indicator = sqrt((X./r).^2 + (Y./r).^2) - 1 < 0;
@@ -559,6 +574,11 @@ for d = 1:1:num_chroms
     end
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    if noise_z == true
+        chromosome_w_inter_and_intra_disc_loops(:,3) = chromosome_w_inter_and_intra_disc_loops(:,3) + normrnd(0,z_spacing,size(chromosome_w_inter_and_intra_disc_loops,1), 1);
+    end
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     % visualize primary sequence throughout chromosome
     numPoints = size(chromosome_w_inter_and_intra_disc_loops,1);
@@ -595,7 +615,7 @@ for d = 1:1:num_chroms
     % c.FontSize = 32;
     % patch('Faces', Faces(:,:) ,'Vertices', chromosome_w_inter_and_intra_disc_loops(:,:) ,'FaceColor', 'none', 'FaceVertexCData', MyColor(:,:) ,'EdgeColor','interp' ,'LineWidth',5, 'FaceAlpha',.5,'EdgeAlpha',.5);
     % %patch('Faces', Faces(:,:) ,'Vertices', chromosome_w_inter_and_intra_disc_loops_100kb_res(:,:) ,'FaceColor', 'none', 'FaceVertexCData', MyColor(:,:) ,'EdgeColor','interp' ,'LineWidth',5, 'FaceAlpha',.5,'EdgeAlpha',.5); %low res CLC structure
-    % view(90,0)
+    % view(90,10)
 
     % for i=skip+1:skip:numPoints
     %     clf(f)
@@ -626,28 +646,28 @@ for d = 1:1:num_chroms
     P(P>1) = 1; %no contact probabilities above 1
 
     %figure S1B in paper
-    figure
-    hold on
-    plot3(chromosome(:,1),chromosome(:,2),chromosome(:,3))
-    for j = 1:1:size(inter_disc_loops,2)
-        plot3(cell2mat(inter_disc_loops{j}(:,1)),cell2mat(inter_disc_loops{j}(:,2)),cell2mat(inter_disc_loops{j}(:,3)),'-o','LineWidth',5,'Color','r')
-    end
-    for k = 1:1:size(intra_disc_loops,2)
-        plot3(cell2mat(intra_disc_loops{k}(:,1)),cell2mat(intra_disc_loops{k}(:,2)),cell2mat(intra_disc_loops{k}(:,3)),'-o','LineWidth',5,'Color','g')
-    end
-    % for i = 1:1:size(find(diag(D,1)>0.5),1)
-    %     far=find(diag(D,1)>0.5);
-    %     plot3(chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,1),chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,2),chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,3),'-o','Color','k')
+    % figure
+    % hold on
+    % plot3(chromosome(:,1),chromosome(:,2),chromosome(:,3))
+    % for j = 1:1:size(inter_disc_loops,2)
+    %     plot3(cell2mat(inter_disc_loops{j}(:,1)),cell2mat(inter_disc_loops{j}(:,2)),cell2mat(inter_disc_loops{j}(:,3)),'-o','LineWidth',5,'Color','r')
     % end
-    plot3(chromosome_w_inter_and_intra_disc_loops(:,1),chromosome_w_inter_and_intra_disc_loops(:,2),chromosome_w_inter_and_intra_disc_loops(:,3),'-','Color','k')
-    xlim([min(chromosome_w_inter_disc_loops(:,1))*2 max(chromosome_w_inter_disc_loops(:,1))*2])
-    ylim([min(chromosome_w_inter_disc_loops(:,2))*2 max(chromosome_w_inter_disc_loops(:,2))*2])
-    zlim([min(chromosome_w_inter_disc_loops(:,3))*2 max(chromosome_w_inter_disc_loops(:,3))*2])
-    set(gca,'XTick',[], 'YTick', [], 'ZTick', [])
-    xlabel('x','FontSize', 24)
-    ylabel('y','FontSize', 24)
-    zlabel('z','FontSize', 24)
-    view(30,2)
+    % for k = 1:1:size(intra_disc_loops,2)
+    %     plot3(cell2mat(intra_disc_loops{k}(:,1)),cell2mat(intra_disc_loops{k}(:,2)),cell2mat(intra_disc_loops{k}(:,3)),'-o','LineWidth',5,'Color','g')
+    % end
+    % % for i = 1:1:size(find(diag(D,1)>0.5),1)
+    % %     far=find(diag(D,1)>0.5);
+    % %     plot3(chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,1),chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,2),chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,3),'-o','Color','k')
+    % % end
+    % plot3(chromosome_w_inter_and_intra_disc_loops(:,1),chromosome_w_inter_and_intra_disc_loops(:,2),chromosome_w_inter_and_intra_disc_loops(:,3),'-','Color','k')
+    % xlim([min(chromosome_w_inter_disc_loops(:,1))*2 max(chromosome_w_inter_disc_loops(:,1))*2])
+    % ylim([min(chromosome_w_inter_disc_loops(:,2))*2 max(chromosome_w_inter_disc_loops(:,2))*2])
+    % zlim([min(chromosome_w_inter_disc_loops(:,3))*2 max(chromosome_w_inter_disc_loops(:,3))*2])
+    % set(gca,'XTick',[], 'YTick', [], 'ZTick', [])
+    % xlabel('x','FontSize', 24)
+    % ylabel('y','FontSize', 24)
+    % zlabel('z','FontSize', 24)
+    % view(30,2)
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

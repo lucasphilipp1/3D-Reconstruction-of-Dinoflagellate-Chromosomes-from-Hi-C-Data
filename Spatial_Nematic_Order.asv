@@ -2,15 +2,15 @@
 %nematic order parameter calculation from chromosome structures
 %following the methods of: https://www.nature.com/articles/s41467-023-39908-1
 
-num_chroms = 4;
+num_chroms = 8;
 nBins = 4; %nBins x nBins x nBins = number of voxels, if error message try reducing nBins
 
 %save order parameter values for each voxel 
 all_alignment_4bins = zeros(num_chroms,6);
 all_alignment_6bins = zeros(num_chroms,6);
 
-for k = 1:1:6 %import data
-    for i = 1:1:num_chroms
+for k = 5:1:5 %import data
+    for i = 1:num_chroms
         if k == 1
             chromosome = importdata(sprintf('cholesteric_monomer_locations_16_discs_%i.txt',i));
             chromosome = chromosome.*100; %chromosome needs to be much larger than unit volume, as the orientation vectors are unit length
@@ -104,40 +104,40 @@ for k = 1:1:6 %import data
         chrom_zbins = linspace(min(chromosome_PCA(:,1)),max(chromosome_PCA(:,1))*1,nBins+1);
 
         %Fig 2C chromosome and inset in paper
-        % figure
-        % hold on
-        % plot3(xx,yy,zz,'k',LineWidth=5)
-        % quiver3(chromosome_PCA(:,1)-bond_vectors(:,1),chromosome_PCA(:,2)-bond_vectors(:,2),chromosome_PCA(:,3)-bond_vectors(:,3),bond_vectors(:,1),bond_vectors(:,2),bond_vectors(:,3),1.25,'Linewidth',2)
-        % axis equal
-        % xlim([chrom_xbins(round(end/2)) chrom_xbins(round(end/2)+1)])
-        % ylim([chrom_ybins(round(end/2)) chrom_ybins(round(end/2)+1)])
-        % zlim([chrom_zbins(round(end/2)) chrom_zbins(round(end/2)+1)])
-        % view(45,22.5)
-        % set(gca,'XTick',[])
-        % set(gca,'YTick',[])
-        % set(gca,'ZTick',[])
-        % hold off
-        % 
-        % bounding_box = ...
-        % [chrom_xbins(round(end/2)) chrom_ybins(round(end/2)) chrom_zbins(round(end/2));
-        % chrom_xbins(round(end/2)+1) chrom_ybins(round(end/2)) chrom_zbins(round(end/2));
-        % chrom_xbins(round(end/2)+1) chrom_ybins(round(end/2)+1) chrom_zbins(round(end/2));
-        % chrom_xbins(round(end/2)) chrom_ybins(round(end/2)+1) chrom_zbins(round(end/2));
-        % chrom_xbins(round(end/2)) chrom_ybins(round(end/2)) chrom_zbins(round(end/2)+1);
-        % chrom_xbins(round(end/2)+1) chrom_ybins(round(end/2)) chrom_zbins(round(end/2)+1);
-        % chrom_xbins(round(end/2)+1) chrom_ybins(round(end/2)+1) chrom_zbins(round(end/2)+1);
-        % chrom_xbins(round(end/2)) chrom_ybins(round(end/2)+1) chrom_zbins(round(end/2)+1)];
-        % idx = [4 8 5 1 4; 1 5 6 2 1; 2 6 7 3 2; 3 7 8 4 3; 5 8 7 6 5; 1 4 3 2 1]';
-        % 
-        % xc4 = bounding_box(:,1);
-        % yc4 = bounding_box(:,2);
-        % zc4 = bounding_box(:,3);
+        figure
+        hold on
+        plot3(xx,yy,zz,'k',LineWidth=5)
+        quiver3(chromosome_PCA(:,1)-bond_vectors(:,1),chromosome_PCA(:,2)-bond_vectors(:,2),chromosome_PCA(:,3)-bond_vectors(:,3),bond_vectors(:,1),bond_vectors(:,2),bond_vectors(:,3),1.25,'Linewidth',2)
+        axis equal
+        xlim([chrom_xbins(round(end/2)) chrom_xbins(round(end/2)+1)])
+        ylim([chrom_ybins(round(end/2)) chrom_ybins(round(end/2)+1)])
+        zlim([chrom_zbins(round(end/2)) chrom_zbins(round(end/2)+1)])
+        view(45,22.5)
+        set(gca,'XTick',[])
+        set(gca,'YTick',[])
+        set(gca,'ZTick',[])
+        hold off
+
+        bounding_box = ...
+        [chrom_xbins(round(end/2)) chrom_ybins(round(end/2)) chrom_zbins(round(end/2));
+        chrom_xbins(round(end/2)+1) chrom_ybins(round(end/2)) chrom_zbins(round(end/2));
+        chrom_xbins(round(end/2)+1) chrom_ybins(round(end/2)+1) chrom_zbins(round(end/2));
+        chrom_xbins(round(end/2)) chrom_ybins(round(end/2)+1) chrom_zbins(round(end/2));
+        chrom_xbins(round(end/2)) chrom_ybins(round(end/2)) chrom_zbins(round(end/2)+1);
+        chrom_xbins(round(end/2)+1) chrom_ybins(round(end/2)) chrom_zbins(round(end/2)+1);
+        chrom_xbins(round(end/2)+1) chrom_ybins(round(end/2)+1) chrom_zbins(round(end/2)+1);
+        chrom_xbins(round(end/2)) chrom_ybins(round(end/2)+1) chrom_zbins(round(end/2)+1)];
+        idx = [4 8 5 1 4; 1 5 6 2 1; 2 6 7 3 2; 3 7 8 4 3; 5 8 7 6 5; 1 4 3 2 1]';
+
+        xc = bounding_box(:,1);
+        yc = bounding_box(:,2);
+        zc = bounding_box(:,3);
 
         % figure
         % hold on
         % plot3(xx,yy,zz,LineWidth=1.2)
         % quiver3(chromosome_PCA(1:8:end,1)-bond_vectors(1:8:end,1),chromosome_PCA(1:8:end,2)-bond_vectors(1:8:end,2),chromosome_PCA(1:8:end,3)-bond_vectors(1:8:end,3),bond_vectors(1:8:end,1),bond_vectors(1:8:end,2),bond_vectors(1:8:end,3),1.5,'Linewidth',1)
-        % patch(xc4(idx),yc4(idx),zc4(idx), 'r', 'facealpha', 0.2);
+        % patch(xc(idx),yc(idx),zc(idx), 'r', 'facealpha', 0.2);
         % axis equal
         % view(45,22.5)
         % set(gca,'XTick',[])
@@ -216,7 +216,7 @@ end
 nBins = 6; %nBins x nBins x nBins = number of voxels %if error message try reducing nBins
 
 for k = 1:1:6
-    for i = 1:1:num_chroms
+    for i = 1:num_chroms
         if k == 1
             chromosome = importdata(sprintf('cholesteric_monomer_locations_16_discs_%i.txt',i));
             chromosome = chromosome.*100; %chromosome needs to be much larger than unit volume, as the orientation vectors are unit length
@@ -300,18 +300,15 @@ for k = 1:1:6
 
         % figure
         % hold on
-        % plot3(xx,yy,zz,'k',LineWidth=5)
-        % quiver3(chromosome_PCA(:,1)-bond_vectors(:,1),chromosome_PCA(:,2)-bond_vectors(:,2),chromosome_PCA(:,3)-bond_vectors(:,3),bond_vectors(:,1),bond_vectors(:,2),bond_vectors(:,3),1.25,'Linewidth',2)
+        % plot3(xx,yy,zz)
+        % quiver3(chromosome_PCA(:,1)-bond_vectors(:,1),chromosome_PCA(:,2)-bond_vectors(:,2),chromosome_PCA(:,3)-bond_vectors(:,3),bond_vectors(:,1),bond_vectors(:,2),bond_vectors(:,3))
         % axis equal
         % xlim([chrom_xbins(round(end/2)) chrom_xbins(round(end/2)+1)])
         % ylim([chrom_ybins(round(end/2)) chrom_ybins(round(end/2)+1)])
         % zlim([chrom_zbins(round(end/2)) chrom_zbins(round(end/2)+1)])
         % view(45,22.5)
-        % set(gca,'XTick',[])
-        % set(gca,'YTick',[])
-        % set(gca,'ZTick',[])
         % hold off
-        % 
+        %
         % bounding_box = ...
         % [chrom_xbins(round(end/2)) chrom_ybins(round(end/2)) chrom_zbins(round(end/2));
         % chrom_xbins(round(end/2)+1) chrom_ybins(round(end/2)) chrom_zbins(round(end/2));
@@ -322,25 +319,18 @@ for k = 1:1:6
         % chrom_xbins(round(end/2)+1) chrom_ybins(round(end/2)+1) chrom_zbins(round(end/2)+1);
         % chrom_xbins(round(end/2)) chrom_ybins(round(end/2)+1) chrom_zbins(round(end/2)+1)];
         % idx = [4 8 5 1 4; 1 5 6 2 1; 2 6 7 3 2; 3 7 8 4 3; 5 8 7 6 5; 1 4 3 2 1]';
-        % 
-        % xc6 = bounding_box(:,1);
-        % yc6 = bounding_box(:,2);
-        % zc6 = bounding_box(:,3);
-        % 
+        %
+        % xc = bounding_box(:,1);
+        % yc = bounding_box(:,2);
+        % zc = bounding_box(:,3);
+        %
         % figure
         % hold on
-        % plot3(xx,yy,zz,'k',LineWidth=1.2)
-        % quiver3(chromosome_PCA(1:8:end,1)-bond_vectors(1:8:end,1),chromosome_PCA(1:8:end,2)-bond_vectors(1:8:end,2),chromosome_PCA(1:8:end,3)-bond_vectors(1:8:end,3),bond_vectors(1:8:end,1),bond_vectors(1:8:end,2),bond_vectors(1:8:end,3),1.5,'Linewidth',1)
-        % patch(xc4(idx),yc4(idx),zc4(idx), 'r', 'facealpha', 0.2);
-        % patch(xc6(idx)-35,yc6(idx),zc6(idx), 'r', 'facealpha', 0.2);
+        % plot3(xx,yy,zz)
+        % quiver3(chromosome_PCA(:,1)-bond_vectors(:,1),chromosome_PCA(:,2)-bond_vectors(:,2),chromosome_PCA(:,3)-bond_vectors(:,3),bond_vectors(:,1),bond_vectors(:,2),bond_vectors(:,3))
+        % patch(xc(idx),yc(idx),zc(idx), 'r', 'facealpha', 0.1);
         % axis equal
-        % view(0,0)
-        % set(gca,'xtick',[])
-        % set(gca,'xticklabel',[])
-        % set(gca,'ytick',[])
-        % set(gca,'yticklabel',[])
-        % set(gca,'ztick',[])
-        % set(gca,'zticklabel',[])
+        % view(45,22.5)
         % hold off
 
         chrom_xyzBinNum = [...

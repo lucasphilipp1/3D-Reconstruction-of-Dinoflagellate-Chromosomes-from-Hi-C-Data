@@ -14,7 +14,7 @@ from cooltools.lib.numutils import adaptive_coarsegrain, interp_nan
 bp_formatter = EngFormatter('b') #label in bp not kilobase-pairs or megabase-pairs
 
 #logarithmic color scale
-norm = LogNorm(vmax=0.002)
+norm = LogNorm(vmax=0.02)
 
 
 def format_ticks(ax, x=True, y=True, rotate=True):

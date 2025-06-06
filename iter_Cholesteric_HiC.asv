@@ -561,8 +561,7 @@ for d = 1:1:num_chroms
 
     % insert intra-disc loops into primary sequence in chromosome
     chromosome_w_inter_and_intra_disc_loops = insert_loops(num_intra_disc_loops, sum(intra_disc_loop_lengths), chromosome_w_inter_disc_loops, intra_disc_loops, intra_disc_loop_starts_ind);
-   
-    chromosome_w_inter_and_intra_disc_loops_before_tilt_and_noise = chromosome_w_inter_and_intra_disc_loops;
+
     % optional slanted discs (discs not perpendicular to chromosome long axis)
     tilt_bins = 50;
     if abs(tilt_angle) > 0
@@ -573,7 +572,7 @@ for d = 1:1:num_chroms
         end
     else
     end
-        
+
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     if noise_z == true
         chromosome_w_inter_and_intra_disc_loops(:,3) = chromosome_w_inter_and_intra_disc_loops(:,3) + normrnd(0,z_spacing,size(chromosome_w_inter_and_intra_disc_loops,1), 1);
@@ -671,23 +670,27 @@ for d = 1:1:num_chroms
     % view(30,2)
 
     %color monomers according to their average Hi-C contact probability
-    % c = sum(P, 1)./size(P,1);  %average contact probability along stripe
-    % 
-    % figure;
-    % scatter3(chromosome_w_inter_and_intra_disc_loops(:,1), chromosome_w_inter_and_intra_disc_loops(:,2), chromosome_w_inter_and_intra_disc_loops(:,3), 50, c, 'filled');  % 50 = marker size
-    % xlabel('X');
-    % ylabel('Y');
-    % zlabel('z');
-    % ax = gca;
-    % ax.XTick = [];
-    % ax.YTick = [];
-    % ax.ZTick = [];
-    % view(3);
-    % cb = colorbar;
-    % cb.Label.String = 'Monomer Averaged Hi-C Contact Probability';
-    % cb.FontSize = 18;
-    % set(gca, 'ColorScale', 'log');
-    % caxis([1e-3 1e0]);
+    c = sum(P, 1);  %stripe strength
+    set(gca, 'ColorScale', 'log');
+    colormap(parula);
+    caxis([1e-3 1e0]);
+
+    colors = cmap(color_idx, :);
+
+    figure;
+    scatter3(chromosome_w_inter_and_intra_disc_loops(:,1), chromosome_w_inter_and_intra_disc_loops(:,2), chromosome_w_inter_and_intra_disc_loops(:,3), 50, c, 'filled');  % 50 = marker size
+    xlabel('X');
+    ylabel('Y');
+    zlabel('z');
+    ax = gca;
+    ax.XTick = [];
+    ax.YTick = [];
+    ax.ZTick = [];
+    view(3);
+    cb = colorbar;
+    cb.Label.String = 'Hi-C Contact Probability';
+    cb.FontSize = 18;
+
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -724,21 +727,21 @@ for d = 1:1:num_chroms
         all_disc_locations = [all_disc_locations; discs{i}];
     end
 
-    idx = ismember(chromosome_w_inter_and_intra_disc_loops_before_tilt_and_noise, all_disc_locations, 'rows');
+    idx = ismember(chromosome_w_inter_and_intra_disc_loops, all_disc_locations, 'rows');
     disc_indices = find(idx);
 
     for i = 1:numel(inter_disc_loops)
         inter_disc_loops_locations = [inter_disc_loops_locations; cell2mat(inter_disc_loops{i})];
     end
 
-    idx = ismember(chromosome_w_inter_and_intra_disc_loops_before_tilt_and_noise, inter_disc_loops_locations, 'rows');
+    idx = ismember(chromosome_w_inter_and_intra_disc_loops, inter_disc_loops_locations, 'rows');
     inter_disc_loops_indices = find(idx);
 
     for i = 1:numel(intra_disc_loops)
         intra_disc_loops_locations = [intra_disc_loops_locations; cell2mat(intra_disc_loops{i})];
     end
 
-    idx = ismember(chromosome_w_inter_and_intra_disc_loops_before_tilt_and_noise, intra_disc_loops_locations, 'rows');
+    idx = ismember(chromosome_w_inter_and_intra_disc_loops, intra_disc_loops_locations, 'rows');
     intra_disc_loops_indices = find(idx);
 
     bar_data = zeros(1, size(P,1));

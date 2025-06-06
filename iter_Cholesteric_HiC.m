@@ -743,7 +743,7 @@ for d = 1:1:num_chroms
 
     bar_data = zeros(1, size(P,1));
     bar_data(disc_indices) = -1;
-    bar_thickness = 100; %in pixels
+    bar_thickness = 200; %in pixels
     bar_matrix = repmat(bar_data, bar_thickness, 1);
     annotation_and_CM=[bar_matrix; P];
 
@@ -754,7 +754,8 @@ for d = 1:1:num_chroms
     caxis([1e-3 1e0]);
 
     hold on;
-
+    
+    %can use two different colormaps for the same imagesc(); plot
     % mask CLC disc track
     mask_white = annotation_and_CM == 0;
     mask_black = annotation_and_CM == -1;
@@ -773,7 +774,7 @@ for d = 1:1:num_chroms
     ax = gca;
     set(gca,'ColorScale','log')
     maj_axis_chr=colorbar;
-    maj_axis_chr.Label.String = 'Probability of Contact';
+    maj_axis_chr.Label.String = 'Contact Probability';
     maj_axis_chr.FontSize = 18;
 
     ax.XTickLabel = ax.XTick*resolution;
@@ -900,7 +901,7 @@ s_avg = cellfun(@transpose,s_avg,'UniformOutput',false);
 %legendStrings = "d_{cutoff} = " + string(distance_threshold) + "um";
 %legend(legendStrings, 'Location', 'southwest')
 % xlabel('Genomic separation [bp]', 'fontsize', 24)
-% ylabel('Probability of contact', 'fontsize', 24)
+% ylabel('Contact Probability', 'fontsize', 24)
 % set(ax,'xScale', 'log')
 % set(ax,'YScale', 'log')
 % set(gca,'YLim',[10^-5 10^0],'YTick',10.^(-5:0))

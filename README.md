@@ -21,20 +21,23 @@ Description: code to create 3D visual model of surface-localized gene expression
 Description: Used to compute the average correlation between two tangent vectors to the 3D chromosome structure separated by a given amount of primary sequence, averaged over the entire chromosome. See: Fig 4B in paper. Code adapted from: https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.116.248101.
 
 ### RNAseq_align_to_CSynth_agg_chr.m
-Description: Visualization of spatial variation in transcription levels determined by mapping RNA-seq data to 3D position on CSynth structure. An aggregate analysis is done where chromosomes are isotropically scaled to the same size, viewed using cylindrical coordinates to show the average transcription level vs distance to centre/surface of the chromosome. See: Fig 5D & S9 in paper.
+Description: Visualization of spatial variation in transcription levels determined by mapping RNA-seq data to 3D position on CSynth structure. An aggregate analysis is done where chromosomes are isotropically scaled to the same size, viewed using cylindrical coordinates to show the average transcription level vs distance to centre/surface of the chromosome. See: Fig 5D & S10 in paper.
 
 ### Spatial_Nematic_Order.m
-Description: Used to calculate alignment (nematic order parameter) of tangent vectors to DNA that are in close spatial proximity. See: Fig 3C in paper.
-![nematic_order_param](https://github.com/user-attachments/assets/bb09b6e8-f223-44b6-b24a-973050fcd4e6)
+Description: Used to calculate alignment (nematic order parameter) of tangent vectors to DNA that are in close spatial proximity. See: Fig 4C in paper.
+<img width="1496" height="855" alt="Screenshot 2025-08-26 at 12 06 05 PM" src="https://github.com/user-attachments/assets/ae95e3fe-e72b-488b-991e-818171e471c2" />
+
 ### TAD_analysis.m
-Description: Used to calculate average level and strand of transcription near TAD boundary. See: Fig 3C in paper for histograms of TAD asphericity. See: Fig S10 in paper for convergent transcription at TAD boundaries.
+Description: Used to calculate average level and strand of transcription near TAD boundary. See: Fig 3C in paper for histograms of TAD asphericity. See: Fig S11 in paper for convergent transcription at TAD boundaries.
 
 ### chr_coverage_at_various_TPM.m
-Description: Cumulative chromosomal coverage of active gene sequence with TPM > x. This coverage is compared to the chromosome surface area to volume ratio. See Fig S8 in paper.
+Description: Cumulative chromosomal coverage of active gene sequence with TPM > x. This coverage is compared to the chromosome surface area to volume ratio. See Fig S9 in paper.
 
 ### colour_TPM_using_bed.js
-Description: Used to load divergent colourmap for visualizing strand-specific transcription levels in 3D space using CSynth GUI. Drag and drop this file into CSynth browswer window before or after loading Hi-C contact data, as in Fig 3B.
-<img width="1294" alt="Screenshot 2025-04-29 at 11 37 54 AM" src="https://github.com/user-attachments/assets/6d59c2b3-303e-49cd-9c17-765638e9fa92" />
+Description: Used to load divergent colourmap for visualizing strand-specific transcription levels in 3D space using CSynth GUI. Drag and drop this file into CSynth browswer window before or after loading Hi-C contact data, as in Fig 5B.
+
+<img width="1436" height="1115" alt="Screenshot 2025-08-26 at 12 01 19 PM" src="https://github.com/user-attachments/assets/52933def-ddbc-45c3-ad8d-6a2e1849a528" />
+
 ### constrained_RW_1D.m
 Description: Function used to generate extrachromosomal loops. Random walks are generated separately for each of the spatial three dimensions.
 
@@ -60,7 +63,7 @@ https://cooltools.readthedocs.io/en/latest/notebooks/contacts_vs_distance.html. 
 Description: Used to compute contact probability curves from fractal and equilibrium globule as a positive control to validate the code later applied to CLC model chromosomes.
 
 ### iter_Cholesteric_HiC.m
-Description: Generate model cholesteric liquid crystal (CLC) chromosomes with extra chromosomal loops. Many adjustable parameters including: loop length, number of discs, cholesteric pitch, and more. Compute single cell and population-level HiC matrices and contact probability curves. See Fig. 1A, 2A, S1, S2, S6 in the paper.
+Description: Generate model cholesteric liquid crystal (CLC) chromosomes with extra chromosomal loops. Many adjustable parameters including: loop length, number of discs, cholesteric pitch, and more. Compute single cell and population-level HiC matrices and contact probability curves. See Fig. 1A, 2A, S1, S2, S7 in the paper.
 
 <img width="1118" alt="figure_S6" src="https://github.com/user-attachments/assets/ff609024-7e67-457a-a055-ea41388e2521" />
 

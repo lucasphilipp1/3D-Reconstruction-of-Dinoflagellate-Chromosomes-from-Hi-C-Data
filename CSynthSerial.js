@@ -2,7 +2,7 @@
 // Load a series of xyz files from single drop, and handle them serially.
 // Drag drop this text onto CSynth first,
 // That will override the standard drag-drop hanling for the remainder of the session
-// Then dragdrop the entire set of .xyz files
+// Then drag & drop the entire set of .xyz files
 // Each one will be displayed as xyz positions without any dynamics, and saved as png image (to downloads)
 
 let baseopenfiles;

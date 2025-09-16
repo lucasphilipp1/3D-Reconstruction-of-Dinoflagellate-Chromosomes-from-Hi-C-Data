@@ -5,69 +5,15 @@
 clc
 clear
 
-num_chroms = 75;
-bins = 20;
+num_chroms = 75; %analyze largest 75 scaffolds only as these are most likely completely assembled chromosomes
+nBins = 20; %%bins are squares with edge length = chromosome long axis length / nBins. the chromosome long axis is also the cylindrical axis
 
 %symbiodinium microadriaticum
-all_expression_agg = [];
-
-telomeres = [];
-
-for i=1:num_chroms
-
-    chromosome = importdata(sprintf('symbiodinium_microadriaticum_chr%i_3D.xyz',i));
-    RNAseq = importdata(sprintf('s_microadriaticum_chr%i_pilon_strandsum_TPM.bed',i));
-
-    chromosome(:,2) = chromosome(:,2) - mean(chromosome(:,2));
-    chromosome(:,3) = chromosome(:,3) - mean(chromosome(:,3));
-    chromosome(:,4) = chromosome(:,4) - mean(chromosome(:,4));
-
-    HiC_resolution = chromosome(2,1)-chromosome(1,1);
-
-    genes_start_end_TPM = [RNAseq.data(:,1) RNAseq.data(:,2) RNAseq.data(:,8)];
-
-    [coeff,score] = pca(chromosome(:,2:4));
-    chromosome_PCA = score;
-
-    %get xyz coordinates for every base pair by linearly interpolating between the model
-    chromosome_PCA_interpolated = zeros(chromosome(end,1),4);
-    chromosome_PCA_interpolated(:,1) = linspace(1,chromosome(end,1),chromosome(end,1))';
-    for j = 1:1:size(chromosome_PCA,1)-1
-        chromosome_PCA_interpolated(HiC_resolution*(j-1)+1:HiC_resolution*j,2:4) = [linspace(chromosome_PCA(j,1),chromosome_PCA(j+1,1),HiC_resolution)' linspace(chromosome_PCA(j,2),chromosome_PCA(j+1,2),HiC_resolution)' linspace(chromosome_PCA(j,3),chromosome_PCA(j+1,3),HiC_resolution)'];
-    end
-
-    %some sequence at end of chromosome is truncated because monomers are 1/5kbp
-    while genes_start_end_TPM(end,2) > chromosome_PCA_interpolated(end,1)
-        genes_start_end_TPM(end,:)=[];
-    end
-
-    genes_center_xyz = [];
-
-    %store coordinates for each base pair in each gene
-    for k = 1:1:size(genes_start_end_TPM,1)
-        genes_center_xyz = [genes_center_xyz; mean(chromosome_PCA_interpolated(genes_start_end_TPM(k,1):genes_start_end_TPM(k,2),2)) mean(chromosome_PCA_interpolated(genes_start_end_TPM(k,1):genes_start_end_TPM(k,2),3)) mean(chromosome_PCA_interpolated(genes_start_end_TPM(k,1):genes_start_end_TPM(k,2),4))];
-    end
-
-    %column 1 is PC1, the chromosome long axis
-    %cart2pol does x,y,z -> theta,rho,z. z is unchanged
-    [theta_TPM, rho_TPM, z_TPM] = cart2pol(genes_center_xyz(:,2),genes_center_xyz(:,3),genes_center_xyz(:,1));
-
-    %column 1 is PC1, the chromosome long axis
-    [theta_chromosome, rho_chromosome, z_chromosome] = cart2pol(chromosome_PCA(:,2),chromosome_PCA(:,3),chromosome_PCA(:,1));
-
-    temp_telomeres = [chromosome_PCA(1,:); chromosome_PCA(end,:)];
-
-    %rescale chromosome dimensions
-    all_expression_agg = [all_expression_agg; rho_TPM./max(rho_chromosome) z_TPM./max(abs(z_chromosome)) abs(genes_start_end_TPM(:,3)) ones(size(genes_start_end_TPM,1),1).*i];
-    %telomeres were defined as = 1% from the start/end of the chromosome which is on average ~ 100kbp.
-    telomeres = [telomeres; rho_chromosome(round(size(rho_chromosome,1)*0.01),:)./max(rho_chromosome) z_chromosome(round(size(rho_chromosome,1)*0.01),:)./max(abs(z_chromosome))];
-    telomeres = [telomeres; rho_chromosome(end-round(size(rho_chromosome,1)*0.01),:)./max(rho_chromosome) z_chromosome(end-round(size(rho_chromosome,1)*0.01),:)./max(abs(z_chromosome))];
-    i
-end
+[all_expression_agg, telomeres] = RNAseq_align_to_CSynth('symbiodinium_microadriaticum_chr%i_3D.xyz', 's_microadriaticum_chr%i_pilon_strandsum_TPM.bed', num_chroms, nBins);
 
 %without telomeres
 figure
-[N,c] = hist3(all_expression_agg(:,1:2),[bins bins]);
+[N,c] = hist3(all_expression_agg(:,1:2),[nBins nBins]);
 N=flipud(N);
 c{1}=fliplr(c{1});
 for i = 1:1:size(N,1)
@@ -97,7 +43,7 @@ pbaspect([1.3 1 1])
 
 %with telomeres
 figure
-[N,c] = hist3(all_expression_agg(:,1:2),[bins bins]);
+[N,c] = hist3(all_expression_agg(:,1:2),[nBins nBins]);
 N=flipud(N);
 c{1}=fliplr(c{1});
 for i = 1:1:size(N,1)
@@ -109,7 +55,7 @@ imagesc(Nbuffer)
 %r coordinate mapping: [0 1]->[bins 1]
 %z coordinate mapping: [-1 1]->[1 bins]
 hold on
-plot((telomeres(:,2).*((bins-1)/2))+(bins-1)/2+1,((-1.*telomeres(:,1))+1).*(bins-1)+1+buffer_length,'o', 'MarkerFaceColor', 'k','MarkerEdgeColor', 'k', 'MarkerSize', 4)
+plot((telomeres(:,2).*((nBins-1)/2))+(nBins-1)/2+1,((-1.*telomeres(:,1))+1).*(nBins-1)+1+buffer_length,'o', 'MarkerFaceColor', 'k','MarkerEdgeColor', 'k', 'MarkerSize', 4)
 hold off
 colormap(custom_cmap('blue'))
 cb = colorbar;
@@ -125,16 +71,78 @@ set(cb,'XTickLabel',{'Low','High',});
 %xlim([2.5 20.5])
 pbaspect([1.3 1 1])
 
-%symbiodinium kawagutii
+[all_expression_agg, telomeres] = RNAseq_align_to_CSynth('s_kawagutii_V3_HiC_scaffold_%i.xyz', 's_kawagutii_chr%i_strandsum_TPM.bed', num_chroms, nBins);
+
+%without telomeres
+figure
+[N,c] = hist3(all_expression_agg(:,1:2),[nBins nBins]);
+N=flipud(N);
+c{1}=fliplr(c{1});
+for i = 1:1:size(N,1)
+    N(:,i)=N(:,i)./c{1}'; %cylindrical jacobian correction
+end
+buffer_length=7;
+Nbuffer = cat(1,zeros(buffer_length,20),N); %add a buffer of zeros to include more of chromosome periphery in plot
+imagesc(Nbuffer)
+%r coordinate mapping: [0 1]->[bins 1]
+%z coordinate mapping: [-1 1]->[1 bins]
+% hold on
+% plot((telomeres(:,2).*((bins-1)/2))+(bins-1)/2+1,((-1.*telomeres(:,1))+1).*(bins-1)+1+buffer_length,'o', 'MarkerFaceColor', 'k','MarkerEdgeColor', 'k', 'MarkerSize', 4)
+% hold off
+colormap(custom_cmap('green'))
+cb = colorbar;
+cb.Label.String = 'Normalized Gene Density';
+cb.FontSize = 16;
+set(gca,'XTick',[])
+set(gca,'YTick',[])
+xlabel('cylindrical axis','FontSize', 24)
+ylabel('radial axis','FontSize', 24)
+t=get(cb,'Limits');
+set(cb,'Ticks',[t(1),t(2)])
+set(cb,'XTickLabel',{'Low','High',});
+%xlim([2.5 20.5])
+pbaspect([1.3 1 1])
+
+%with telomeres
+figure
+[N,c] = hist3(all_expression_agg(:,1:2),[nBins nBins]);
+N=flipud(N);
+c{1}=fliplr(c{1});
+for i = 1:1:size(N,1)
+    N(:,i)=N(:,i)./c{1}'; %cylindrical jacobian correction
+end
+buffer_length=7;
+Nbuffer = cat(1,zeros(buffer_length,20),N); %add a buffer of zeros to include more of chromosome periphery in plot
+imagesc(Nbuffer)
+%r coordinate mapping: [0 1]->[bins 1]
+%z coordinate mapping: [-1 1]->[1 bins]
+hold on
+plot((telomeres(:,2).*((nBins-1)/2))+(nBins-1)/2+1,((-1.*telomeres(:,1))+1).*(nBins-1)+1+buffer_length,'o', 'MarkerFaceColor', 'k','MarkerEdgeColor', 'k', 'MarkerSize', 4)
+hold off
+colormap(custom_cmap('green'))
+cb = colorbar;
+cb.Label.String = 'Normalized Gene Density';
+cb.FontSize = 16;
+set(gca,'XTick',[])
+set(gca,'YTick',[])
+xlabel('cylindrical axis','FontSize', 24)
+ylabel('radial axis','FontSize', 24)
+t=get(cb,'Limits');
+set(cb,'Ticks',[t(1),t(2)])
+set(cb,'XTickLabel',{'Low','High',});
+%xlim([2.5 20.5])
+pbaspect([1.3 1 1])
+
+
+function [all_expression_agg, telomeres] = RNAseq_align_to_CSynth(chromosome_file,RNAseq_file, num_chroms, bins)
 i=0;
 all_expression_agg = [];
-
 telomeres = [];
 
 for i=1:num_chroms
 
-    chromosome = importdata(sprintf('s_kawagutii_V3_HiC_scaffold_%i.xyz',i));
-    RNAseq = importdata(sprintf('s_kawagutii_chr%i_strandsum_TPM.bed',i));
+    chromosome = importdata(sprintf(chromosome_file,i));
+    RNAseq = importdata(sprintf(RNAseq_file,i));
 
     chromosome(:,2) = chromosome(:,2) - mean(chromosome(:,2));
     chromosome(:,3) = chromosome(:,3) - mean(chromosome(:,3));
@@ -181,66 +189,7 @@ for i=1:num_chroms
     telomeres = [telomeres; rho_chromosome(end-round(size(rho_chromosome,1)*0.01),:)./max(rho_chromosome) z_chromosome(end-round(size(rho_chromosome,1)*0.01),:)./max(abs(z_chromosome))];
     i
 end
-
-%without telomeres
-figure
-[N,c] = hist3(all_expression_agg(:,1:2),[bins bins]);
-N=flipud(N);
-c{1}=fliplr(c{1});
-for i = 1:1:size(N,1)
-    N(:,i)=N(:,i)./c{1}'; %cylindrical jacobian correction
 end
-buffer_length=7;
-Nbuffer = cat(1,zeros(buffer_length,20),N); %add a buffer of zeros to include more of chromosome periphery in plot
-imagesc(Nbuffer)
-%r coordinate mapping: [0 1]->[bins 1]
-%z coordinate mapping: [-1 1]->[1 bins]
-% hold on
-% plot((telomeres(:,2).*((bins-1)/2))+(bins-1)/2+1,((-1.*telomeres(:,1))+1).*(bins-1)+1+buffer_length,'o', 'MarkerFaceColor', 'k','MarkerEdgeColor', 'k', 'MarkerSize', 4)
-% hold off
-colormap(custom_cmap('green'))
-cb = colorbar;
-cb.Label.String = 'Normalized Gene Density';
-cb.FontSize = 16;
-set(gca,'XTick',[])
-set(gca,'YTick',[])
-xlabel('cylindrical axis','FontSize', 24)
-ylabel('radial axis','FontSize', 24)
-t=get(cb,'Limits');
-set(cb,'Ticks',[t(1),t(2)])
-set(cb,'XTickLabel',{'Low','High',});
-%xlim([2.5 20.5])
-pbaspect([1.3 1 1])
-
-%with telomeres
-figure
-[N,c] = hist3(all_expression_agg(:,1:2),[bins bins]);
-N=flipud(N);
-c{1}=fliplr(c{1});
-for i = 1:1:size(N,1)
-    N(:,i)=N(:,i)./c{1}'; %cylindrical jacobian correction
-end
-buffer_length=7;
-Nbuffer = cat(1,zeros(buffer_length,20),N); %add a buffer of zeros to include more of chromosome periphery in plot
-imagesc(Nbuffer)
-%r coordinate mapping: [0 1]->[bins 1]
-%z coordinate mapping: [-1 1]->[1 bins]
-hold on
-plot((telomeres(:,2).*((bins-1)/2))+(bins-1)/2+1,((-1.*telomeres(:,1))+1).*(bins-1)+1+buffer_length,'o', 'MarkerFaceColor', 'k','MarkerEdgeColor', 'k', 'MarkerSize', 4)
-hold off
-colormap(custom_cmap('green'))
-cb = colorbar;
-cb.Label.String = 'Normalized Gene Density';
-cb.FontSize = 16;
-set(gca,'XTick',[])
-set(gca,'YTick',[])
-xlabel('cylindrical axis','FontSize', 24)
-ylabel('radial axis','FontSize', 24)
-t=get(cb,'Limits');
-set(cb,'Ticks',[t(1),t(2)])
-set(cb,'XTickLabel',{'Low','High',});
-%xlim([2.5 20.5])
-pbaspect([1.3 1 1])
 
 %for green colormap
 %https://github.com/JonathanRob/GeneSetAnalysisMatlab/blob/master/custom_cmap.m
@@ -359,5 +308,3 @@ else
     end
 end
 end
-
-

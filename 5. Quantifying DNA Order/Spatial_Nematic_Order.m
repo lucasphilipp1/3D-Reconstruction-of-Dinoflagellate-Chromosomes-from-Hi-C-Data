@@ -1,221 +1,27 @@
+clc; clear;
 %Fig 4C in paper
 %nematic order parameter calculation from chromosome structures
 %following the methods of: https://www.nature.com/articles/s41467-023-39908-1
 
-num_chroms = 4;
-nBins = 4; %nBins x nBins x nBins = number of voxels, if error message try reducing nBins
+%bins are cubes with edge length = chromosome long axis length / nBins
+%analyze largest 75 scaffolds only as these are most likely completely assembled chromosomes
+all_alignment_4bins = NOP(4, 75); %nBins, num_chroms
+all_alignment_6bins = NOP(6, 75); %nBins, num_chroms
 
-%save order parameter values for each voxel 
-all_alignment_4bins = zeros(num_chroms,6);
-all_alignment_6bins = zeros(num_chroms,6);
+all_alignment = [all_alignment_4bins(:,1) all_alignment_6bins(:,1) all_alignment_4bins(:,2) all_alignment_6bins(:,2) all_alignment_4bins(:,3) all_alignment_6bins(:,3) all_alignment_4bins(:,4) all_alignment_6bins(:,4) all_alignment_4bins(:,6) all_alignment_6bins(:,6) all_alignment_4bins(:,5) all_alignment_6bins(:,5)];
 
-for k = 1:1:6 %import data
-    for i = 1:1:num_chroms
-        if k == 1
-            chromosome = importdata(sprintf('cholesteric_monomer_locations_16_discs_%i.txt',i));
-            chromosome = chromosome.*100; %chromosome needs to be much larger than unit volume, as the orientation vectors are unit length
-            chromosome = [(1:1:size(chromosome,1))' chromosome];
-        elseif k == 2
-            chromosome = importdata(sprintf('cholesteric_monomer_locations_27_discs_%i.txt',i));
-            chromosome = chromosome.*100; %chromosome needs to be much larger than unit volume, as the orientation vectors are unit length
-            chromosome = [(1:1:size(chromosome,1))' chromosome];
-        elseif k == 3
-            chromosome = importdata(sprintf('cholesteric_monomer_locations_54_discs_%i.txt',i));
-            chromosome = chromosome.*100; %chromosome needs to be much larger than unit volume, as the orientation vectors are unit length
-            chromosome = [(1:1:size(chromosome,1))' chromosome];
-        elseif k == 4
-            equilibrium_struct=tdfread(sprintf('equilibrium%i.dat',i));
-            equilibrium_names = fieldnames(equilibrium_struct);
-            steps_equil = size(getfield(equilibrium_struct,equilibrium_names{1}),1);
-            equilibrium = zeros(steps_equil,3);
-            chromosome = [(1:1:steps_equil)' getfield(equilibrium_struct,equilibrium_names{1})];
-        elseif k == 5
-            chromosome = importdata(sprintf('symbiodinium_microadriaticum_chr%i_3D.xyz',i));
-        elseif k == 6
-            chromosome = importdata(sprintf('s_kawagutii_V3_HiC_scaffold_%i.xyz',i));
-        end
+figure
+violin(all_alignment,'facecolor',[0 0 0; 0 0 0; 0 0 0; 0 0 0; 0 0 0; 0 0 0; 0.9290 0.6940 0.1250; 0.9290 0.6940 0.1250; 0.4660 0.6740 0.1880; 0.4660 0.6740 0.1880; 0 0.4470 0.7410; 0 0.4470 0.7410],'medc',[]);
+xticks([1 2 3 4 5 6 7 8 9 10 11 12])
+xticklabels({'CLC (16 discs)','CLC (16 discs)','CLC (27 discs)','CLC (27 discs)','CLC (54 discs)','CLC (54 discs)','Equilibrium Globule','Equilibrium Globule','\it S. kawagutii','\it S. kawagutii','\it S. microadriaticum','\it S. microadriaticum'})
+xtickangle(70)
+ylabel('Local Nematic Order Parameter','FontSize', 18)
+ylim([0 1])
 
-        chromosome(:,2) = chromosome(:,2) - mean(chromosome(:,2));
-        chromosome(:,3) = chromosome(:,3) - mean(chromosome(:,3));
-        chromosome(:,4) = chromosome(:,4) - mean(chromosome(:,4));
-
-        [coeff,score] = pca(chromosome(:,2:4));
-        chromosome_PCA = score;
-
-        monomer_index=1:1:size(chromosome_PCA,1);
-        query_index=1:0.01:size(chromosome_PCA,1);
-        % spline interpolation for each spatial dimension
-        % interpolate between monomers for a more "natural" looking chromosome
-        % no straight lines
-        % also used to calculate tangent vectors to DNA
-        xx = interp1(monomer_index,chromosome_PCA(:,1),query_index,'spline');
-        yy = interp1(monomer_index,chromosome_PCA(:,2),query_index,'spline');
-        zz = interp1(monomer_index,chromosome_PCA(:,3),query_index,'spline');
-        % %Visualize the result
-        % figure
-        % scatter3(chromosome_PCA(:,1),chromosome_PCA(:,2),chromosome_PCA(:,3))
-        % hold on
-        % plot3(xx,yy,zz)
-
-        %calculate tangent vectors
-        bond_vectors = [];
-
-        for j = 2:1:size(chromosome_PCA,1)-1
-            left_point_x=xx(find(query_index==monomer_index(j))-1);
-            right_point_x=xx(find(query_index==monomer_index(j))+1);
-
-            left_point_y=yy(find(query_index==monomer_index(j))-1);
-            right_point_y=yy(find(query_index==monomer_index(j))+1);
-
-            left_point_z=zz(find(query_index==monomer_index(j))-1);
-            right_point_z=zz(find(query_index==monomer_index(j))+1);
-
-            tx=right_point_x-left_point_x;
-            ty=right_point_y-left_point_y;
-            tz=right_point_z-left_point_z;
-
-            bond_vectors = [bond_vectors; [tx./norm([tx ty tz]) ty./norm([tx ty tz]) tz./norm([tx ty tz])]];
-        end
-
-        bond_vectors = [[0 0 0]; bond_vectors; [0 0 0]];
-
-        %caculate Q-tensor
-        Qtensor = [];
-        for j = 1:1:size(bond_vectors,1)
-            Qxx = (3.*bond_vectors(j,1).*bond_vectors(j,1)-1)./2;
-            Qxy = (3.*bond_vectors(j,1).*bond_vectors(j,2))./2;
-            Qxz = (3.*bond_vectors(j,1).*bond_vectors(j,3))./2;
-
-            Qyx = (3.*bond_vectors(j,1).*bond_vectors(j,2))./2;
-            Qyy = (3.*bond_vectors(j,2).*bond_vectors(j,2)-1)./2;
-            Qyz = (3.*bond_vectors(j,2).*bond_vectors(j,3))./2;
-
-            Qzx = (3.*bond_vectors(j,1).*bond_vectors(j,3))./2;
-            Qzy = (3.*bond_vectors(j,2).*bond_vectors(j,3))./2;
-            Qzz = (3.*bond_vectors(j,3).*bond_vectors(j,3)-1)./2;
-
-            Qtensor(:,:,j)=[[Qxx Qxy Qxz]; [Qyx Qyy Qyz]; [Qzx Qzy Qzz]];
-        end
-
-        %% Compute local alignment
-        % divide monomers into 3D bins
-        chrom_xbins = linspace(min(chromosome_PCA(:,1)),max(chromosome_PCA(:,1))*1,nBins+1); %bins are cubes with edge length = chromosome long axis length / nBins
-        chrom_ybins = linspace(min(chromosome_PCA(:,1)),max(chromosome_PCA(:,1))*1,nBins+1);
-        chrom_zbins = linspace(min(chromosome_PCA(:,1)),max(chromosome_PCA(:,1))*1,nBins+1);
-
-        %Fig 2C chromosome and inset in paper
-        % figure
-        % hold on
-        % plot3(xx,yy,zz,'k',LineWidth=5)
-        % quiver3(chromosome_PCA(:,1)-bond_vectors(:,1),chromosome_PCA(:,2)-bond_vectors(:,2),chromosome_PCA(:,3)-bond_vectors(:,3),bond_vectors(:,1),bond_vectors(:,2),bond_vectors(:,3),1.25,'Linewidth',2)
-        % axis equal
-        % xlim([chrom_xbins(round(end/2)) chrom_xbins(round(end/2)+1)])
-        % ylim([chrom_ybins(round(end/2)) chrom_ybins(round(end/2)+1)])
-        % zlim([chrom_zbins(round(end/2)) chrom_zbins(round(end/2)+1)])
-        % view(45,22.5)
-        % set(gca,'XTick',[])
-        % set(gca,'YTick',[])
-        % set(gca,'ZTick',[])
-        % hold off
-        % 
-        % bounding_box = ...
-        % [chrom_xbins(round(end/2)) chrom_ybins(round(end/2)) chrom_zbins(round(end/2));
-        % chrom_xbins(round(end/2)+1) chrom_ybins(round(end/2)) chrom_zbins(round(end/2));
-        % chrom_xbins(round(end/2)+1) chrom_ybins(round(end/2)+1) chrom_zbins(round(end/2));
-        % chrom_xbins(round(end/2)) chrom_ybins(round(end/2)+1) chrom_zbins(round(end/2));
-        % chrom_xbins(round(end/2)) chrom_ybins(round(end/2)) chrom_zbins(round(end/2)+1);
-        % chrom_xbins(round(end/2)+1) chrom_ybins(round(end/2)) chrom_zbins(round(end/2)+1);
-        % chrom_xbins(round(end/2)+1) chrom_ybins(round(end/2)+1) chrom_zbins(round(end/2)+1);
-        % chrom_xbins(round(end/2)) chrom_ybins(round(end/2)+1) chrom_zbins(round(end/2)+1)];
-        % idx = [4 8 5 1 4; 1 5 6 2 1; 2 6 7 3 2; 3 7 8 4 3; 5 8 7 6 5; 1 4 3 2 1]';
-        % 
-        % xc4 = bounding_box(:,1);
-        % yc4 = bounding_box(:,2);
-        % zc4 = bounding_box(:,3);
-
-        % figure
-        % hold on
-        % plot3(xx,yy,zz,LineWidth=1.2)
-        % quiver3(chromosome_PCA(1:8:end,1)-bond_vectors(1:8:end,1),chromosome_PCA(1:8:end,2)-bond_vectors(1:8:end,2),chromosome_PCA(1:8:end,3)-bond_vectors(1:8:end,3),bond_vectors(1:8:end,1),bond_vectors(1:8:end,2),bond_vectors(1:8:end,3),1.5,'Linewidth',1)
-        % patch(xc4(idx),yc4(idx),zc4(idx), 'r', 'facealpha', 0.2);
-        % axis equal
-        % view(45,22.5)
-        % set(gca,'XTick',[])
-        % set(gca,'YTick',[])
-        % set(gca,'ZTick',[])
-        % hold off
-
-        %code adapted from: https://www.mathworks.com/matlabcentral/answers/802966-binning-a-3d-scatter-plot#answer_676356
-        % xyzBinNum is an nx3 matrix containing
-        % the bin ID for n values in xyz for the [x,y,z] axes.
-        chrom_xyzBinNum = [...
-            discretize(chromosome_PCA(:,1),chrom_xbins), ...
-            discretize(chromosome_PCA(:,2),chrom_ybins), ...
-            discretize(chromosome_PCA(:,3),chrom_zbins), ...
-            ];
-        % bin3D is a mx3 matrix of m unique 3D bins that appear
-        % in xyzBinNum, sorted.  binNum is a nx1 vector of bin
-        % numbers identifying the bin for each xyz point. For example,
-        % b=xyz(j,:) belongs to bins3D(b,:).
-        [chrom_bins3D, ~, chrom_binNum] = unique(chrom_xyzBinNum, 'rows');
-
-        %row corresponds to bin ID
-        alignment = [];
-        for j = 1:1:max(chrom_binNum)
-            ind=find(chrom_binNum==j);
-            eigenvalues=eig(mean(Qtensor(:,:,ind),3)); %compute eigenvalues of Q-tensor for each bin
-            alignment=[alignment; 2*(eigenvalues(end)-eigenvalues(end-1))/3]; %compute nematic order parameter for each bin
-        end
-
-        % Compute bin centers
-        chrom_xbinCnt = chrom_xbins(2:end)-diff(chrom_xbins)/2;
-        chrom_ybinCnt = chrom_ybins(2:end)-diff(chrom_ybins)/2;
-        chrom_zbinCnt = chrom_zbins(2:end)-diff(chrom_zbins)/2;
-
-        %remove bins with low numbers of monomers
-        min_monomers_per_voxel = 15;
-        index_remove=[];
-        for j = 1:1:max(chrom_binNum)
-            if size(find(chrom_binNum==j),1) < min_monomers_per_voxel
-                index_remove = [index_remove; j];
-            end
-        end
-
-        %visualize how many monomers per voxel
-        %hist(chrom_binNum,max(chrom_binNum))
-
-        chrom_bins3D(index_remove,:) = [];
-        alignment(index_remove,:) = [];
-
-        % visualize nematic order for individual chromosomes
-        % fig = figure();
-        % %% Plot scatter3
-        % scatter3(...
-        %     chrom_xbinCnt(chrom_bins3D(:,1)), ...
-        %     chrom_ybinCnt(chrom_bins3D(:,2)), ...
-        %     chrom_zbinCnt(chrom_bins3D(:,3)), ...
-        %     alignment*1000, ...
-        %     alignment, 'filled', ...
-        %     'MarkerFaceAlpha',.6)
-        % axis equal
-        % box on
-        % xlabel('x')
-        % ylabel('y')
-        % zlabel('z')
-        % cb = colorbar
-        % cb.Label.String = 'Orientational Alignment';
-        % cb.FontSize = 16;
-
-        all_alignment_4bins(i,k)=mean(alignment);
-
-        i
-    end
-end
-
-%repeat of above code but for a different bin size
-nBins = 6; %nBins x nBins x nBins = number of voxels %if error message try reducing nBins
-
+function all_alignment = NOP(nBins, num_chroms) %if error message try reducing nBins
+all_alignment = zeros(num_chroms,6);
 for k = 1:1:6
+    k
     for i = 1:1:num_chroms
         if k == 1
             chromosome = importdata(sprintf('cholesteric_monomer_locations_16_discs_%i.txt',i));
@@ -392,21 +198,12 @@ for k = 1:1:6
         % cb.Label.String = 'Orientational Alignment';
         % cb.FontSize = 16;
 
-        all_alignment_6bins(i,k)=mean(alignment);
+        all_alignment(i,k)=mean(alignment);
 
         i
     end
 end
-
-all_alignment = [all_alignment_4bins(:,1) all_alignment_6bins(:,1) all_alignment_4bins(:,2) all_alignment_6bins(:,2) all_alignment_4bins(:,3) all_alignment_6bins(:,3) all_alignment_4bins(:,4) all_alignment_6bins(:,4) all_alignment_4bins(:,6) all_alignment_6bins(:,6) all_alignment_4bins(:,5) all_alignment_6bins(:,5)];
-
-figure
-violin(all_alignment,'facecolor',[0 0 0; 0 0 0; 0 0 0; 0 0 0; 0 0 0; 0 0 0; 0.9290 0.6940 0.1250; 0.9290 0.6940 0.1250; 0.4660 0.6740 0.1880; 0.4660 0.6740 0.1880; 0 0.4470 0.7410; 0 0.4470 0.7410],'medc',[]);
-xticks([1 2 3 4 5 6 7 8 9 10 11 12])
-xticklabels({'CLC (16 discs)','CLC (16 discs)','CLC (27 discs)','CLC (27 discs)','CLC (54 discs)','CLC (54 discs)','Equilibrium Globule','Equilibrium Globule','\it S. kawagutii','\it S. kawagutii','\it S. microadriaticum','\it S. microadriaticum'})
-xtickangle(70)
-ylabel('Local Nematic Order Parameter','FontSize', 18)
-ylim([0 1])
+end
 
 %__________________________________________________________________________
 % violin.m - Simple violin plot using matlab default kernel density estimation
@@ -439,7 +236,7 @@ ylim([0 1])
 % edgecolor: LineColor. (default 'k'); Specify abbrev. (e.g. 'k' for black); set either [],'' or 'none' if the mean should not be plotted
 % facealpha: Alpha value (transparency). default: 0.5
 % mc:        Color of the bars indicating the mean. (default 'k'); set either [],'' or 'none' if the mean should not be plotted
-% medc:      Color of the bars indicating the median. (default 'r'); set either [],'' or 'none' if the mean should not be plotted
+% medc:      Color of the bars indicating the median. (default 'r'); set either [],'' or 'none' if the median should not be plotted
 % bw:        Kernel bandwidth. (default []); prescribe if wanted as follows:
 %            a) if bw is a single number, bw will be applied to all
 %            columns or cells

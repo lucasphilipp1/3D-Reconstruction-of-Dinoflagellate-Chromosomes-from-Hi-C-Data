@@ -31,7 +31,7 @@ Description: Use to assess accuracy of CSynth conformations and to optomize CSyn
 Description: Used to compute contact probability curves from fractal and equilibrium globule as a positive control to validate the code later applied to CLC model chromosomes.
 ### sim_HiC_map_CSynth.m
 Description: Used to simulate IMR90 chr21 Hi-C contact map from CSynth structure. This contact map is compared with empirical Hi-C contact for an assessment of CSynth accuracy. See: Fig S3 A & G in paper.
-## 3. “Simulating CLCs”:
+## 3. Simulating CLCs:
 ### iter_Cholesteric_HiC.m
 Description: Generate model cholesteric liquid crystal (CLC) chromosomes with extra chromosomal loops. Many adjustable parameters including: loop length, number of discs, cholesteric pitch, and more. Compute single cell and population-level HiC matrices and contact probability curves. See Fig. 1A, 2A, S1, S2, S7 in the paper.
 
@@ -43,10 +43,10 @@ Description: Function used to generate extrachromosomal loops. Random walks are 
 Description: Function used to generate extrachromosomal loops. Combines random walks in each dimension to compute a 3D random walk.
 ### helix_w_crumpled_domains.m
 Description: Used to generate crumpled domains positioned along a helical backbone. A simulated Hi-C map is generated showing TADs, where each TAD corresponds to a crumpled domain.
-## 4. “TADs”:
+## 4. TADs:
 ### TAD_analysis.m
 Description: Used to calculate average level and strand of transcription near TAD boundary. See: Fig 3C in paper for histograms of TAD asphericity. See: Fig S11 in paper for convergent transcription at TAD boundaries.
-## 5. “Quantifying DNA Order”:
+## 5. Quantifying DNA Order:
 ### plot_P(s)_dinoflagellate.py
 Description: Used to compute contact probability curves from dinoflagellate Hi-C data. See: Fig 2B, C, & D in the paper.
 ### Orientation_Order_Parameter.py
@@ -54,7 +54,7 @@ Description: Used to compute the average correlation between two tangent vectors
 ### Spatial_Nematic_Order.m
 Description: Used to calculate alignment (nematic order parameter) of tangent vectors to DNA that are in close spatial proximity. See: Fig 4C in paper.
 <img width="1496" height="855" alt="Screenshot 2025-08-26 at 12 06 05 PM" src="https://github.com/user-attachments/assets/ae95e3fe-e72b-488b-991e-818171e471c2" />
-## 6. “RNAseq”:
+## 6. RNAseq:
 ### Fig5_A_CLC_Expression.m
 Description: code to create 3D visual model of surface-localized gene expression on CLC chromosomes using a divergent strand-specific expression colormap. See: Fig 5A in paper.
 ### colour_TPM_using_bed.js

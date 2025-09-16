@@ -61,6 +61,7 @@ Description: code to create 3D visual model of surface-localized gene expression
 Description: Used to load divergent colourmap for visualizing strand-specific transcription levels in 3D space using CSynth GUI. Drag and drop this file into CSynth browswer window before or after loading Hi-C contact data, as in Fig 5B.
 
 <img width="1436" height="1115" alt="Screenshot 2025-08-26 at 12 01 19 PM" src="https://github.com/user-attachments/assets/52933def-ddbc-45c3-ad8d-6a2e1849a528" />
+
 ### RNAseq_align_to_CSynth_cylindrical_axis.m
 Description: Visualization of spatial variation in transcription levels determined by mapping RNA-seq data to 3D position on CSynth structure. An aggregate analysis is done where chromosomes are isotropically scaled to the same size, viewed using cylindrical coordinates to show the average transcription level vs distance to centre/surface of the chromosome. See: Fig 5D & S10 in paper.
 ### chr_coverage_at_various_TPM.m

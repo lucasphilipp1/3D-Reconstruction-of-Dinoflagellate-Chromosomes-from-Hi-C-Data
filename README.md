@@ -39,7 +39,6 @@ Description: Generate model cholesteric liquid crystal (CLC) chromosomes with ex
 
 ### each_TAD_is_a_group_of_CLC_discs.m
 Description: In CLCs, conformational heterogeneity alone does not produce topological associating domains (TADs). However, TADs can arise from the combination of conformational heterogeneity and fixed primary sequence boundaries. Specifically, we considered a version of the CLC model where across structures the primary sequence order of discs were shuffled along the CLC’s long axis between fixed primary sequence boundaries, each delineating a separate TAD.
-
 <img width="1319" height="478" alt="CLC_permute_disc_order" src="https://github.com/user-attachments/assets/a82e1a54-f405-41ee-9ccf-d194bfa728c0" />
 
 ### constrained_RW_1D.m

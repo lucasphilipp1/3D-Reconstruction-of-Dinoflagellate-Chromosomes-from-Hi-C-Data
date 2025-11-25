@@ -37,6 +37,11 @@ Description: Generate model cholesteric liquid crystal (CLC) chromosomes with ex
 
 <img width="1118" alt="figure_S6" src="https://github.com/user-attachments/assets/ff609024-7e67-457a-a055-ea41388e2521" />
 
+### each_TAD_is_a_group_of_CLC_discs.m
+Description: In CLCs, conformational heterogeneity alone does not produce topological associating domains (TADs). However, TADs can arise from the combination of conformational heterogeneity and fixed primary sequence boundaries. Specifically, we considered a version of the CLC model where across structures the primary sequence order of discs were shuffled along the CLC’s long axis between fixed primary sequence boundaries, each delineating a separate TAD.
+
+<img width="1319" height="478" alt="CLC_permute_disc_order" src="https://github.com/user-attachments/assets/a82e1a54-f405-41ee-9ccf-d194bfa728c0" />
+
 ### constrained_RW_1D.m
 Description: Function used to generate extrachromosomal loops. Random walks are generated separately for each of the spatial three dimensions.
 ### constrained_self_avoiding_RW_3D.m
@@ -64,8 +69,6 @@ Description: Used to load divergent colourmap for visualizing strand-specific tr
 
 ### RNAseq_align_to_CSynth_cylindrical_axis.m
 Description: Visualization of spatial variation in transcription levels determined by mapping RNA-seq data to 3D position on CSynth structure. An aggregate analysis is done where chromosomes are isotropically scaled to the same size, viewed using cylindrical coordinates to show the average transcription level vs distance to centre/surface of the chromosome. See: Fig 5D & S10 in paper.
-### chr_coverage_at_various_TPM.m
-Description: Cumulative chromosomal coverage of active gene sequence with TPM > x. This coverage is compared to the chromosome surface area to volume ratio. See Fig S9 in paper.
 
 # Data Sources:
 ### Hi-C data pre-processing:

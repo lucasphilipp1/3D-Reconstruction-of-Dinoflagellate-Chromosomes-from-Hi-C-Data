@@ -10,7 +10,7 @@
 %s_agg_original = s_agg;
 %Ps_agg_original = Ps_agg;
 
-num_chroms = 100; %number of simulated chromosomes
+num_chroms = 350-190-48-106; %number of simulated chromosomes
 resolution = 5000; %number of base pairs per monomer
 
 %contact probability curve data
@@ -18,7 +18,7 @@ s_avg = cell(1, num_chroms); %cell array for genomic separation
 Ps_avg = cell(1, num_chroms); %cell array for contact probability
 
 total_chromosome_length = 4000; %number of monomers
-P_agg = zeros(total_chromosome_length); %collect Hi-C contact maps for different chromosomes
+%P_agg = zeros(total_chromosome_length); %collect Hi-C contact maps for different chromosomes
 
 disc_diameter = []; %collect disc_diameter for different chromosomes
 
@@ -640,13 +640,33 @@ for d = 1:1:num_chroms
     s_avg{d} = s';
     Ps_avg{d} = Ps';
 
+    %old way of aligning chromosomes, start of first disc is always aligned
+    %%%
     %truncate end of chromosomes that are slightly longer, portions of
     %discs are not deleted
-    if size(P,1)<total_chromosome_length
-        P=padarray(P,[total_chromosome_length-size(P,1) total_chromosome_length-size(P,1)],0,'post');
+    % if size(P,1)<total_chromosome_length
+    %     P=padarray(P,[total_chromosome_length-size(P,1) total_chromosome_length-size(P,1)],0,'post');
+    % end
+
+    %P_agg = P_agg+P(1:total_chromosome_length,1:total_chromosome_length); %single cell contact maps are superimposed, then averaged
+    %%%
+
+    %new way of aligning chromosomes, if matrix is larger/shorter a random
+    %crop/pad is applied to the left side, the crop/pad on the right side
+    %is determined by the target chromosome size
+    %%%
+    size_diff = size(P,1) - total_chromosome_length;
+    r = randi(abs(size_diff)+1)-1;
+    if size_diff<0
+        P=padarray(P,[r r],0,'pre');
+        P=padarray(P,[abs(size_diff)-r abs(size_diff)-r],0,'post');
     end
 
-    P_agg = P_agg+P(1:total_chromosome_length,1:total_chromosome_length); %single cell contact maps are superimposed, then averaged
+    if size_diff>0
+        P=P(r+1:size(P,1)-(size_diff-r),r+1:size(P,1)-(size_diff-r));
+    end
+
+    P_agg = P_agg + P;
 end
 
 P_agg=P_agg./num_chroms;
@@ -752,16 +772,17 @@ count = 0;
 for i=1:1:round(total_chromosome_length*0.95)
     for j=i:1:round(total_chromosome_length*0.95)
         count = count + 1;
-        %PCSynth(count,1)=i;
-        %PCSynth(count,2)=j;
-        PCSynth(count,1)=i*resolution;
-        PCSynth(count,2)=j*resolution;
+        PCSynth(count,1)=i;
+        PCSynth(count,2)=j;
+        %PCSynth(count,1)=i*resolution;
+        %PCSynth(count,2)=j*resolution;
         PCSynth(count,3)=P_agg(i,j);
     end
 end
 
 PCSynth(:,3) = round(PCSynth(:,3),3,"significant");
 %writematrix(PCSynth,strcat('cholesteric_short_frac_loops_0.1_CSynth_D4_aggregated_num_chroms_',num2str(num_chroms),'.txt'),'Delimiter','tab');
+writematrix(PCSynth,strcat('CLC_permuted_fanc.txt'),'Delimiter','tab');
 
 %calculate error bar for contact proability curve
 %vertically concatenate single cell contact probability curves, pad with NaNs
@@ -799,6 +820,8 @@ s_avg = cellfun(@transpose,s_avg,'UniformOutput',false);
 % xlim([10^4,10^7]);
 % ylim([10^-5,10^0]);
 % grid on
+
+writematrix(P_agg, 'CLC_permuted_contact_map.txt', 'Delimiter', 'tab')
 
 function sum = nat_sum(x)
 sum=0;

@@ -6,19 +6,22 @@ clear
 %
 %requires: statistics and machine learning toolbox
 
-num_chroms = 1; %number of simulated chromosomes
+num_chroms = 100; %number of simulated chromosomes
 resolution = 5000; %number of base pairs per monomer
 
 %contact probability curve data
 s_avg = cell(1, num_chroms); %cell array for genomic separation
 Ps_avg = cell(1, num_chroms); %cell array for contact probability
 
-total_chromosome_length = 4000; %number of monomers
+total_chromosome_length = 3000; %number of monomers
 P_agg = zeros(total_chromosome_length); %collect Hi-C contact maps for different chromosomes
 
 disc_diameter = []; %collect disc_diameter for different chromosomes
 mon_per_disc_agg = []; %collect number of monomers per disc for different chromosomes
 mean_loop_length_agg = []; %collect mean loop length for different chromosomes
+
+all_intra_disc_loop_lengths = [];
+all_inter_disc_loop_lengths = [];
 
 for d = 1:1:num_chroms
     d
@@ -136,7 +139,6 @@ for d = 1:1:num_chroms
             intra_disc_loop_potential_starts_ind = [intra_disc_loop_potential_starts_ind; size(chromosome,1) + flip_these];
 
             chromosome = [chromosome; [rotcoord(:,1), rotcoord(:,2), z.*ones(size(xEllipse))]]; %append positions of DNA fibres for new cholesteric disc
-
             discs{end+1} = [rotcoord(:,1), rotcoord(:,2), z.*ones(size(xEllipse))];
 
             lin_vec_x = [lin_vec_x; xy_spacing*cosd((i-1)*dtheta_layer).*ones(size(xEllipse))]; %append orientation of DNA fibres for new cholesteric disc
@@ -273,6 +275,7 @@ for d = 1:1:num_chroms
     % plot3(chromosome(intra_disc_loop_potential_starts_ind,1),chromosome(intra_disc_loop_potential_starts_ind,2),chromosome(intra_disc_loop_potential_starts_ind,3),'o','MarkerFaceColor','r')
     % xlim([min(chromosome(:,1))*2 max(chromosome(:,1))*2])
     % ylim([min(chromosome(:,2))*2 max(chromosome(:,2))*2])
+    % zlim([min(chromosome(:,3))*2 max(chromosome(:,3))*2])
     % set(gca,'XTick',[], 'YTick', [], 'ZTick', [])
     % for i = 0:0.05:1
     %     zlim([max(chromosome(:,3))*(i-0.03) max(chromosome(:,3))*(i+0.03)])
@@ -282,7 +285,7 @@ for d = 1:1:num_chroms
     % hold off
 
     %INTER DISC LOOPS
-    idx=find(diff(chromosome(:,3))>0); %new disc starts when z coordinate changes
+    idx=find(abs(diff(chromosome(:,3)))>0); %new disc starts when z coordinate changes
     num_inter_disc_loops = size(idx,1);
     mean_loop_length = wanted_total_inter_disc_loop_length/num_inter_disc_loops;
     mean_loop_length_agg = [mean_loop_length_agg; mean_loop_length];
@@ -422,6 +425,8 @@ for d = 1:1:num_chroms
         sum_inter_disc_loops = sum_inter_disc_loops+size(inter_disc_loops{i},1);
     end
 
+    all_inter_disc_loop_lengths = [all_inter_disc_loop_lengths; inter_disc_loop_lengths'];
+
     % insert inter-disc loops into proper primary sequence locations in 3D model
     chromosome_w_inter_disc_loops = insert_loops(num_inter_disc_loops, sum_inter_disc_loops, chromosome, inter_disc_loops, idx);
 
@@ -437,7 +442,7 @@ for d = 1:1:num_chroms
         intra_disc_loop_potential_starts_ind(i)=idx3;
     end
 
-    % visualize that intra-disc loop coordinates were properly mapped
+    %visualize that intra-disc loop coordinates were properly mapped
     % figure
     % hold on
     % plot3(chromosome_w_inter_disc_loops(:,1),chromosome_w_inter_disc_loops(:,2),chromosome_w_inter_disc_loops(:,3),'o','MarkerFaceColor','k')
@@ -559,6 +564,8 @@ for d = 1:1:num_chroms
         end
     end
 
+    all_intra_disc_loop_lengths = [all_intra_disc_loop_lengths; intra_disc_loop_lengths'];
+
     % insert intra-disc loops into primary sequence in chromosome
     chromosome_w_inter_and_intra_disc_loops = insert_loops(num_intra_disc_loops, sum(intra_disc_loop_lengths), chromosome_w_inter_disc_loops, intra_disc_loops, intra_disc_loop_starts_ind);
    
@@ -618,6 +625,34 @@ for d = 1:1:num_chroms
     % %patch('Faces', Faces(:,:) ,'Vertices', chromosome_w_inter_and_intra_disc_loops_100kb_res(:,:) ,'FaceColor', 'none', 'FaceVertexCData', MyColor(:,:) ,'EdgeColor','interp' ,'LineWidth',5, 'FaceAlpha',.5,'EdgeAlpha',.5); %low res CLC structure
     % view(90,10)
 
+    % numPoints = size(chromosome,1);   
+    % MyColor = linspace(1,numPoints,numPoints)';
+    % Faces = [1:(numPoints-1); 2:numPoints]';
+    % 
+    % f=figure
+    % screen = get(0, 'Screensize');
+    % screen(3)=screen(3)/1.75;
+    % set(gcf, 'Position', screen);
+    % hold on
+    % plot3(chromosome(:,1),chromosome(:,2),chromosome(:,3),'Color', [.6 .6 .6])
+    % %plot3(chromosome_w_inter_and_intra_disc_loops_100kb_res(:,1),chromosome_w_inter_and_intra_disc_loops_100kb_res(:,2),chromosome_w_inter_and_intra_disc_loops_100kb_res(:,3),'Color', [.6 .6 .6]) %low res CLC structure
+    % colormap jet
+    % axis equal
+    % xlim([min(chromosome(:,1))*1.5 max(chromosome(:,1))*1.5])
+    % ylim([min(chromosome(:,2))*1.5 max(chromosome(:,2))*1.5])
+    % zlim([min(chromosome(:,3))*1.1 max(chromosome(:,3))*1.1])
+    % set(gca,'XTick',[], 'YTick', [], 'ZTick', [])
+    % caxis([min(MyColor) max(MyColor)])
+    % c = colorbar;
+    % c.Position = c.Position - [.1 0 0 0];
+    % c.Ticks = linspace(0, total_chromosome_length, round(total_chromosome_length/500)+1);
+    % c.TickLabels = num2cell(linspace(0, total_chromosome_length*resolution, round(total_chromosome_length/500)+1));
+    % c.Label.String = 'primary sequence [bp]';
+    % c.FontSize = 32;
+    % patch('Faces', Faces(:,:) ,'Vertices', chromosome(:,:) ,'FaceColor', 'none', 'FaceVertexCData', MyColor(:,:) ,'EdgeColor','interp' ,'LineWidth',5, 'FaceAlpha',.5,'EdgeAlpha',.5);
+    % %patch('Faces', Faces(:,:) ,'Vertices', chromosome_w_inter_and_intra_disc_loops_100kb_res(:,:) ,'FaceColor', 'none', 'FaceVertexCData', MyColor(:,:) ,'EdgeColor','interp' ,'LineWidth',5, 'FaceAlpha',.5,'EdgeAlpha',.5); %low res CLC structure
+    % view(90,10)
+
     % for i=skip+1:skip:numPoints
     %     clf(f)
     %     plot3(chromosome_w_inter_and_intra_disc_loops(:,1),chromosome_w_inter_and_intra_disc_loops(:,2),chromosome_w_inter_and_intra_disc_loops(:,3),'Color', [.6 .6 .6])
@@ -646,10 +681,9 @@ for d = 1:1:num_chroms
     P(isinf(P)) = 1; %self contact probabilities are 1
     P(P>1) = 1; %no contact probabilities above 1
 
-    %figure S1B in paper
+    % %figure S1B in paper
     % figure
     % hold on
-    % plot3(chromosome(:,1),chromosome(:,2),chromosome(:,3))
     % for j = 1:1:size(inter_disc_loops,2)
     %     plot3(cell2mat(inter_disc_loops{j}(:,1)),cell2mat(inter_disc_loops{j}(:,2)),cell2mat(inter_disc_loops{j}(:,3)),'-o','LineWidth',5,'Color','r')
     % end
@@ -661,14 +695,28 @@ for d = 1:1:num_chroms
     % %     plot3(chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,1),chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,2),chromosome_w_inter_and_intra_disc_loops(far(i):far(i)+1,3),'-o','Color','k')
     % % end
     % plot3(chromosome_w_inter_and_intra_disc_loops(:,1),chromosome_w_inter_and_intra_disc_loops(:,2),chromosome_w_inter_and_intra_disc_loops(:,3),'-','Color','k')
-    % xlim([min(chromosome_w_inter_disc_loops(:,1))*2 max(chromosome_w_inter_disc_loops(:,1))*2])
-    % ylim([min(chromosome_w_inter_disc_loops(:,2))*2 max(chromosome_w_inter_disc_loops(:,2))*2])
-    % zlim([min(chromosome_w_inter_disc_loops(:,3))*2 max(chromosome_w_inter_disc_loops(:,3))*2])
+    % xlim([min(chromosome_w_inter_disc_loops(:,1))*1.5 max(chromosome_w_inter_disc_loops(:,1))*1.5])
+    % ylim([min(chromosome_w_inter_disc_loops(:,2))*1.5 max(chromosome_w_inter_disc_loops(:,2))*1.5])
+    % zlim([min(chromosome_w_inter_disc_loops(:,3))*1.1 max(chromosome_w_inter_disc_loops(:,3))*1.1])
+    % axis equal
     % set(gca,'XTick',[], 'YTick', [], 'ZTick', [])
     % xlabel('x','FontSize', 24)
     % ylabel('y','FontSize', 24)
     % zlabel('z','FontSize', 24)
-    % view(30,2)
+    % view(90,5)
+    % 
+    % figure
+    % hold on
+    % plot3(chromosome(:,1),chromosome(:,2),chromosome(:,3),'-','Color','k')
+    % xlim([min(chromosome(:,1))*1.5 max(chromosome(:,1))*1.5])
+    % ylim([min(chromosome(:,2))*1.5 max(chromosome(:,2))*1.5])
+    % zlim([min(chromosome(:,3))*1.1 max(chromosome(:,3))*1.1])
+    % axis equal
+    % set(gca,'XTick',[], 'YTick', [], 'ZTick', [])
+    % xlabel('x','FontSize', 24)
+    % ylabel('y','FontSize', 24)
+    % zlabel('z','FontSize', 24)
+    % view(90,5)
 
     %color monomers according to their average Hi-C contact probability
     % c = sum(P, 1)./size(P,1);  %average contact probability along stripe
@@ -747,49 +795,49 @@ for d = 1:1:num_chroms
     bar_matrix = repmat(bar_data, bar_thickness, 1);
     annotation_and_CM=[bar_matrix; P];
 
-    figure;
-    imagesc(annotation_and_CM);
-    set(gca, 'ColorScale', 'log');
-    colormap(parula);
-    caxis([1e-3 1e0]);
-
-    hold on;
-    
-    %can use two different colormaps for the same imagesc(); plot
-    % mask CLC disc track
-    mask_white = annotation_and_CM == 0;
-    mask_black = annotation_and_CM == -1;
-
-    % Overlay white
-    [rows, cols] = find(mask_white);
-    scatter(cols, rows, 1, 'w', 'filled');
-
-    % Overlay black
-    [rows, cols] = find(mask_black);
-    scatter(cols, rows, 1, 'k', 'filled');
-    xlabel('primary sequence [bp]', 'fontsize', 24)
-    ylabel('primary sequence [bp]', 'fontsize', 24)
-    xlim([0 total_chromosome_length])
-    ylim([0 total_chromosome_length])
-    ax = gca;
-    set(gca,'ColorScale','log')
-    maj_axis_chr=colorbar;
-    maj_axis_chr.Label.String = 'Contact Probability';
-    maj_axis_chr.FontSize = 18;
-
-    ax.XTickLabel = ax.XTick*resolution;
-    %offset because of CLC disc track
-    ax.YTick = ax.YTick + bar_thickness;
-    ax.YTickLabel = (ax.YTick-bar_thickness)*resolution;
-    ytick_labels = string(ax.YTickLabel); 
-
-    %starting ytick should be 0
-    idx = find(yticks == bar_thickness);
-    if ~isempty(idx)
-        ytick_labels(idx) = "0";
-    end
-    ax.YTickLabel = ytick_labels;
-    ylim([0 size(annotation_and_CM,1)])
+    % figure;
+    % imagesc(annotation_and_CM);
+    % set(gca, 'ColorScale', 'log');
+    % colormap(parula);
+    % caxis([1e-3 1e0]);
+    % 
+    % hold on;
+    % 
+    % %can use two different colormaps for the same imagesc(); plot
+    % % mask CLC disc track
+    % mask_white = annotation_and_CM == 0;
+    % mask_black = annotation_and_CM == -1;
+    % 
+    % % Overlay white
+    % [rows, cols] = find(mask_white);
+    % scatter(cols, rows, 1, 'w', 'filled');
+    % 
+    % % Overlay black
+    % [rows, cols] = find(mask_black);
+    % scatter(cols, rows, 1, 'k', 'filled');
+    % xlabel('primary sequence [bp]', 'fontsize', 24)
+    % ylabel('primary sequence [bp]', 'fontsize', 24)
+    % xlim([0 total_chromosome_length])
+    % ylim([0 total_chromosome_length])
+    % ax = gca;
+    % set(gca,'ColorScale','log')
+    % maj_axis_chr=colorbar;
+    % maj_axis_chr.Label.String = 'Contact Probability';
+    % maj_axis_chr.FontSize = 18;
+    % 
+    % ax.XTickLabel = ax.XTick*resolution;
+    % %offset because of CLC disc track
+    % ax.YTick = ax.YTick + bar_thickness;
+    % ax.YTickLabel = (ax.YTick-bar_thickness)*resolution;
+    % ytick_labels = string(ax.YTickLabel); 
+    % 
+    % %starting ytick should be 0
+    % idx = find(yticks == bar_thickness);
+    % if ~isempty(idx)
+    %     ytick_labels(idx) = "0";
+    % end
+    % ax.YTickLabel = ytick_labels;
+    % ylim([0 size(annotation_and_CM,1)])
 
     %calculate contact probability curve
     %number of pairs of genomic positions separated by s on a given chromosome is Lc-s, where Lc is the length of the chromosome
@@ -798,34 +846,54 @@ for d = 1:1:num_chroms
     s_avg{d} = s';
     Ps_avg{d} = Ps';
 
+    %old way of aligning chromosomes, start of first disc is always aligned
+    %%%
     %truncate end of chromosomes that are slightly longer, portions of
     %discs are not deleted
-    if size(P,1)<total_chromosome_length
-        P=padarray(P,[total_chromosome_length-size(P,1) total_chromosome_length-size(P,1)],0,'post');
+    % if size(P,1)<total_chromosome_length
+    %     P=padarray(P,[total_chromosome_length-size(P,1) total_chromosome_length-size(P,1)],0,'post');
+    % end
+
+    %P_agg = P_agg+P(1:total_chromosome_length,1:total_chromosome_length); %single cell contact maps are superimposed, then averaged
+    %%%
+
+    %new way of aligning chromosomes, if matrix is larger/shorter a random
+    %crop/pad is applied to the left side, the crop/pad on the right side
+    %is determined by the target chromosome size
+    %%%
+    size_diff = size(P,1) - total_chromosome_length;
+    r = randi(abs(size_diff)+1)-1;
+    if size_diff<0
+        P=padarray(P,[r r],0,'pre');
+        P=padarray(P,[abs(size_diff)-r abs(size_diff)-r],0,'post');
     end
 
-    P_agg = P_agg+P(1:total_chromosome_length,1:total_chromosome_length); %single cell contact maps are superimposed, then averaged
+    if size_diff>0
+        P=P(r+1:size(P,1)-(size_diff-r),r+1:size(P,1)-(size_diff-r));
+    end
+
+    P_agg = P_agg + P;
 end
 
 P_agg=P_agg./num_chroms;
 
 %population level (aggregate) Hi-C contact map
-% figure
-% imagesc(P_agg);
-% hold on;
-% colorbar
-% xlabel('primary sequence [bp]', 'fontsize', 24)
-% ylabel('primary sequence [bp]', 'fontsize', 24)
-% xlim([0 total_chromosome_length])
-% ylim([0 total_chromosome_length])
-% ax = gca;
-% ax.XTickLabel = ax.XTick*resolution;
-% ax.YTickLabel = ax.YTick*resolution;
-% set(gca,'ColorScale','log')
-% maj_axis_chr=colorbar;
-% maj_axis_chr.Label.String = 'Contact Probability';
-% maj_axis_chr.FontSize = 18;
-% caxis([10^(-3) 10^0]);
+figure
+imagesc(P_agg);
+hold on;
+colorbar
+xlabel('primary sequence [bp]', 'fontsize', 24)
+ylabel('primary sequence [bp]', 'fontsize', 24)
+xlim([0 total_chromosome_length])
+ylim([0 total_chromosome_length])
+ax = gca;
+ax.XTickLabel = ax.XTick*resolution;
+ax.YTickLabel = ax.YTick*resolution;
+set(gca,'ColorScale','log')
+maj_axis_chr=colorbar;
+maj_axis_chr.Label.String = 'Contact Probability';
+maj_axis_chr.FontSize = 18;
+caxis([10^(-3) 10^0]);
 
 s_agg=1:1:round(total_chromosome_length*0.95);
 s_agg=s_agg';
@@ -873,6 +941,8 @@ end
 
 PCSynth(:,3) = round(PCSynth(:,3),3,"significant");
 %writematrix(PCSynth,strcat('cholesteric_short_frac_loops_0.1_CSynth_D4_aggregated_num_chroms_',num2str(num_chroms),'.txt'),'Delimiter','tab');
+writematrix(PCSynth,'CLC_CSynth_input.txt','Delimiter','tab');
+writematrix(P_agg, 'CLC_CSynth_input_matrix.txt', 'Delimiter', 'tab')
 
 %calculate error bar for contact proability curve
 %vertically concatenate single cell contact probability curves, pad with NaNs
@@ -910,6 +980,29 @@ s_avg = cellfun(@transpose,s_avg,'UniformOutput',false);
 % xlim([10^4,10^7]);
 % ylim([10^-5,10^0]);
 % grid on
+
+edges = linspace(0, 80*resolution/10^6, 10);
+
+[N1,e1]=histcounts(all_intra_disc_loop_lengths.*resolution./10^6, edges);
+[N2,e2]=histcounts(all_inter_disc_loop_lengths.*resolution./10^6, edges);
+
+e1 = e1(2:end) - (e1(2)-e1(1))/2;
+e2 = e2(2:end) - (e2(2)-e2(1))/2;
+
+figure
+hold on
+plot(e1,N1./sum(N1)+0.015, '-', Color = [0 1 0], LineWidth=5)
+plot(e2,N2./sum(N2), '-', Color = [1 0 0], LineWidth=5)
+
+lgd=legend({'intra-disc','inter-disc'});
+lgd.FontSize = 24;
+legend boxoff
+hold off
+ylim([0 1])
+ax = gca;
+ax.FontSize = 24;
+xlabel('Extrachromosomal Loop Length [Mb]','FontSize', 24)
+ylabel('Probability','FontSize', 24)
 
 function sum = nat_sum(x)
 sum=0;

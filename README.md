@@ -21,19 +21,19 @@ Description: Convert .hic formatted Hi-C data to a format readable by CSynth. Cr
 
 ### cool_plot_HiC.m
 Description: Visualize Hi-C contact maps using the cooltools package. A minor modification of:
-https://cooltools.readthedocs.io/en/latest/notebooks/contacts_vs_distance.html. See: Fig 1B in the paper.
+https://cooltools.readthedocs.io/en/latest/notebooks/contacts_vs_distance.html.
 ## 2. Controls:
 ### contact_probability_xyz.m
 Description: Compute contact probability curves from a 3D structure. Calculation is different from computing contact probability curve from Hi-C matrix. See: Naumova, N., Imakaev, M., Fudenberg, G., Zhan, Y., Lajoie, B. R., Mirny, L. A., & Dekker, J. (2013). Organization of the mitotic chromosome. Science, 342(6161), 948-953. https://www.science.org/doi/10.1126/science.1236083 for detailed methods.
 ### CSynth_FISH_Compare_Su_Cell_2020.m
-Description: Assess accuracy of CSynth conformations and to optomize CSynth parameters, using a human cell line where Hi-C data and 3D FISH data (652 probes) exist. See: Fig S3 C,D,E,F in paper.
+Description: Assess accuracy of CSynth conformations and to optomize CSynth parameters, using a human cell line where Hi-C data and 3D FISH data (652 probes) exist. See: Fig S14 C,D,E,F in paper.
 ### fractal_equilbrium_load.m
 Description: Compute contact probability curves from fractal and equilibrium globule as a positive control to validate the code later applied to CLC model chromosomes.
 ### sim_HiC_map_CSynth.m
-Description: Simulate IMR90 chr21 Hi-C contact map from CSynth structure. This contact map is compared with empirical Hi-C contact for an assessment of CSynth accuracy. See: Fig S3 A & G in paper.
+Description: Simulate IMR90 chr21 Hi-C contact map from CSynth structure. This contact map is compared with empirical Hi-C contact for an assessment of CSynth accuracy. See: Fig S14 A & G in paper.
 ## 3. Simulating CLCs:
 ### iter_Cholesteric_HiC.m
-Description: Generate model cholesteric liquid crystal (CLC) chromosomes with extra chromosomal loops. Many adjustable parameters including: loop length, number of discs, cholesteric pitch, and more. Compute single cell and population-level HiC matrices and contact probability curves. See Fig. 1A, 2A, S1, S2, S7 in the paper.
+Description: Generate model cholesteric liquid crystal (CLC) chromosomes with extra chromosomal loops. Many adjustable parameters including: loop length, number of discs, cholesteric pitch, and more. Compute single cell and population-level HiC matrices and contact probability curves. See Fig. 1A, 3A, S1, S2, S13 in the paper.
 
 <img width="1118" alt="figure_S6" src="https://github.com/user-attachments/assets/ff609024-7e67-457a-a055-ea41388e2521" />
 
@@ -47,7 +47,7 @@ Description: Generate extrachromosomal loops. Random walks are generated separat
 Description: Generate extrachromosomal loops. Combines random walks in each dimension to compute a 3D random walk.
 ## 4. Quantifying DNA Order:
 ### plot_P(s)_dinoflagellate.py
-Description: Compute contact probability curves from dinoflagellate Hi-C data. See: Fig 2B, C, & D in the paper.
+Description: Compute contact probability curves from dinoflagellate Hi-C data. See: Fig 3B, C, & D in the paper.
 ### Orientation_Order_Parameter.py
 Description: Compute the average correlation between two tangent vectors to the 3D chromosome structure separated by a given amount of primary sequence, averaged over the entire chromosome. See: Fig 4B in paper. Code adapted from: https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.116.248101.
 ### Spatial_Nematic_Order.m
@@ -55,16 +55,16 @@ Description: Calculate alignment (nematic order parameter) of tangent vectors to
 <img width="1496" height="855" alt="Screenshot 2025-08-26 at 12 06 05 PM" src="https://github.com/user-attachments/assets/ae95e3fe-e72b-488b-991e-818171e471c2" />
 ## 5. RNAseq:
 ### TAD_analysis.m
-Description: Calculate average level and strand of transcription near TAD boundary. See: Fig S11 in paper for convergent transcription at TAD boundaries.
-### Fig5_A_CLC_Expression.m
-Description: Create 3D visual model of surface-localized gene expression on CLC chromosomes using a divergent strand-specific expression colormap. See: Fig 5A in paper.
+Description: Calculate average level and strand of transcription near TAD boundary. See: Fig S12 in paper for convergent transcription at TAD boundaries.
+### CLC_Expression_schematic.m
+Description: Create 3D visual model of surface-localized gene expression on CLC chromosomes using a divergent strand-specific expression colormap.
 ### colour_TPM_using_bed.js
-Description: Load divergent colourmap for visualizing strand-specific transcription levels in 3D space using CSynth GUI. Drag and drop this file into CSynth browswer window before or after loading Hi-C contact data, as in Fig 5B.
+Description: Load divergent colourmap for visualizing strand-specific transcription levels in 3D space using CSynth GUI. Drag and drop this file into CSynth browswer window before or after loading Hi-C contact data.
 
 <img width="1436" height="1115" alt="Screenshot 2025-08-26 at 12 01 19 PM" src="https://github.com/user-attachments/assets/52933def-ddbc-45c3-ad8d-6a2e1849a528" />
 
 ### RNAseq_align_to_CSynth_cylindrical_axis.m
-Description: Visualization of spatial variation in transcription levels determined by mapping RNA-seq data to 3D position on CSynth structure. An aggregate analysis is done where chromosomes are isotropically scaled to the same size, viewed using cylindrical coordinates to show the average transcription level vs distance to centre/surface of the chromosome. See: Fig 5D & S10 in paper.
+Description: Visualization of spatial variation in transcription levels determined by mapping RNA-seq data to 3D position on CSynth structure. An aggregate analysis is done where chromosomes are isotropically scaled to the same size, viewed using cylindrical coordinates to show the average transcription level vs distance to centre/surface of the chromosome. See: Fig 5 & S11 in paper.
 
 # Data Sources:
 ### Hi-C data pre-processing:

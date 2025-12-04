@@ -1,8 +1,6 @@
 """
 a minor modification of:
 https://cooltools.readthedocs.io/en/latest/notebooks/contacts_vs_distance.html
-
-Fig 1B in the paper
 """
 
 import cooler

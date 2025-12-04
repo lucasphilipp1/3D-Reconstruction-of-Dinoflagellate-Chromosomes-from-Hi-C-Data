@@ -1,5 +1,4 @@
-%Fig 3 D in paper: histograms of TAD asphericity
-%Fig S10 in paper: convergent transcription at TAD boundaries
+%Fig S12 in paper: convergent transcription at TAD boundaries
 
 num_chroms = 50;
 dist_to_TAD = 45000;

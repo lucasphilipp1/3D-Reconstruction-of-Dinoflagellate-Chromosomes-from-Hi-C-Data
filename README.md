@@ -1,15 +1,15 @@
-# This GitHub repository contains the code to recreate the analyses of:
-Philipp, L., Marinov G. K., Todd S., Weber S. C., 3D Reconstruction of Dinoflagellate Chromosomes from Hi-C Data Challenges the Cholesteric Liquid Crystal Hypothesis. In review.
+### This GitHub repository contains the code to recreate the analyses of:
+## Philipp, L., Marinov G. K., Todd S., Weber S. C., 3D Reconstruction of Dinoflagellate Chromosomes from Hi-C Data Challenges the Cholesteric Liquid Crystal Hypothesis. In review.
 ![auto_symbiodinium_microadriaticum_chr1_3D xyz](https://github.com/user-attachments/assets/1d8cd915-b809-495d-b877-2e65a52e2fd5)
 bioRxiv link to pre-print: [https://www.biorxiv.org/content/10.1101/2025.01.24.634729v1](https://www.biorxiv.org/content/10.1101/2025.01.24.634729v1)
 
 # Data Availability:
-S. kawagutii Hi-C data, S. kawagutii & S. microadriaticum CSynth structures, aligned RNA-seq .bed files, and TAD .bed files, have been deposited to: https://doi.org/10.5281/zenodo.14285613.
+*F. kawagutii* Hi-C data, *F. kawagutii* & *S. microadriaticum* CSynth structures, aligned RNA-seq .bed files, and TAD .bed files, have been deposited to: https://doi.org/10.5281/zenodo.14285613.
 
-# Descriptions of code:
+# Descriptions of Code:
 Scripts are organized into separate folders according to their functionality.
 ### CSynthSerial.js
-Description: save .png images for a set of CSynth structures. Drag & drop this file onto CSynth first, then drag & drop a set of .xyz files. Images are saved to downloads folder.
+Description: Save .png images for a set of CSynth structures. Drag & drop this file onto CSynth first, then drag & drop a set of .xyz files. Images are saved to downloads folder.
 
 ## 1. Hi-C Data Pre-Processing:
 ### convert_cool_to_CSynth.sh
@@ -24,13 +24,13 @@ Description: Visualize Hi-C contact maps using the cooltools package. A minor mo
 https://cooltools.readthedocs.io/en/latest/notebooks/contacts_vs_distance.html. See: Fig 1B in the paper.
 ## 2. Controls:
 ### contact_probability_xyz.m
-Description: Function used to compute contact probability curves from a 3D structure. Calculation is different from computing contact probability curve from Hi-C matrix. See: Naumova, N., Imakaev, M., Fudenberg, G., Zhan, Y., Lajoie, B. R., Mirny, L. A., & Dekker, J. (2013). Organization of the mitotic chromosome. Science, 342(6161), 948-953. for detailed methods.
+Description: Compute contact probability curves from a 3D structure. Calculation is different from computing contact probability curve from Hi-C matrix. See: Naumova, N., Imakaev, M., Fudenberg, G., Zhan, Y., Lajoie, B. R., Mirny, L. A., & Dekker, J. (2013). Organization of the mitotic chromosome. Science, 342(6161), 948-953. https://www.science.org/doi/10.1126/science.1236083 for detailed methods.
 ### CSynth_FISH_Compare_Su_Cell_2020.m
-Description: Use to assess accuracy of CSynth conformations and to optomize CSynth parameters, using a human cell line where Hi-C data and 3D FISH data (652 probes) exist. See: Fig S3 C,D,E,F in paper.
+Description: Assess accuracy of CSynth conformations and to optomize CSynth parameters, using a human cell line where Hi-C data and 3D FISH data (652 probes) exist. See: Fig S3 C,D,E,F in paper.
 ### fractal_equilbrium_load.m
-Description: Used to compute contact probability curves from fractal and equilibrium globule as a positive control to validate the code later applied to CLC model chromosomes.
+Description: Compute contact probability curves from fractal and equilibrium globule as a positive control to validate the code later applied to CLC model chromosomes.
 ### sim_HiC_map_CSynth.m
-Description: Used to simulate IMR90 chr21 Hi-C contact map from CSynth structure. This contact map is compared with empirical Hi-C contact for an assessment of CSynth accuracy. See: Fig S3 A & G in paper.
+Description: Simulate IMR90 chr21 Hi-C contact map from CSynth structure. This contact map is compared with empirical Hi-C contact for an assessment of CSynth accuracy. See: Fig S3 A & G in paper.
 ## 3. Simulating CLCs:
 ### iter_Cholesteric_HiC.m
 Description: Generate model cholesteric liquid crystal (CLC) chromosomes with extra chromosomal loops. Many adjustable parameters including: loop length, number of discs, cholesteric pitch, and more. Compute single cell and population-level HiC matrices and contact probability curves. See Fig. 1A, 2A, S1, S2, S7 in the paper.
@@ -38,31 +38,28 @@ Description: Generate model cholesteric liquid crystal (CLC) chromosomes with ex
 <img width="1118" alt="figure_S6" src="https://github.com/user-attachments/assets/ff609024-7e67-457a-a055-ea41388e2521" />
 
 ### each_TAD_is_a_group_of_CLC_discs.m
-Description: In CLCs, conformational heterogeneity alone does not produce topological associating domains (TADs). However, TADs can arise from the combination of conformational heterogeneity and fixed primary sequence boundaries. Specifically, we considered a version of the CLC model where across structures the primary sequence order of discs were shuffled along the CLC’s long axis between fixed primary sequence boundaries, each delineating a separate TAD.
+Description: Generate conformations, simulated Hi-C contact maps, and contact probability curves for a version of the CLC model with conformational heterogeneity and fixed primary sequence boundaries. Specifically, the primary sequence order of discs were permuted across conformations within groups, each delineating a TAD, but not across groups.
 <img width="1319" height="478" alt="CLC_permute_disc_order" src="https://github.com/user-attachments/assets/a82e1a54-f405-41ee-9ccf-d194bfa728c0" />
 
 ### constrained_RW_1D.m
-Description: Function used to generate extrachromosomal loops. Random walks are generated separately for each of the spatial three dimensions.
+Description: Generate extrachromosomal loops. Random walks are generated separately for each of the spatial three dimensions.
 ### constrained_self_avoiding_RW_3D.m
-Description: Function used to generate extrachromosomal loops. Combines random walks in each dimension to compute a 3D random walk.
-### helix_w_crumpled_domains.m
-Description: Used to generate crumpled domains positioned along a helical backbone. A simulated Hi-C map is generated showing TADs, where each TAD corresponds to a crumpled domain.
-## 4. TADs:
-### TAD_analysis.m
-Description: Used to calculate average level and strand of transcription near TAD boundary. See: Fig 3C in paper for histograms of TAD asphericity. See: Fig S11 in paper for convergent transcription at TAD boundaries.
-## 5. Quantifying DNA Order:
+Description: Generate extrachromosomal loops. Combines random walks in each dimension to compute a 3D random walk.
+## 4. Quantifying DNA Order:
 ### plot_P(s)_dinoflagellate.py
-Description: Used to compute contact probability curves from dinoflagellate Hi-C data. See: Fig 2B, C, & D in the paper.
+Description: Compute contact probability curves from dinoflagellate Hi-C data. See: Fig 2B, C, & D in the paper.
 ### Orientation_Order_Parameter.py
-Description: Used to compute the average correlation between two tangent vectors to the 3D chromosome structure separated by a given amount of primary sequence, averaged over the entire chromosome. See: Fig 4B in paper. Code adapted from: https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.116.248101.
+Description: Compute the average correlation between two tangent vectors to the 3D chromosome structure separated by a given amount of primary sequence, averaged over the entire chromosome. See: Fig 4B in paper. Code adapted from: https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.116.248101.
 ### Spatial_Nematic_Order.m
-Description: Used to calculate alignment (nematic order parameter) of tangent vectors to DNA that are in close spatial proximity. See: Fig 4C in paper.
+Description: Calculate alignment (nematic order parameter) of tangent vectors to DNA that are in close spatial proximity. See: Fig 4C in paper.
 <img width="1496" height="855" alt="Screenshot 2025-08-26 at 12 06 05 PM" src="https://github.com/user-attachments/assets/ae95e3fe-e72b-488b-991e-818171e471c2" />
-## 6. RNAseq:
+## 5. RNAseq:
+### TAD_analysis.m
+Description: Calculate average level and strand of transcription near TAD boundary. See: Fig S11 in paper for convergent transcription at TAD boundaries.
 ### Fig5_A_CLC_Expression.m
-Description: code to create 3D visual model of surface-localized gene expression on CLC chromosomes using a divergent strand-specific expression colormap. See: Fig 5A in paper.
+Description: Create 3D visual model of surface-localized gene expression on CLC chromosomes using a divergent strand-specific expression colormap. See: Fig 5A in paper.
 ### colour_TPM_using_bed.js
-Description: Used to load divergent colourmap for visualizing strand-specific transcription levels in 3D space using CSynth GUI. Drag and drop this file into CSynth browswer window before or after loading Hi-C contact data, as in Fig 5B.
+Description: Load divergent colourmap for visualizing strand-specific transcription levels in 3D space using CSynth GUI. Drag and drop this file into CSynth browswer window before or after loading Hi-C contact data, as in Fig 5B.
 
 <img width="1436" height="1115" alt="Screenshot 2025-08-26 at 12 01 19 PM" src="https://github.com/user-attachments/assets/52933def-ddbc-45c3-ad8d-6a2e1849a528" />
 
@@ -71,17 +68,17 @@ Description: Visualization of spatial variation in transcription levels determin
 
 # Data Sources:
 ### Hi-C data pre-processing:
-For an overview of how dinoflagellate contact maps are assembled from raw reads see (Marinov, G., et al. 2024). Previously published Hi-C assisted genome assemblies and contact strengths were accessed at: GEO accession: GSE152150, GSE152150_HiC-Dplus.smic1.1N.mapq_30.1000.mcool (Nand, A., et al., 2021), https://doi.org/10.5281/zenodo.10035644 (Marinov, G., et al. 2024), and GSE153950 (Marinov, G., et al. 2021).
+For an overview of how dinoflagellate contact maps are assembled from raw reads see (Marinov, G., et al. 2024. https://doi.org/10.1016/j.xpro.2024.102941). Previously published Hi-C assisted genome assemblies and contact strengths were accessed at: GEO accession: GSE152150, GSE152150_HiC-Dplus.smic1.1N.mapq_30.1000.mcool (Nand, A., et al., 2021. https://doi.org/10.1038/s41588-021-00841-y), https://doi.org/10.5281/zenodo.10035644 (Marinov, G., et al. 2024. https://doi.org/10.1016/j.xpro.2024.102941), and GSE153950 (Marinov, G., et al. 2021. https://doi.org/10.1038/s41588-021-00848-5).
 
 ### Human control Hi-C and FISH data:
-Previously published human IMR90 Hi-C data (Rao, S. S., et al. 2014) was accessed from the GEO using accession number: GSE63525. Previously published IMR90 FISH probe 3D locations (Su, J. H., et al. 2020) were downloaded from: https://doi.org/10.5281/zenodo.3928890.
+Previously published human IMR90 Hi-C data (Rao, S. S., et al. 2014. https://doi.org/10.1016/j.cell.2014.11.021) was accessed from the GEO using accession number: GSE63525. Previously published IMR90 FISH probe 3D locations (Su, J. H., et al. 2020. https://doi.org/10.1016/j.cell.2020.07.032) were downloaded from: https://doi.org/10.5281/zenodo.3928890.
 
 ### Equilibrium globule structures:
-Equilibrium globule structures were downloaded from the GEO using the accession number: GSE18199 (Lieberman-Aiden, E., et al., 2009).
+Equilibrium globule structures were downloaded from the GEO using the accession number: GSE18199 (Lieberman-Aiden, E., et al., 2009) https://www.science.org/doi/10.1126/science.1181369.
 
 ### Spatial Organization of Transcription Analysis:
 RNA-seq data used in this study can be accessed via the SRA using the accession numbers:
-SRR3337493 (S. microadriaticum, (Liew, Y. J., et al., 2017)), SRR9417753 SRR9417755 SRR9417756 SRR1300302 SRR1300303 SRR1300304 SRR1300305 (S. kawagutii, (Li, T., et al., 2020; Keeling, P. J., et al., 2014)).
+SRR3337493 (S. microadriaticum, (Liew, Y. J., et al., 2017. https://doi.org/10.1371/journal.pgen.1006619)), SRR9417753 SRR9417755 SRR9417756 SRR1300302 SRR1300303 SRR1300304 SRR1300305 (S. kawagutii, (Li, T., et al., 2020. https://doi.org/10.1016/j.scitotenv.2019.135767; Keeling, P. J., et al., 2014. https://doi.org/10.1371/journal.pbio.1001889)).
 
 # Questions:
 If you have questions about this repository please contact Lucas Philipp (lucas.philipp@mail.mcgill.ca).

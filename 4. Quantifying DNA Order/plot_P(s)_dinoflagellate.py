@@ -2,7 +2,7 @@
 a minor modification of:
 https://cooltools.readthedocs.io/en/latest/notebooks/contacts_vs_distance.html
 
-Fig 2 B C D in the paper
+Fig 3 B C D in the paper
 """
 import matplotlib.pyplot as plt
 import pandas as pd

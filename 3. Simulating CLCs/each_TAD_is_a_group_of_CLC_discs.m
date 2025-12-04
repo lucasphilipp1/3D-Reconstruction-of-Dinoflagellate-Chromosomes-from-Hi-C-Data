@@ -4,7 +4,8 @@
 %iteratively create CLC chromosomes
 %discs order is permuted randomly within groups, recapitulating TADs
 %simulate CLC Hi-C contact maps/contact probability curves
-%
+%see Fig 2. A & B in our paper
+
 %requires: statistics and machine learning toolbox
 
 %s_agg_original = s_agg;

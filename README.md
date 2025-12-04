@@ -38,7 +38,7 @@ Description: Generate model cholesteric liquid crystal (CLC) chromosomes with ex
 <img width="1118" alt="figure_S6" src="https://github.com/user-attachments/assets/ff609024-7e67-457a-a055-ea41388e2521" />
 
 ### each_TAD_is_a_group_of_CLC_discs.m
-Description: Generate conformations, simulated Hi-C contact maps, and contact probability curves for a version of the CLC model with conformational heterogeneity and fixed primary sequence boundaries. Specifically, the primary sequence order of discs were permuted across conformations within groups, each delineating a TAD, but not across groups.
+Description: Generate conformations, simulated Hi-C contact maps, and contact probability curves for a version of the CLC model with conformational heterogeneity and fixed primary sequence boundaries. Specifically, the primary sequence order of discs were permuted across conformations within groups, each delineating a TAD, but not across groups. See: Fig. 2 A, B, 3 A.
 <img width="1319" height="478" alt="CLC_permute_disc_order" src="https://github.com/user-attachments/assets/a82e1a54-f405-41ee-9ccf-d194bfa728c0" />
 
 ### constrained_RW_1D.m

@@ -1,4 +1,4 @@
-%Fig S12 in paper: convergent transcription at TAD boundaries
+%Fig S11 in paper: convergent transcription at TAD boundaries
 
 num_chroms = 50;
 dist_to_TAD = 45000;

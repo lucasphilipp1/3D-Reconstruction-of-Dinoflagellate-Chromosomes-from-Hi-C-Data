@@ -1,4 +1,4 @@
-%Fig 5 & S11 in our paper
+%Fig 5 & S10 in our paper
 %visualization of spatial variation in transcription levels using a
 %cylindrical coorindate system
 

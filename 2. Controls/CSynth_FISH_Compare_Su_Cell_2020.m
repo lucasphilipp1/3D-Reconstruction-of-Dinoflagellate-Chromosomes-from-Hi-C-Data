@@ -1,5 +1,5 @@
 % %Author: Lucas Philipp
-% Fig S14 C,D,E,F in paper
+% Fig S13 C,D,E,F in paper
 
 % optomization of CSynth parameters using Hi-C data and multiplexed FISH data
 

@@ -1,4 +1,4 @@
-%Fig S14 A & G in paper
+%Fig S13 A & G in paper
 
 chromosome = importdata('Su_Cell_2020_chr21_CSynth_output_SP_0_CF_60_PP_-4.xyz');
 input_HiC = importdata('Hi-C_contacts_chromosome21.csv');

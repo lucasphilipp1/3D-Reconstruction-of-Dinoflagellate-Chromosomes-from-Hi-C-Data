@@ -71,6 +71,7 @@ plt.gca().xaxis.tick_bottom()
 
 plt.colorbar(im3, ax=axs, fraction=0.046, label='Normalized Contact Frequency')
 
+#clr = cooler.Cooler('/Users/lucasphilipp/Desktop/Research/GitHub/Dinoflagellate_Large_Files/Dinoflagellate HiC Data/Symbiodinium_kawagutii_5000.cool')
 clr = cooler.Cooler('/Users/lucasphilipp/Desktop/Research/GitHub/Dinoflagellate_Large_Files/Dinoflagellate HiC Data/Symbiodinium_kawagutii_5000.cool')
 
 chromstarts = []
@@ -82,7 +83,7 @@ f, ax = plt.subplots(figsize=(7,6))
 #specific the name of the chromosome here:
 #microadriaticum: chr#_pilon
 #kawagutii: HiC_scaffold_#
-chromosome_num = "HiC_scaffold_1"
+chromosome_num = "HiC_scaffold_2"
 
 im = ax.matshow(
     clr.matrix(balance=True).fetch(chromosome_num),

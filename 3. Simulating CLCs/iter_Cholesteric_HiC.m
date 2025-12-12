@@ -3,7 +3,7 @@ clear
 %Author: Lucas Philipp
 %iteratively create CLC chromosomes with various parameters
 %simulate CLC Hi-C contact maps/contact probability curves
-%see Fig. 1 A & B in our paper
+%see Fig. 1 A & B, S1, S2, S12 in our paper
 %
 %requires: statistics and machine learning toolbox
 

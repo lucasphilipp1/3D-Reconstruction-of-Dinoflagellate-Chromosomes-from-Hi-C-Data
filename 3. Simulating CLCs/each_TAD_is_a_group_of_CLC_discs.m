@@ -11,7 +11,7 @@
 %s_agg_original = s_agg;
 %Ps_agg_original = Ps_agg;
 
-num_chroms = 350-190-48-106; %number of simulated chromosomes
+num_chroms = 100; %number of simulated chromosomes
 resolution = 5000; %number of base pairs per monomer
 
 %contact probability curve data

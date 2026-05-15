@@ -75,11 +75,11 @@ Creating the .hcs file, and steps below which process IGM outputs, require insta
 
 ### Inputs:
 ### config_file.json
-Description: Parameters used to simulate Symbiodinium microadriaticum chromosome 1 at 5 kb per monomer resolution with a population of 100 conformations. 
+Description: Parameters used to simulate *Symbiodinium microadriaticum* chromosome 1 at 5 kb per monomer resolution with a population of 100 conformations. 
 
 ### Outputs:
 ### extract_polymer_coordinates.py
-Description: Once the IGM simulation is finished, run this script to get the xyz coordinates for all the polymer conformations.
+Description: Once the IGM simulation is finished, run this script to get the xyz coordinates for all polymer conformations.
 ### extract_IGM_simulated_HiC_matrix.py
 Description: Once the IGM simulation is finished, run this script to get the simulated Hi-C contact map generated from the ensemble of IGM polymer conformations.
 

@@ -6,6 +6,20 @@ bioRxiv link to pre-print: [https://www.biorxiv.org/content/10.1101/2025.01.24.6
 # Data Availability:
 *F. kawagutii* Hi-C data, *F. kawagutii* & *S. microadriaticum* CSynth structures, aligned RNA-seq .bed files, and TAD .bed files, have been deposited to: https://doi.org/10.5281/zenodo.14285613.
 
+# Code Dependencies:
+All MATLAB scripts were developed and run using version 2023.a
+Some scripts require the statistics and machine learning toolbox: https://www.mathworks.com/products/statistics.html
+
+All python scripts in Folders 1-5 can be ran in an environment following the installation instructions below:
+```bash
+conda create -n environment_name python=3.11
+conda activate environment_name
+conda install -c conda-forge llvmlite
+pip3 install cooler==0.10.4 cooltools==0.7.1 hic-straw==1.3.1 numpy==2.1.3 pandas==2.2.3 scipy==1.15.3 matplotlib==3.10.0
+```
+
+To install IGM see their installation instructions here: https://github.com/alberlab/igm
+
 # Descriptions of Code:
 Scripts are organized into separate folders according to their functionality.
 ### CSynthSerial.js

@@ -66,6 +66,21 @@ Description: Load divergent colourmap for visualizing strand-specific transcript
 ### RNAseq_align_to_CSynth_cylindrical_axis.m
 Description: Visualization of spatial variation in transcription levels determined by mapping RNA-seq data to 3D position on CSynth structure. An aggregate analysis is done where chromosomes are isotropically scaled to the same size, viewed using cylindrical coordinates to show the average transcription level vs distance to centre/surface of the chromosome. See: Fig 5 & S10 in paper.
 
+## 6. IGM:
+The Integrated Genome Modeling platform was developed by the Albert Lab at UCLA (https://github.com/alberlab/igm). We used their platform to generate an ensemble of polymer conformations consistent with experimental dinoflagellate Hi-C data.
+
+IGM requires Hi-C data in a binary .hcs format. To convert .cool or .mcool files to .hcs format follow the instructions under "Generate .hcs file from .mcool raw data" on the IGM github. This step, and steps which process IGM outputs, require installing the alabtools (https://github.com/alberlab/alabtools) accessory software package. 
+
+### Inputs:
+### config_file.json
+Description: Parameters used to simulate Symbiodinium microadriaticum chromosome 1 at 5 kb per monomer resolution with a population of 100 conformations. 
+
+### Outputs:
+### extract_polymer_coordinates.py
+Description: Once the IGM simulation is finished, run this script to get the xyz coordinates for all the polymer conformations.
+### extract_IGM_simulated_HiC_matrix.py
+Description: Once the IGM simulation is finished, run this script to get the simulated Hi-C contact map generated from the ensemble of IGM polymer conformations.
+
 # Data Sources:
 ### Hi-C data pre-processing:
 For an overview of how dinoflagellate contact maps are assembled from raw reads see (Marinov, G., et al. 2024. https://doi.org/10.1016/j.xpro.2024.102941). Previously published Hi-C assisted genome assemblies and contact strengths were accessed at: GEO accession: GSE152150, GSE152150_HiC-Dplus.smic1.1N.mapq_30.1000.mcool (Nand, A., et al., 2021. https://doi.org/10.1038/s41588-021-00841-y), https://doi.org/10.5281/zenodo.10035644 (Marinov, G., et al. 2024. https://doi.org/10.1016/j.xpro.2024.102941), and GSE153950 (Marinov, G., et al. 2021. https://doi.org/10.1038/s41588-021-00848-5).

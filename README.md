@@ -67,7 +67,7 @@ Description: Load divergent colourmap for visualizing strand-specific transcript
 Description: Visualization of spatial variation in transcription levels determined by mapping RNA-seq data to 3D position on CSynth structure. An aggregate analysis is done where chromosomes are isotropically scaled to the same size, viewed using cylindrical coordinates to show the average transcription level vs distance to centre/surface of the chromosome. See: Fig 5 & S10 in paper.
 
 ## 6. IGM:
-The Integrated Genome Modeling platform was developed by the Alber Lab at UCLA (https://github.com/alberlab/igm). We used their platform to generate an ensemble of polymer conformations consistent with experimental dinoflagellate Hi-C data. More detailed instructions on how to use IGM is located on their github.
+The Integrated Genome Modeling (IGM) platform was developed by the Alber Lab at UCLA (https://github.com/alberlab/igm). We used their platform to generate an ensemble of polymer conformations consistent with experimental dinoflagellate Hi-C data. More detailed instructions on how to use IGM is located on their github.
 
 IGM requires Hi-C data written in binary .hcs format. To convert .cool or .mcool files to .hcs format follow the instructions under "Generate .hcs file from .mcool raw data" on the IGM github. If you are starting with a .hic file convert it first to .cool or .mcool useing hic2cool (https://github.com/4dn-dcic/hic2cool).
 

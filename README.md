@@ -95,7 +95,7 @@ Description: Parameters used to simulate *Symbiodinium microadriaticum* chromoso
 ### extract_polymer_coordinates.py
 Description: Once the IGM simulation is finished, run this script to get the xyz coordinates for all polymer conformations.
 
-[figure_S7.pdf](https://github.com/user-attachments/files/27810180/figure_S7.pdf)
+<img width="1749" height="4950" alt="figure_S7" src="https://github.com/user-attachments/assets/1110b4ee-68f8-4663-aff1-444f1e8f12fa" />
 
 ### extract_IGM_simulated_HiC_matrix.py
 Description: Once the IGM simulation is finished, run this script to get the simulated Hi-C contact map generated from the ensemble of IGM polymer conformations.

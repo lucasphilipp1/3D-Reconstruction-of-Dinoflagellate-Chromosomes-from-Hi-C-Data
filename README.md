@@ -75,7 +75,7 @@ Description: Create 3D visual model of surface-localized gene expression on CLC 
 ### colour_TPM_using_bed.js
 Description: Load divergent colourmap for visualizing strand-specific transcription levels in 3D space using CSynth GUI. Drag and drop this file into CSynth browswer window before or after loading Hi-C contact data.
 
-<img width="1436" height="1115" alt="Screenshot 2025-08-26 at 12 01 19 PM" src="https://github.com/user-attachments/assets/52933def-ddbc-45c3-ad8d-6a2e1849a528" />
+<img width="802" height="667" alt="Screenshot 2026-05-18 at 2 04 36 PM" src="https://github.com/user-attachments/assets/b5b1b578-042e-4608-8b70-280435caefc9" />
 
 ### RNAseq_align_to_CSynth_cylindrical_axis.m
 Description: Visualization of spatial variation in transcription levels determined by mapping RNA-seq data to 3D position on CSynth structure. An aggregate analysis is done where chromosomes are isotropically scaled to the same size, viewed using cylindrical coordinates to show the average transcription level vs distance to centre/surface of the chromosome. **Used to generate: Fig. 5 & S10 in paper.**

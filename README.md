@@ -6,6 +6,20 @@ bioRxiv link to pre-print: [https://www.biorxiv.org/content/10.1101/2025.01.24.6
 # Data Availability:
 *F. kawagutii* Hi-C data, *F. kawagutii* & *S. microadriaticum* CSynth structures, aligned RNA-seq .bed files, and TAD .bed files, have been deposited to: https://doi.org/10.5281/zenodo.14285613.
 
+# Code Dependencies:
+All MATLAB scripts were developed and run using version 2023.a <br />
+Some scripts require the statistics and machine learning toolbox: https://www.mathworks.com/products/statistics.html
+
+All python scripts in Folders 1-5 can be ran in an environment following the installation instructions below:
+```bash
+conda create -n environment_name python=3.11
+conda activate environment_name
+conda install -c conda-forge llvmlite
+pip3 install cooler==0.10.4 cooltools==0.7.1 hic-straw==1.3.1 numpy==2.1.3 pandas==2.2.3 scipy==1.15.3 matplotlib==3.10.0
+```
+
+To install IGM see their installation instructions here: https://github.com/alberlab/igm
+
 # Descriptions of Code:
 Scripts are organized into separate folders according to their functionality.
 ### CSynthSerial.js
@@ -26,19 +40,19 @@ https://cooltools.readthedocs.io/en/latest/notebooks/contacts_vs_distance.html.
 ### contact_probability_xyz.m
 Description: Compute contact probability curves from a 3D structure. Calculation is different from computing contact probability curve from Hi-C matrix. See: Naumova, N., Imakaev, M., Fudenberg, G., Zhan, Y., Lajoie, B. R., Mirny, L. A., & Dekker, J. (2013). Organization of the mitotic chromosome. Science, 342(6161), 948-953. https://www.science.org/doi/10.1126/science.1236083 for detailed methods.
 ### CSynth_FISH_Compare_Su_Cell_2020.m
-Description: Assess accuracy of CSynth conformations and to optomize CSynth parameters, using a human cell line where Hi-C data and 3D FISH data (652 probes) exist. See: Fig S13 C,D,E,F in paper.
+Description: Assess accuracy of CSynth conformations and to optomize CSynth parameters, using a human cell line where Hi-C data and 3D FISH data (652 probes) exist. **Used to generate: Fig. S13 C,D,E,F in paper.**
 ### fractal_equilbrium_load.m
 Description: Compute contact probability curves from fractal and equilibrium globule as a positive control to validate the code later applied to CLC model chromosomes.
 ### sim_HiC_map_CSynth.m
-Description: Simulate IMR90 chr21 Hi-C contact map from CSynth structure. This contact map is compared with empirical Hi-C contact for an assessment of CSynth accuracy. See: Fig S13 A & G in paper.
+Description: Simulate IMR90 chr21 Hi-C contact map from CSynth structure. This contact map is compared with empirical Hi-C contact for an assessment of CSynth accuracy. **Used to generate: Fig. S13 A & G in paper.**
 ## 3. Simulating CLCs:
 ### iter_Cholesteric_HiC.m
-Description: Generate model cholesteric liquid crystal (CLC) chromosomes with extra chromosomal loops. Many adjustable parameters including: loop length, number of discs, cholesteric pitch, and more. Compute single cell and population-level HiC matrices and contact probability curves. See Fig. 1A, 3A, S1, S2, S12 in the paper.
+Description: Generate model cholesteric liquid crystal (CLC) chromosomes with extra chromosomal loops. Many adjustable parameters including: loop length, number of discs, cholesteric pitch, and more. Compute single cell and population-level HiC matrices and contact probability curves. **Used to generate: Fig. 1A, 3A, S1, S2, S12 in paper.**
 
 <img width="1118" alt="figure_S6" src="https://github.com/user-attachments/assets/ff609024-7e67-457a-a055-ea41388e2521" />
 
 ### each_TAD_is_a_group_of_CLC_discs.m
-Description: Generate conformations, simulated Hi-C contact maps, and contact probability curves for a version of the CLC model with conformational heterogeneity and fixed primary sequence boundaries. Specifically, the primary sequence order of discs were permuted across conformations within groups, each delineating a TAD, but not across groups. See: Fig. 2 A, B, 3 A.
+Description: Generate conformations, simulated Hi-C contact maps, and contact probability curves for a version of the CLC model with conformational heterogeneity and fixed primary sequence boundaries. Specifically, the primary sequence order of discs were permuted across conformations within groups, each delineating a TAD, but not across groups. **Used to generate: Fig. 2A, B & 3A in paper.**
 <img width="1319" height="478" alt="CLC_permute_disc_order" src="https://github.com/user-attachments/assets/a82e1a54-f405-41ee-9ccf-d194bfa728c0" />
 
 ### constrained_RW_1D.m
@@ -47,15 +61,15 @@ Description: Generate extrachromosomal loops. Random walks are generated separat
 Description: Generate extrachromosomal loops. Combines random walks in each dimension to compute a 3D random walk.
 ## 4. Quantifying DNA Order:
 ### plot_P(s)_dinoflagellate.py
-Description: Compute contact probability curves from dinoflagellate Hi-C data. See: Fig 3B, C, & D in the paper.
+Description: Compute contact probability curves from dinoflagellate Hi-C data. **Used to generate: Fig. 3B, C, & D in paper.** 
 ### Orientation_Order_Parameter.py
-Description: Compute the average correlation between two tangent vectors to the 3D chromosome structure separated by a given amount of primary sequence, averaged over the entire chromosome. See: Fig 4B in paper. Code adapted from: https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.116.248101.
+Description: Compute the average correlation between two tangent vectors to the 3D chromosome structure separated by a given amount of primary sequence, averaged over the entire chromosome. **Used to generate: Fig. 4B in paper.**  Code adapted from: https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.116.248101.
 ### Spatial_Nematic_Order.m
-Description: Calculate alignment (nematic order parameter) of tangent vectors to DNA that are in close spatial proximity. See: Fig 4C in paper.
+Description: Calculate alignment (nematic order parameter) of tangent vectors to DNA that are in close spatial proximity. **Used to generate: Fig. 4C in paper.** 
 <img width="1496" height="855" alt="Screenshot 2025-08-26 at 12 06 05 PM" src="https://github.com/user-attachments/assets/ae95e3fe-e72b-488b-991e-818171e471c2" />
 ## 5. RNAseq:
 ### TAD_analysis.m
-Description: Calculate average level and strand of transcription near TAD boundary. See: Fig S11 in paper for convergent transcription at TAD boundaries.
+Description: Calculate average level and strand of transcription near TAD boundary. **Used to generate: Fig. S11 in paper.** 
 ### CLC_Expression_schematic.m
 Description: Create 3D visual model of surface-localized gene expression on CLC chromosomes using a divergent strand-specific expression colormap.
 ### colour_TPM_using_bed.js
@@ -64,12 +78,12 @@ Description: Load divergent colourmap for visualizing strand-specific transcript
 <img width="1436" height="1115" alt="Screenshot 2025-08-26 at 12 01 19 PM" src="https://github.com/user-attachments/assets/52933def-ddbc-45c3-ad8d-6a2e1849a528" />
 
 ### RNAseq_align_to_CSynth_cylindrical_axis.m
-Description: Visualization of spatial variation in transcription levels determined by mapping RNA-seq data to 3D position on CSynth structure. An aggregate analysis is done where chromosomes are isotropically scaled to the same size, viewed using cylindrical coordinates to show the average transcription level vs distance to centre/surface of the chromosome. See: Fig 5 & S10 in paper.
+Description: Visualization of spatial variation in transcription levels determined by mapping RNA-seq data to 3D position on CSynth structure. An aggregate analysis is done where chromosomes are isotropically scaled to the same size, viewed using cylindrical coordinates to show the average transcription level vs distance to centre/surface of the chromosome. **Used to generate: Fig. 5 & S10 in paper.**
 
 ## 6. IGM:
 The Integrated Genome Modeling (IGM) platform was developed by the Alber Lab at UCLA (https://github.com/alberlab/igm). We used their platform to generate an ensemble of polymer conformations consistent with experimental dinoflagellate Hi-C data. More detailed instructions on how to use IGM is located on their github.
 
-IGM requires Hi-C data written in binary .hcs format. To convert .cool or .mcool files to .hcs format follow the instructions under "Generate .hcs file from .mcool raw data" on the IGM github. If you are starting with a .hic file convert it first to .cool or .mcool useing hic2cool (https://github.com/4dn-dcic/hic2cool).
+IGM requires Hi-C data written in binary .hcs format. To convert .cool or .mcool files to .hcs format follow the instructions under "Generate .hcs file from .mcool raw data" on the IGM github. If you are starting with a .hic file convert it first to .cool or .mcool using the hic2cool python package (https://github.com/4dn-dcic/hic2cool).
 
 Creating the .hcs file, and steps below which process IGM outputs, require installation of the alabtools (https://github.com/alberlab/alabtools) accessory software package.
 
@@ -80,6 +94,12 @@ Description: Parameters used to simulate *Symbiodinium microadriaticum* chromoso
 ### Outputs:
 ### extract_polymer_coordinates.py
 Description: Once the IGM simulation is finished, run this script to get the xyz coordinates for all polymer conformations.
+
+### plot_IGM.m
+Description: Visualize IGM conformations. Can choose to color polymer according to primary sequence or by Topological Associating Domain. **Used to generate: Fig. 2E, S6 & S7 in paper.**
+
+<img width="1749" height="4950" alt="figure_S7" src="https://github.com/user-attachments/assets/1110b4ee-68f8-4663-aff1-444f1e8f12fa" />
+
 ### extract_IGM_simulated_HiC_matrix.py
 Description: Once the IGM simulation is finished, run this script to get the simulated Hi-C contact map generated from the ensemble of IGM polymer conformations.
 

@@ -80,8 +80,10 @@ Description: Load divergent colourmap for visualizing strand-specific transcript
 ### RNAseq_align_to_CSynth_cylindrical_axis.m
 Description: Visualization of spatial variation in transcription levels determined by mapping RNA-seq data to 3D position on CSynth structure. An aggregate analysis is done where chromosomes are isotropically scaled to the same size, viewed using cylindrical coordinates to show the average transcription level vs distance to centre/surface of the chromosome. **Used to generate: Fig. 5 & S10 in paper.**
 
+<img width="1434" height="488" alt="Screenshot 2026-05-18 at 3 49 35 PM" src="https://github.com/user-attachments/assets/765be109-0b71-4374-885a-6be3feeb532b" />
+
 ## 6. IGM:
-The Integrated Genome Modeling (IGM) platform was developed by the Alber Lab at UCLA (https://github.com/alberlab/igm). We used their platform to generate an ensemble of polymer conformations consistent with experimental dinoflagellate Hi-C data. More detailed instructions on how to use IGM is located on their github.
+The Integrated Genome Modeling (IGM) platform was developed by the Alber Lab at UCLA. We used their platform to generate an ensemble of polymer conformations consistent with experimental dinoflagellate Hi-C data. More detailed instructions on how to install and run IGM is located on their github: https://github.com/alberlab/igm.
 
 IGM requires Hi-C data written in binary .hcs format. To convert .cool or .mcool files to .hcs format follow the instructions under "Generate .hcs file from .mcool raw data" on the IGM github. If you are starting with a .hic file convert it first to .cool or .mcool using the hic2cool python package (https://github.com/4dn-dcic/hic2cool).
 

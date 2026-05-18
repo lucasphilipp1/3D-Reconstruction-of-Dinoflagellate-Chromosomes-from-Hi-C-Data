@@ -40,7 +40,7 @@ https://cooltools.readthedocs.io/en/latest/notebooks/contacts_vs_distance.html.
 ### contact_probability_xyz.m
 Description: Compute contact probability curves from a 3D structure. Calculation is different from computing contact probability curve from Hi-C matrix. See: Naumova, N., Imakaev, M., Fudenberg, G., Zhan, Y., Lajoie, B. R., Mirny, L. A., & Dekker, J. (2013). Organization of the mitotic chromosome. Science, 342(6161), 948-953. https://www.science.org/doi/10.1126/science.1236083 for detailed methods.
 ### CSynth_FISH_Compare_Su_Cell_2020.m
-Description: Assess accuracy of CSynth conformations and to optomize CSynth parameters, using a human cell line where Hi-C data and 3D FISH data (652 probes) exist. *Used to generate: Fig S13 C,D,E,F in paper.*
+Description: Assess accuracy of CSynth conformations and to optomize CSynth parameters, using a human cell line where Hi-C data and 3D FISH data (652 probes) exist. **Used to generate: Fig S13 C,D,E,F in paper.**
 ### fractal_equilbrium_load.m
 Description: Compute contact probability curves from fractal and equilibrium globule as a positive control to validate the code later applied to CLC model chromosomes.
 ### sim_HiC_map_CSynth.m

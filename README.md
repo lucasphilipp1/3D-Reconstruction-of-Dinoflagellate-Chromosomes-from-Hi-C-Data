@@ -83,7 +83,7 @@ Description: Visualization of spatial variation in transcription levels determin
 ## 6. IGM:
 The Integrated Genome Modeling (IGM) platform was developed by the Alber Lab at UCLA (https://github.com/alberlab/igm). We used their platform to generate an ensemble of polymer conformations consistent with experimental dinoflagellate Hi-C data. More detailed instructions on how to use IGM is located on their github.
 
-IGM requires Hi-C data written in binary .hcs format. To convert .cool or .mcool files to .hcs format follow the instructions under "Generate .hcs file from .mcool raw data" on the IGM github. If you are starting with a .hic file convert it first to .cool or .mcool useing hic2cool (https://github.com/4dn-dcic/hic2cool).
+IGM requires Hi-C data written in binary .hcs format. To convert .cool or .mcool files to .hcs format follow the instructions under "Generate .hcs file from .mcool raw data" on the IGM github. If you are starting with a .hic file convert it first to .cool or .mcool using the hic2cool python package (https://github.com/4dn-dcic/hic2cool).
 
 Creating the .hcs file, and steps below which process IGM outputs, require installation of the alabtools (https://github.com/alberlab/alabtools) accessory software package.
 

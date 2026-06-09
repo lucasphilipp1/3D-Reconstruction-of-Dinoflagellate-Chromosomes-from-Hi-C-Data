@@ -29,7 +29,7 @@ Description: Save .png images for a set of CSynth structures. Drag & drop this f
 ### convert_cool_to_CSynth.sh
 Description: Convert .cool or .mcool formatted Hi-C data to a format readable by CSynth. Create separate files for each chromosome. Run in a new terminal window after installing the cooler package: https://github.com/open2c/cooler.
 ### convert_hic_to_CSynth.py
-Description: Convert .hic formatted Hi-C data to a format readable by CSynth. Create separate files for each chromosome. Column 1: primary sequence location [bp], Column 2: primary sequence location [bp], Column 3: Hi-C contact strength. Missing values are rare and likely due to repetative regions in the assembly.
+Description: Convert .hic formatted Hi-C data to a format readable by CSynth. Create separate files for each chromosome. Column 1: primary sequence location [bp], Column 2: primary sequence location [bp], Column 3: Hi-C contact strength. Missing values are rare and likely due to repetitive regions in the assembly.
 
 <img width="183" alt="Screenshot 2024-10-14 at 3 28 36 PM" src="https://github.com/user-attachments/assets/9855140a-cfe3-4e90-b4b7-09638ab92f7f">
 
@@ -40,19 +40,19 @@ https://cooltools.readthedocs.io/en/latest/notebooks/contacts_vs_distance.html.
 ### contact_probability_xyz.m
 Description: Compute contact probability curves from a 3D structure. Calculation is different from computing contact probability curve from Hi-C matrix. See: Naumova, N., Imakaev, M., Fudenberg, G., Zhan, Y., Lajoie, B. R., Mirny, L. A., & Dekker, J. (2013). Organization of the mitotic chromosome. Science, 342(6161), 948-953. https://www.science.org/doi/10.1126/science.1236083 for detailed methods.
 ### CSynth_FISH_Compare_Su_Cell_2020.m
-Description: Assess accuracy of CSynth conformations and to optomize CSynth parameters, using a human cell line where Hi-C data and 3D FISH data (652 probes) exist. **Used to generate: Fig. S13 C,D,E,F in paper.**
+Description: Assess accuracy of CSynth conformations and to optimize CSynth parameters, using a human cell line where Hi-C data and 3D FISH data (652 probes) exist. **Used to generate: Fig. S13 C,D,E,F in paper.**
 ### fractal_equilbrium_load.m
-Description: Compute contact probability curves from fractal and equilibrium globule as a positive control to validate the code later applied to CLC model chromosomes.
+Description: Compute contact probability curves from fractal and equilibrium globule as a positive control to validate the code later applied to CLC structures.
 ### sim_HiC_map_CSynth.m
 Description: Simulate IMR90 chr21 Hi-C contact map from CSynth structure. This contact map is compared with empirical Hi-C contact for an assessment of CSynth accuracy. **Used to generate: Fig. S13 A & G in paper.**
 ## 3. Simulating CLCs:
 ### iter_Cholesteric_HiC.m
-Description: Generate model cholesteric liquid crystal (CLC) chromosomes with extra chromosomal loops. Many adjustable parameters including: loop length, number of discs, cholesteric pitch, and more. Compute single cell and population-level HiC matrices and contact probability curves. **Used to generate: Fig. 1A, 3A, S1, S2, S12 in paper.**
+Description: Generate model cholesteric liquid crystal (CLC) chromosomes with extra chromosomal loops. Many adjustable parameters including: loop length, number of discs, cholesteric pitch, and more. Compute single cell and population-level Hi-C matrices and contact probability curves. **Used to generate: Fig. 1A, 3A, S1, S2, S12 in paper.**
 
 <img width="1118" alt="figure_S6" src="https://github.com/user-attachments/assets/ff609024-7e67-457a-a055-ea41388e2521" />
 
 ### each_TAD_is_a_group_of_CLC_discs.m
-Description: Generate conformations, simulated Hi-C contact maps, and contact probability curves for a version of the CLC model with conformational heterogeneity and fixed primary sequence boundaries. Specifically, the primary sequence order of discs were permuted across conformations within groups, each delineating a TAD, but not across groups. **Used to generate: Fig. 2A, B & 3A in paper.**
+Description: Generate conformations, simulated Hi-C contact maps, and contact probability curves for a version of the CLC model with conformational heterogeneity and fixed primary sequence boundaries. Specifically, the primary sequence order of discs was permuted across conformations within groups, each delineating a TAD, but not across groups. **Used to generate: Fig. 2A, B & 3A in paper.**
 <img width="1319" height="478" alt="CLC_permute_disc_order" src="https://github.com/user-attachments/assets/a82e1a54-f405-41ee-9ccf-d194bfa728c0" />
 
 ### constrained_RW_1D.m
@@ -73,7 +73,7 @@ Description: Calculate average level and strand of transcription near TAD bounda
 ### CLC_Expression_schematic.m
 Description: Create 3D visual model of surface-localized gene expression on CLC chromosomes using a divergent strand-specific expression colormap.
 ### colour_TPM_using_bed.js
-Description: Load divergent colourmap for visualizing strand-specific transcription levels in 3D space using CSynth GUI. Drag and drop this file into CSynth browswer window before or after loading Hi-C contact data.
+Description: Load divergent colourmap for visualizing strand-specific transcription levels in 3D space using CSynth GUI. Drag and drop this file into CSynth browser window before or after loading Hi-C contact data.
 
 <img width="802" height="667" alt="Screenshot 2026-05-18 at 2 04 36 PM" src="https://github.com/user-attachments/assets/b5b1b578-042e-4608-8b70-280435caefc9" />
 
@@ -101,7 +101,7 @@ Description: Once the IGM simulation is finished, run this script to get the xyz
 Description: Once the IGM simulation is finished, run this script to get the simulated Hi-C contact map generated from the ensemble of IGM polymer conformations.
 
 ### plot_IGM.m
-Description: Visualize IGM conformations. Can choose to color polymer according to primary sequence or by Topological Associating Domain. **Used to generate: Fig. 2E, S6 & S7 in paper.**
+Description: Visualize IGM conformations. Can choose to color polymer according to primary sequence or by Topologically Associating Domain. **Used to generate: Fig. 2E, S6 & S7 in paper.**
 
 <img width="1749" height="4950" alt="figure_S7" src="https://github.com/user-attachments/assets/1110b4ee-68f8-4663-aff1-444f1e8f12fa" />
 
@@ -117,7 +117,7 @@ Equilibrium globule structures were downloaded from the GEO using the accession 
 
 ### Spatial Organization of Transcription Analysis:
 RNA-seq data used in this study can be accessed via the SRA using the accession numbers:
-SRR3337493 (S. microadriaticum, (Liew, Y. J., et al., 2017. https://doi.org/10.1371/journal.pgen.1006619)), SRR9417753 SRR9417755 SRR9417756 SRR1300302 SRR1300303 SRR1300304 SRR1300305 (S. kawagutii, (Li, T., et al., 2020. https://doi.org/10.1016/j.scitotenv.2019.135767; Keeling, P. J., et al., 2014. https://doi.org/10.1371/journal.pbio.1001889)).
+SRR3337493 (*S. microadriaticum*, (Liew, Y. J., et al., 2017. https://doi.org/10.1371/journal.pgen.1006619)), SRR9417753 SRR9417755 SRR9417756 SRR1300302 SRR1300303 SRR1300304 SRR1300305 (*F. kawagutii*, (Li, T., et al., 2020. https://doi.org/10.1016/j.scitotenv.2019.135767; Keeling, P. J., et al., 2014. https://doi.org/10.1371/journal.pbio.1001889)).
 
 # Questions:
 If you have questions about this repository please contact Lucas Philipp (lucas.philipp@mail.mcgill.ca).

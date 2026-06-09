@@ -66,7 +66,7 @@ Description: Compute contact probability curves from dinoflagellate Hi-C data. *
 Description: Compute the average correlation between two tangent vectors to the 3D chromosome structure separated by a given amount of primary sequence, averaged over the entire chromosome. **Used to generate: Fig. 4B in paper.**  Code adapted from: https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.116.248101.
 ### Spatial_Nematic_Order.m
 Description: Calculate alignment (nematic order parameter) of tangent vectors to DNA that are in close spatial proximity. **Used to generate: Fig. 4C in paper.** 
-<img width="1496" height="855" alt="Screenshot 2025-08-26 at 12 06 05 PM" src="https://github.com/user-attachments/assets/ae95e3fe-e72b-488b-991e-818171e471c2" />
+<img width="1744" height="770" alt="Screenshot 2026-06-09 at 11 43 28 AM" src="https://github.com/user-attachments/assets/2ce99ce2-89d4-402f-8ba8-4b81348e837f" />
 ## 5. RNAseq:
 ### TAD_analysis.m
 Description: Calculate average level and strand of transcription near TAD boundary. **Used to generate: Fig. S11 in paper.** 

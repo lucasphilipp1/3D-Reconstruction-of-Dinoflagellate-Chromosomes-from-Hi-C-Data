@@ -49,11 +49,12 @@ Description: Simulate IMR90 chr21 Hi-C contact map from CSynth structure. This c
 ### iter_Cholesteric_HiC.m
 Description: Generate model cholesteric liquid crystal (CLC) chromosomes with extra chromosomal loops. Many adjustable parameters including: loop length, number of discs, cholesteric pitch, and more. Compute single cell and population-level Hi-C matrices and contact probability curves. **Used to generate: Fig. 1A, 3A, S1, S2, S12 in paper.**
 
-[figure_S2.pdf](https://github.com/user-attachments/files/31658623/figure_S2.pdf)
+<img width="10651" height="13250" alt="figure_S2" src="https://github.com/user-attachments/assets/ca496b67-19ff-412a-a9c9-07a679da6cba" />
 
 ### each_TAD_is_a_group_of_CLC_discs.m
 Description: Generate conformations, simulated Hi-C contact maps, and contact probability curves for a version of the CLC model with conformational heterogeneity and fixed primary sequence boundaries. Specifically, the primary sequence order of discs was permuted across conformations within groups, each delineating a TAD, but not across groups. **Used to generate: Fig. 2A, B & 3A in paper.**
-<img width="1772" height="499" alt="Screenshot 2026-08-31 at 11 50 18 AM" src="https://github.com/user-attachments/assets/c7c85209-1108-4435-8114-a6c326c3f704" />
+
+<img width="1772" height="501" alt="Screenshot 2026-08-31 at 12 00 37 PM" src="https://github.com/user-attachments/assets/e72b450e-cfa2-4d14-a6ab-e33a381f18c4" />
 
 ### constrained_RW_1D.m
 Description: Generate extrachromosomal loops. Random walks are generated separately for each of the spatial three dimensions.
